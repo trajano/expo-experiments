@@ -1,0 +1,14 @@
+{
+  "name": "expo-experiments",
+  "scripts": {
+    "postinstall": "lefthook install"
+  },
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "devDependencies": {
+    "@evilmartians/lefthook": "^1.7.14"
+  },
+  "packageManager": "bun@1.1.2"
+}
