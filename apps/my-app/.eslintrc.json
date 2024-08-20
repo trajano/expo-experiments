@@ -1,0 +1,8 @@
+{
+  "extends": ["expo", "prettier"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
+}
