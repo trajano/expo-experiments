@@ -14,3 +14,18 @@ pre-commit:
       root: apps/my-app
       glob: '*.{ts,tsx}'
       run: npx eslint --fix {staged_files}
+
+    my-app-tsc:
+      root: apps/my-app
+      glob: '*.{ts,tsx}'
+      run: npx tsc
+
+    my-text-lint:
+      root: libs/my-text
+      glob: '*.{ts,tsx}'
+      run: npx eslint --fix {staged_files}
+
+    my-text-tsc:
+      root: libs/my-text
+      glob: '*.{ts,tsx}'
+      run: npx tsc --noEmit
