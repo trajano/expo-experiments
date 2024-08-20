@@ -8,6 +8,6 @@ pre-commit:
   commands:
     prettier:
       glob: "*.{ts,tsx,vue,json,css,scss,md,yaml,yml}"
-#       runner: npx prettier --write {staged_files}
+      run: npx prettier --write {staged_files}
 #       glob: '**/*.{js,ts,vue,json,css,scss,md,yaml,yml}'
 #       exclude: 'node_modules/**/*'
