@@ -9,11 +9,13 @@ pre-commit:
     prettier:
       glob: '*.{js,ts,tsx,vue,json,css,scss,md,yaml,yml}'
       run: npx prettier --write {staged_files}
+      stage_fixed: true
 
     my-app-lint:
       root: apps/my-app
       glob: '*.{ts,tsx}'
       run: npx eslint --fix {staged_files}
+      stage_fixed: true
 
     my-app-tsc:
       root: apps/my-app
@@ -24,6 +26,7 @@ pre-commit:
       root: libs/my-text
       glob: '*.{ts,tsx}'
       run: npx eslint --fix {staged_files}
+      stage_fixed: true
 
     my-text-tsc:
       root: libs/my-text
