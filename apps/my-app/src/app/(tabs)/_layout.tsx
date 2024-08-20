@@ -5,9 +5,11 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+import * as Nunito from '@expo-google-fonts/nunito';
+import { useFonts } from 'expo-font';
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{

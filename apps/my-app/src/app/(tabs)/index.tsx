@@ -6,10 +6,14 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { multiply } from 'react-native-my-text';
 import { useEffect, useState } from 'react';
+import { useFonts } from 'expo-font';
 
 export default function HomeScreen() {
   const [number, setNumber] = useState(0);
   useEffect(() => { (async () => { setNumber(await multiply(6, 9)); })() }, []);
+  const [loaded, error] = useFonts({
+
+  })
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
