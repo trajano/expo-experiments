@@ -6,10 +6,11 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 import * as Nunito from '@expo-google-fonts/nunito';
-import { useFonts } from 'expo-font';
+import { useExpoGoogleFonts } from 'react-native-my-text';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  useExpoGoogleFonts(Nunito);
   return (
     <Tabs
       screenOptions={{

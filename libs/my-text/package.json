@@ -62,6 +62,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@expo-google-fonts/nunito": "^0.2.3",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/react-native": "^12.6.0",
