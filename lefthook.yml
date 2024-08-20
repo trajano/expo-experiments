@@ -15,7 +15,7 @@ output:
 commit-msg:
   commands:
     commitlint:
-      runner: npx commitlint --edit $1
+      run: npx commitlint --edit
 
 # pre-commit:
 #   parallel: true
