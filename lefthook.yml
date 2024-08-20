@@ -6,6 +6,11 @@ commit-msg:
 pre-commit:
   parallel: true
   commands:
-      prettier:
-            glob: '*.{ts,tsx,vue,json,css,scss,md,yaml,yml}'
-            run: npx prettier --write {staged_files}
+    prettier:
+      glob: '*.{js,ts,tsx,vue,json,css,scss,md,yaml,yml}'
+      run: npx prettier --write {staged_files}
+
+    my-app-lint:
+      root: apps/my-app
+      glob: '*.{ts,tsx}'
+      run: npx eslint --fix {staged_files}
