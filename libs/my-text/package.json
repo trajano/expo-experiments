@@ -20,16 +20,7 @@
   "files": [
     "src",
     "lib",
-    "android",
-    "ios",
-    "cpp",
-    "*.podspec",
-    "!ios/build",
-    "!android/build",
-    "!android/gradle",
-    "!android/gradlew",
-    "!android/gradlew.bat",
-    "!android/local.properties",
+    "!**/*.test.*",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
@@ -37,7 +28,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "typecheck": "tsc",
+    "typecheck": "tsc -b",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli lib",
     "prepare": "bob build",
@@ -64,7 +55,7 @@
   "devDependencies": {
     "@expo-google-fonts/nunito": "^0.2.3",
     "@expo-google-fonts/source-sans-pro": "^0.2.3",
-    "@react-native/eslint-config": "^0.73.1",
+    "@react-native/eslint-config": "^0.75.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/react-native": "^12.6.0",
     "@types/jest": "^29.5.5",
@@ -76,7 +67,7 @@
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-builder-bob": "^0.30.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.5.4"
   },
   "resolutions": {
     "@types/react": "^18.2.44"

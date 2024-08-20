@@ -4,7 +4,7 @@ import {
 } from './mapToGoogleFontKey';
 import { Platform } from 'react-native';
 
-describe('mapToEmbeddedFontFamily', () => {
+describe('mapToPostScriptName', () => {
   it('should map 400 normal font to Regular', () => {
     const fontFamily = 'Inter';
     const fontWeight = '400';

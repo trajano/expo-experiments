@@ -61,7 +61,7 @@ describe('MyText component', () => {
         expect(textElement.props.style.fontWeight).toBeUndefined();
     });
 
-    it('should override inherited font styles if explicitly provided', () => {
+    it('should override inherited font styles if explicitly provided to remove italic', () => {
         const { getByText } = render(
             <MyText style={{ fontFamily: 'Nunito', fontStyle: 'italic' }}>
                 <MyText style={{ fontStyle: 'normal' }}>
@@ -111,7 +111,7 @@ describe('MyText component', () => {
         expect(textElement.props.style.fontStyle).toBeUndefined(); // fontStyle should be undefined since it's handled by the fontFamily
     });
 
-    it('should preserve the correct styles across three levels of nesting with SourceSansPro, even with random inner styles', () => {
+    it('should preserve the correct styles specifically the variants across three levels of nesting with SourceSansPro, even with random inner styles', () => {
         const { getByText } = render(
             <MyText style={{ fontFamily: 'SourceSansPro', fontWeight: '600', fontStyle: 'italic', fontVariant: ['small-caps'] }}>
                 <MyText style={{ fontStyle: 'normal' }}>
