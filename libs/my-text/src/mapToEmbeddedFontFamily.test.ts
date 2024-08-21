@@ -38,7 +38,7 @@ describe('mapToEmbeddedFontFamily', () => {
 
     expect(result).toBeUndefined();
   });
-  
+
   it('should map to the correct PostScript name for iOS', () => {
     jest.spyOn(Platform, 'select').mockImplementation((obj) => obj.ios);
 
@@ -64,7 +64,7 @@ describe('mapToEmbeddedFontFamily', () => {
   });
 
   it('should map to the correct Google Font key for non-iOS platforms', () => {
-    jest.spyOn(Platform, 'select').mockImplementation((obj) => obj.android);
+    jest.spyOn(Platform, 'select').mockImplementation((obj) => obj['default']);
 
     const fontFamily = 'Inter';
     const fontWeight = '400';
@@ -76,7 +76,7 @@ describe('mapToEmbeddedFontFamily', () => {
   });
 
   it('should map to the correct Google Font key for non-iOS platforms with italic', () => {
-    jest.spyOn(Platform, 'select').mockImplementation((obj) => obj.android);
+    jest.spyOn(Platform, 'select').mockImplementation((obj) => obj['default']);
 
     const fontFamily = 'Inter';
     const fontWeight = '400';
