@@ -1,7 +1,14 @@
 import { createContext, forwardRef, useContext } from 'react';
 import { Text, type TextProps } from 'react-native';
-import { mapToEmbeddedFontFamily, mapToGoogleFontKey } from './mapToGoogleFontKey';
-import type { FontFamilyMapper, FontStyleContext, LineHeightMapper } from './MyText.types';
+import {
+  mapToEmbeddedFontFamily,
+  mapToGoogleFontKey,
+} from './mapToGoogleFontKey';
+import type {
+  FontFamilyMapper,
+  FontStyleContext,
+  LineHeightMapper,
+} from './MyText.types';
 import { useFontStyles } from './useFontStyles';
 
 /**
@@ -9,22 +16,22 @@ import { useFontStyles } from './useFontStyles';
  * all nested MyText components.
  */
 const MyTextContext = createContext<FontStyleContext>({
-    mapToFontFamily: mapToGoogleFontKey,
-    mapToLineHeight: () => undefined,
+  mapToFontFamily: mapToGoogleFontKey,
+  mapToLineHeight: () => undefined,
 });
 
 export type MyTextProps = TextProps & {
-    /**
-     * An optional mapper that would get the final font family given the logical font family, font weight, and font style.
-     * This defaults to {@link mapToGoogleFontKey}
-     */
-    mapToFontFamily?: FontFamilyMapper;
+  /**
+   * An optional mapper that would get the final font family given the logical font family, font weight, and font style.
+   * This defaults to {@link mapToGoogleFontKey}
+   */
+  mapToFontFamily?: FontFamilyMapper;
 
-    /**
-     * An optional mapper that would take the fontSize and translate it to a lineHeight value to ensure consistency across platforms.
-     * This defaults to always return `undefined` which lets React Native handle it natively.
-     */
-    mapToLineHeight?: LineHeightMapper;
+  /**
+   * An optional mapper that would take the fontSize and translate it to a lineHeight value to ensure consistency across platforms.
+   * This defaults to always return `undefined` which lets React Native handle it natively.
+   */
+  mapToLineHeight?: LineHeightMapper;
 };
 
 /**
@@ -35,24 +42,26 @@ export type MyTextProps = TextProps & {
  * @returns A React component that renders a Text element with inherited font styles.
  */
 const createMyTextComponent = (defaultMapToFontFamily: FontFamilyMapper) =>
-    // eslint-disable-next-line react/display-name
-    forwardRef<Text, MyTextProps>(({ children, mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
-        const parentStyles = useContext(MyTextContext);
-        const { currentFontStyles, combinedStyle } = useFontStyles(
-            mapToFontFamily ?? defaultMapToFontFamily,
-            mapToLineHeight ?? (() => undefined),
-            style,
-            parentStyles
-        );
+  // eslint-disable-next-line react/display-name
+  forwardRef<Text, MyTextProps>(
+    ({ children, mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
+      const parentStyles = useContext(MyTextContext);
+      const { currentFontStyles, combinedStyle } = useFontStyles(
+        mapToFontFamily ?? defaultMapToFontFamily,
+        mapToLineHeight ?? (() => undefined),
+        style,
+        parentStyles,
+      );
 
-        return (
-            <MyTextContext.Provider value={currentFontStyles}>
-                <Text ref={ref} style={combinedStyle} {...props}>
-                    {children}
-                </Text>
-            </MyTextContext.Provider>
-        );
-    });
+      return (
+        <MyTextContext.Provider value={currentFontStyles}>
+          <Text ref={ref} style={combinedStyle} {...props}>
+            {children}
+          </Text>
+        </MyTextContext.Provider>
+      );
+    },
+  );
 
 /**
  * MyText is a custom Text component that inherits font styles

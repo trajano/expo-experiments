@@ -36,7 +36,7 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontFamily: "Nunito",
+    fontFamily: 'Nunito',
     fontSize: 16,
     lineHeight: 24,
   },
