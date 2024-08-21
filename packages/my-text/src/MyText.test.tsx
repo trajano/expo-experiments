@@ -2,7 +2,7 @@ import { render } from '@testing-library/react-native';
 import { MyText } from './MyText'; // Adjust the import path as necessary
 describe('MyText component', () => {
   it('should apply the correct Google Font key based on fontFamily, fontWeight, and fontStyle', () => {
-    const { getByText } = render(
+    const { getByText, toJSON } = render(
       <MyText
         style={{
           fontFamily: 'Nunito',
@@ -19,6 +19,7 @@ describe('MyText component', () => {
     expect(textElement.props.style.fontFamily).toBe('Nunito_700Bold_Italic');
     expect(textElement.props.style.fontStyle).toBeUndefined();
     expect(textElement.props.style.fontWeight).toBeUndefined();
+    expect(toJSON()).toMatchSnapshot();
   });
 
   it('should fallback to the original values if Google Font key mapping fails', () => {
@@ -192,6 +193,5 @@ describe('MyText component', () => {
     expect(baz.props.style.fontStyle).toBeUndefined();
 
     expect(toJSON()).toMatchSnapshot();
-
   });
 });
