@@ -1,4 +1,2 @@
-*.pbxproj -text
 *.sh text eol=lf
 *.bat text eol=crlf
-bun.lockb binary
