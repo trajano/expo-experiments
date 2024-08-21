@@ -11,6 +11,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import * as Nunito from '@expo-google-fonts/nunito';
+import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import { useExpoGoogleFonts } from 'react-native-my-text';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -22,12 +23,13 @@ export default function RootLayout() {
     SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
   });
   const [expoFontsLoaded] = useExpoGoogleFonts(Nunito);
+  const [expoFontsLoaded2] = useExpoGoogleFonts(ComicNeue);
 
   useEffect(() => {
-    if (loaded && expoFontsLoaded) {
+    if (loaded && expoFontsLoaded && expoFontsLoaded2) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, expoFontsLoaded]);
+  }, [loaded, expoFontsLoaded, expoFontsLoaded2]);
 
   if (!loaded) {
     return null;

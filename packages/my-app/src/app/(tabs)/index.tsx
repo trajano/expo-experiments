@@ -5,6 +5,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useState } from 'react';
+import { MyText } from 'react-native-my-text';
 
 export default function HomeScreen() {
   const [number, setNumber] = useState(0);
@@ -39,7 +40,7 @@ export default function HomeScreen() {
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
         <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
+          Tap the Explore tab to learn <MyText style={{ fontWeight: "bold" }}>more <MyText style={{ fontStyle: "italic" }}>about</MyText> what's</MyText> included in this
           starter app.
         </ThemedText>
       </ThemedView>

@@ -36,7 +36,7 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
-    fontFamily: 'Nunito',
+    fontFamily: 'ComicNeue',
     fontSize: 16,
     lineHeight: 24,
   },
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   title: {
+    fontFamily: 'Nunito',
     fontSize: 32,
     fontWeight: 'bold',
     lineHeight: 32,

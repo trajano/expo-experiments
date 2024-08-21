@@ -1,7 +1,8 @@
 {
   "name": "expo-experiments",
   "scripts": {
-    "x-postinstall": "lefthook install"
+    "x-postinstall": "lefthook install",
+    "start": "cd packages/my-app && expo start -c"
   },
   "workspaces": [
     "packages/*"
