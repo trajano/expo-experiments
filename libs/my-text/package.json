@@ -63,6 +63,6 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "dist/"
   ]
 }

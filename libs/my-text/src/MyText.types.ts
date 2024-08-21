@@ -1,6 +1,18 @@
 import type { TextStyle } from 'react-native';
 
 /**
+ * FontStyleContext is used to define the shape of the font styles
+ * that will be tracked and inherited by nested MyText components.
+ */
+export interface FontStyleContext {
+  fontFamily?: string;
+  fontStyle?: TextStyle['fontStyle'];
+  fontWeight?: TextStyle['fontWeight'];
+  mapToFontFamily: FontFamilyMapper;
+  mapToLineHeight: LineHeightMapper;
+}
+
+/**
  * A function type that maps the provided font family, weight, and style to a new font family.
  *
  * @param fontFamily - The original font family.
