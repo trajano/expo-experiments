@@ -7,7 +7,7 @@
     "typecheck": "npm run typecheck --workspaces",
     "prepare": "husky"
   },
-  "type": "module",
+  "private": true,
   "workspaces": [
     "packages/*"
   ],
