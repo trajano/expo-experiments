@@ -1,6 +1,7 @@
-import { Text, type TextProps, StyleSheet } from 'react-native';
+import { StyleSheet, type TextProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { MyText } from 'react-native-my-text';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -18,7 +19,7 @@ export function ThemedText({
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
   return (
-    <Text
+    <MyText
       style={[
         { color },
         type === 'default' ? styles.default : undefined,
@@ -35,6 +36,7 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   default: {
+    fontFamily: "Nunito",
     fontSize: 16,
     lineHeight: 24,
   },

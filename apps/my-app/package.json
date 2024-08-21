@@ -14,6 +14,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo-google-fonts/comic-neue": "^0.2.3",
     "@expo-google-fonts/nunito": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
