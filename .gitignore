@@ -4,3 +4,5 @@ coverage/
 .DS_Store
 Thumb.db
 desktop.ini
+%ProgramData%/
+*.heapsnapshot
