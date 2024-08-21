@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll",
+    "test": "jest",
     "lint": "expo lint"
   },
   "jest": {
@@ -39,9 +39,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@testing-library/react-native": "^12.6.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
-    "@types/react-test-renderer": "^18.0.7",
     "@typescript-eslint/typescript-estree": "^8.2.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",

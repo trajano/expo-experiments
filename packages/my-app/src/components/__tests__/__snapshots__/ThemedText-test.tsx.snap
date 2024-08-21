@@ -3,20 +3,14 @@
 exports[`renders correctly 1`] = `
 <Text
   style={
-    [
-      {
-        "color": "#11181C",
-      },
-      {
-        "fontSize": 16,
-        "lineHeight": 24,
-      },
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-    ]
+    {
+      "color": "#11181D",
+      "fontFamily": "ComicNeue_400Regular",
+      "fontSize": 16,
+      "fontStyle": undefined,
+      "fontWeight": undefined,
+      "lineHeight": 24,
+    }
   }
 >
   Snapshot test!

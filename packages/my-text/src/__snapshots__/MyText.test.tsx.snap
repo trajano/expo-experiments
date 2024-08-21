@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MyText component should correctly apply styles to each text segment with nested MyText elements and different font families 1`] = `
+<Text
+  style={
+    {
+      "fontFamily": "SourceSansPro_600SemiBold_Italic",
+      "fontStyle": undefined,
+      "fontVariant": [
+        "small-caps",
+      ],
+      "fontWeight": undefined,
+      "lineHeight": undefined,
+    }
+  }
+>
+  foo
+  <Text
+    style={
+      {
+        "fontFamily": "Nunito_600SemiBold",
+        "fontStyle": undefined,
+        "fontWeight": undefined,
+        "lineHeight": undefined,
+      }
+    }
+  >
+    bar
+    <Text
+      style={
+        {
+          "fontFamily": "SourceSansPro_700Bold",
+          "fontStyle": undefined,
+          "fontWeight": undefined,
+          "lineHeight": undefined,
+        }
+      }
+    >
+      baz
+    </Text>
+    mew
+  </Text>
+</Text>
+`;

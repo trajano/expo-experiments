@@ -146,7 +146,7 @@ describe('MyText component', () => {
   });
 
   it('should correctly apply styles to each text segment with nested MyText elements and different font families', () => {
-    const { getByText } = render(
+    const { getByText, toJSON } = render(
       <MyText
         style={{
           fontFamily: 'SourceSansPro',
@@ -190,5 +190,8 @@ describe('MyText component', () => {
     expect(baz.props.style.fontFamily).toBe('SourceSansPro_700Bold');
     expect(baz.props.style.fontWeight).toBeUndefined();
     expect(baz.props.style.fontStyle).toBeUndefined();
+
+    expect(toJSON()).toMatchSnapshot();
+
   });
 });
