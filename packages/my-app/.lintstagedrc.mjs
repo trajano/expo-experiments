@@ -4,6 +4,7 @@ export default {
   '*.{ts,tsx,js}': [
     'npm run lint -- --fix',
     () => 'tsc --noEmit',
-    'jest --bail --findRelatedTests',
+    // for Expo App project, because it's more difficult to write tests allow passing with no tests
+    'jest --bail --findRelatedTests --passWithNoTests',
   ],
 };
