@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`MyText component should apply the correct Google Font key based on fontFamily, fontWeight, and fontStyle 1`] = `
+<Text
+  style={
+    {
+      "fontFamily": "Nunito_700Bold_Italic",
+      "fontStyle": undefined,
+      "fontWeight": undefined,
+      "lineHeight": undefined,
+    }
+  }
+>
+  Test Text
+</Text>
+`;
+
 exports[`MyText component should correctly apply styles to each text segment with nested MyText elements and different font families 1`] = `
 <Text
   style={

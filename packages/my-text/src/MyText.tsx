@@ -3,7 +3,7 @@ import { Text, type TextProps } from 'react-native';
 import {
   mapToEmbeddedFontFamily,
   mapToGoogleFontKey,
-} from './mapToGoogleFontKey';
+} from './mapToEmbeddedFontFamily';
 import type {
   FontFamilyMapper,
   FontStyleContext,

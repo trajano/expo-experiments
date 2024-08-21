@@ -1,7 +1,7 @@
 import {
   mapToPostScriptName,
   mapToEmbeddedFontFamily,
-} from './mapToGoogleFontKey';
+} from './mapToEmbeddedFontFamily';
 import { Platform } from 'react-native';
 
 describe('mapToPostScriptName', () => {

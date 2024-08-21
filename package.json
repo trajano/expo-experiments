@@ -6,6 +6,7 @@
     "test": "npm run test --workspaces",
     "prepare": "husky"
   },
+  "type": "module",
   "workspaces": [
     "packages/*"
   ],
