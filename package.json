@@ -1,14 +1,12 @@
 {
   "name": "expo-experiments",
-  "packageManager": "bun@1.1.2",
   "scripts": {
     "x-postinstall": "lefthook install"
   },
   "workspaces": [
-    "apps/*",
-    "libs/*"
+    "packages/*"
   ],
-  "devDependencies": {
-    "typescript": "^5.5.4"
+  "volta": {
+    "node": "18.20.4"
   }
 }
