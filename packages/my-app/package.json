@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest",
     "typecheck": "tsc -b",
-    "lint": "eslint"
+    "lint": "eslint ."
   },
   "jest": {
     "preset": "jest-expo"
@@ -20,7 +20,7 @@
     "@expo-google-fonts/nunito": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
-    "expo": "~51.0.28",
+    "expo": "^51.0.30",
     "expo-constants": "~16.0.2",
     "expo-font": "^12.0.9",
     "expo-linking": "~6.3.1",

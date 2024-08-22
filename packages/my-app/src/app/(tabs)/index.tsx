@@ -8,8 +8,6 @@ import { useState } from 'react';
 import { MyText } from 'react-native-my-text';
 
 export default function HomeScreen() {
-  const [number, setNumber] = useState(0);
-
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -34,14 +32,16 @@ export default function HomeScreen() {
             {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
           </ThemedText>{' '}
           to open developer tools.
-          {number}
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
         <ThemedText>
-          Tap the Explore tab to learn <MyText style={{ fontWeight: "bold" }}>more <MyText style={{ fontStyle: "italic" }}>about</MyText> what's</MyText> included in this
-          starter app.
+          Tap the Explore tab to learn{' '}
+          <MyText style={{ fontWeight: 'bold' }}>
+            more <MyText style={{ fontStyle: 'italic' }}>about</MyText> what's
+          </MyText>{' '}
+          included in this starter app.
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>

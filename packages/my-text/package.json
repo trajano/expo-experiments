@@ -8,16 +8,13 @@
     "dev": "tsup --watch",
     "test": "jest",
     "typecheck": "tsc -b",
-    "lint": "eslint",
+    "lint": "eslint .",
     "prepare": "tsup"
   },
   "devDependencies": {
     "@expo-google-fonts/nunito": "^0.2.3",
     "@expo-google-fonts/source-sans-pro": "^0.2.3",
-    "@react-native/eslint-config": "^0.75.2",
     "@testing-library/react-native": "^12.6.0",
-    "@tsconfig/recommended": "^1.0.7",
-    "react-test-renderer": "18.2.0",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
     "babel-jest": "^29.7.0",
@@ -30,6 +27,7 @@
     "jest-expo": "^51.0.4",
     "react": "18.2.0",
     "react-native": "0.74.5",
+    "react-test-renderer": "18.2.0",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   },
@@ -37,9 +35,9 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
+    "expo-font": "*",
     "react": "*",
-    "react-native": "*",
-    "expo-font": "*"
+    "react-native": "*"
   },
   "jest": {
     "preset": "jest-expo",
