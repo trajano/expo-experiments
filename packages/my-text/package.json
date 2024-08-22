@@ -5,6 +5,7 @@
   "types": "./src/index.ts",
   "react-native": "./src/index.ts",
   "scripts": {
+    "dev": "tsup --watch",
     "test": "jest",
     "typecheck": "tsc -b",
     "lint": "eslint",
