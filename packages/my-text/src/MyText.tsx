@@ -11,13 +11,14 @@ import type {
 } from './MyText.types';
 import { useFontStyles } from './useFontStyles';
 
+const defaultMapToLineHeight: LineHeightMapper = () => undefined;
 /**
  * MyTextContext is a React Context that provides the font styles to
  * all nested MyText components.
  */
 const MyTextContext = createContext<FontStyleContext>({
   mapToFontFamily: mapToGoogleFontKey,
-  mapToLineHeight: () => undefined,
+  mapToLineHeight: defaultMapToLineHeight,
 });
 
 export type MyTextProps = TextProps & {
@@ -48,7 +49,7 @@ const createMyTextComponent = (defaultMapToFontFamily: FontFamilyMapper) =>
       const parentStyles = useContext(MyTextContext);
       const { currentFontStyles, combinedStyle } = useFontStyles(
         mapToFontFamily ?? defaultMapToFontFamily,
-        mapToLineHeight ?? (() => undefined),
+        mapToLineHeight ?? defaultMapToLineHeight,
         style,
         parentStyles,
       );
