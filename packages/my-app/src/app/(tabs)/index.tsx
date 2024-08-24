@@ -4,10 +4,17 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useState } from 'react';
+import { useClockState } from 'react-native-my-hooks';
 import { MyText } from 'react-native-my-text';
 
+const formatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true, // Optional: Use `false` for 24-hour format
+});
 export default function HomeScreen() {
+  const clock = useClockState();
+  const formattedTime = formatter.format(clock);
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -19,7 +26,9 @@ export default function HomeScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <MyText style={{ fontSize: 30, fontWeight: 'black', color: 'white' }}>
+          Welcome on {formattedTime} !
+        </MyText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>

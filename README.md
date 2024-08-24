@@ -18,6 +18,7 @@ Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to 
 ## Concept
 
 - Rely on the IDE (Visual Studio Code) to manage typechecks, and lint checks
+- Just react-native for iOS and Android no react web support.
 
 ## Tooling
 
