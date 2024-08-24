@@ -1,128 +1,41 @@
-import { createContext, forwardRef, useContext } from 'react';
-import { Text, TextInput, TextInputProps, type TextProps } from 'react-native';
+import { Text, TextInput, TextInputProps, TextProps } from 'react-native';
+import { createMyTextComponent } from './createMyTextComponent';
 import {
   mapToEmbeddedFontFamily,
   mapToGoogleFontKey,
 } from './mapToEmbeddedFontFamily';
-import type {
-  FontFamilyMapper,
-  FontStyleContext,
-  LineHeightMapper,
-} from './MyText.types';
-import { useFontStyles } from './useFontStyles';
+import { FontStyleProps } from './MyText.types';
 
-const defaultMapToLineHeight: LineHeightMapper = () => undefined;
-/**
- * MyTextContext is a React Context that provides the font styles to
- * all nested MyText components.
- */
-const MyTextContext = createContext<FontStyleContext>({
-  mapToFontFamily: mapToGoogleFontKey,
-  mapToLineHeight: defaultMapToLineHeight,
-});
+export type MyTextProps = TextProps & FontStyleProps;
 
-export type MyTextProps = TextProps & {
-  /**
-   * An optional mapper that would get the final font family given the logical font family, font weight, and font style.
-   * This defaults to {@link mapToGoogleFontKey}
-   */
-  mapToFontFamily?: FontFamilyMapper;
-
-  /**
-   * An optional mapper that would take the fontSize and translate it to a lineHeight value to ensure consistency across platforms.
-   * This defaults to always return `undefined` which lets React Native handle it natively.
-   */
-  mapToLineHeight?: LineHeightMapper;
-};
-
-export type MyTextInputProps = TextInputProps & {
-  /**
-   * An optional mapper that would get the final font family given the logical font family, font weight, and font style.
-   * This defaults to {@link mapToGoogleFontKey}
-   */
-  mapToFontFamily?: FontFamilyMapper;
-
-  /**
-   * An optional mapper that would take the fontSize and translate it to a lineHeight value to ensure consistency across platforms.
-   * This defaults to always return `undefined` which lets React Native handle it natively.
-   */
-  mapToLineHeight?: LineHeightMapper;
-};
-
-/**
- * A factory function that creates a custom Text component that inherits font styles
- * (fontFamily, fontStyle, fontWeight) from its parent MyText components unless explicitly overridden.
- *
- * @param defaultMapToFontFamily - The default function to map the font family.
- * @returns A React component that renders a Text element with inherited font styles.
- */
-const createMyTextComponent = (defaultMapToFontFamily: FontFamilyMapper) =>
-  // eslint-disable-next-line react/display-name
-  forwardRef<Text, MyTextProps>(
-    ({ mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
-      const parentStyles = useContext(MyTextContext);
-      const { currentFontStyles, combinedStyle } = useFontStyles(
-        mapToFontFamily ?? defaultMapToFontFamily,
-        mapToLineHeight ?? defaultMapToLineHeight,
-        style,
-        parentStyles,
-      );
-
-      return (
-        <MyTextContext.Provider value={currentFontStyles}>
-          <Text ref={ref} style={combinedStyle} {...props} />
-        </MyTextContext.Provider>
-      );
-    },
-  );
-
+export type MyTextInputProps = TextInputProps & FontStyleProps;
 /**
  * MyText is a custom Text component that inherits font styles
  * (fontFamily, fontStyle, fontWeight) from its parent MyText components
  * unless explicitly overridden. It presumes the use of Expo Google Fonts
  * and the fonts are loaded using the `useExpoGoogleFonts` hook.
  */
-export const MyText = createMyTextComponent(mapToGoogleFontKey);
+export const MyText = createMyTextComponent(Text, mapToGoogleFontKey);
 
 /**
  * MyTextE is a custom Text component similar to MyText, but it uses
  * embedded font families instead of Google Fonts by default.
  */
-export const MyTextE = createMyTextComponent(mapToEmbeddedFontFamily);
-export const MyTextInput = forwardRef<TextInput, MyTextInputProps>(
-  ({ mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
-    const parentStyles = useContext(MyTextContext);
-    const { currentFontStyles, combinedStyle } = useFontStyles(
-      mapToFontFamily ?? mapToGoogleFontKey,
-      mapToLineHeight ?? defaultMapToLineHeight,
-      style,
-      parentStyles,
-    );
+export const MyTextE = createMyTextComponent(Text, mapToEmbeddedFontFamily);
 
-    return (
-      <MyTextContext.Provider value={currentFontStyles}>
-        <TextInput ref={ref} style={combinedStyle} {...props} />
-      </MyTextContext.Provider>
-    );
-  },
+/**
+ * MyTextInput is a custom TextInput component that inherits font styles
+ * (fontFamily, fontStyle, fontWeight) from its parent MyText components
+ * unless explicitly overridden. It presumes the use of Expo Google Fonts
+ * and the fonts are loaded using the `useExpoGoogleFonts` hook.
+ */
+export const MyTextInput = createMyTextComponent(TextInput, mapToGoogleFontKey);
+
+/**
+ * MyTextInputE is a custom TextInput component similar to MyTextInput, but it uses
+ * embedded font families instead of Google Fonts by default.
+ */
+export const MyTextInputE = createMyTextComponent(
+  TextInput,
+  mapToEmbeddedFontFamily,
 );
-MyTextInput.displayName = 'MyTextInput';
-
-export const MyTextInputE = forwardRef<TextInput, MyTextInputProps>(
-  ({ mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
-    const parentStyles = useContext(MyTextContext);
-    const { currentFontStyles, combinedStyle } = useFontStyles(
-      mapToFontFamily ?? mapToEmbeddedFontFamily,
-      mapToLineHeight ?? defaultMapToLineHeight,
-      style,
-      parentStyles,
-    );
-
-    return (
-      <MyTextContext.Provider value={currentFontStyles}>
-        <TextInput ref={ref} style={combinedStyle} {...props} />
-      </MyTextContext.Provider>
-    );
-  },
-);
-MyTextInputE.displayName = 'MyTextInputE';

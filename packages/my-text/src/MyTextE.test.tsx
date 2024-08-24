@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react-native';
 import { createRef } from 'react';
-import { Text } from 'react-native';
+import { Text, TextInput } from 'react-native';
 import { mapToEmbeddedFontFamily } from './mapToEmbeddedFontFamily';
-import { MyTextE } from './MyText';
+import { MyTextE, MyTextInputE } from './MyText';
 
 describe('MyTextE', () => {
   it('should render with embedded font family styles on iOS', () => {
@@ -29,5 +29,17 @@ describe('MyTextE', () => {
     // Ensure that the ref is correctly assigned to the underlying Text component
     expect(ref.current).toBeInstanceOf(Text);
     expect(ref.current.props).toEqual(renderedText.props);
+  });
+
+  it('should forward the ref to the underlying Text component', () => {
+    const ref = createRef<TextInput>();
+
+    const { getByTestId } = render(<MyTextInputE testID="input" ref={ref} />);
+
+    const inputField = getByTestId('input');
+
+    // Ensure that the ref is correctly assigned to the underlying Text component
+    expect(ref.current).toBeInstanceOf(TextInput);
+    expect(ref.current.props).toEqual(inputField.props);
   });
 });

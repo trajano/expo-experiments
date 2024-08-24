@@ -35,3 +35,20 @@ export type FontFamilyMapper = (
 export type LineHeightMapper = (
   fontSize?: TextStyle['fontSize'],
 ) => TextStyle['lineHeight'] | undefined;
+
+/**
+ * A reusable type that contains the shared properties for both Text and TextInput components.
+ */
+export type FontStyleProps = {
+  /**
+   * An optional mapper that would get the final font family given the logical font family, font weight, and font style.
+   * This defaults to {@link mapToGoogleFontKey}
+   */
+  mapToFontFamily?: FontFamilyMapper;
+
+  /**
+   * An optional mapper that would take the fontSize and translate it to a lineHeight value to ensure consistency across platforms.
+   * This defaults to always return `undefined` which lets React Native handle it natively.
+   */
+  mapToLineHeight?: LineHeightMapper;
+};
