@@ -1,5 +1,6 @@
-import { ComponentType, createContext, forwardRef, useContext } from 'react';
-import { StyleProp, TextStyle } from 'react-native';
+/* eslint-disable react/display-name */
+import { createContext, forwardRef, useContext } from 'react';
+import { Text, TextInput, TextInputProps, TextProps } from 'react-native';
 import {
   FontFamilyMapper,
   FontStyleContext,
@@ -8,7 +9,9 @@ import {
 } from './MyText.types';
 import { mapToGoogleFontKey } from './mapToEmbeddedFontFamily';
 import { useFontStyles } from './useFontStyles';
+
 const defaultMapToLineHeight: LineHeightMapper = () => undefined;
+
 /**
  * MyTextContext is a React Context that provides the font styles to
  * all nested MyText components.
@@ -17,21 +20,18 @@ const MyTextContext = createContext<FontStyleContext>({
   mapToFontFamily: mapToGoogleFontKey,
   mapToLineHeight: defaultMapToLineHeight,
 });
+
 /**
- * A factory function that creates a custom Text or TextInput component that inherits font styles
+ * A factory function that creates a custom Text component that inherits font styles
  * (fontFamily, fontStyle, fontWeight) from its parent MyText components unless explicitly overridden.
  *
- * @param Component - The React component to be rendered, either Text or TextInput.
  * @param defaultMapToFontFamily - The default function to map the font family.
- * @returns A React component that renders the specified component with inherited font styles.
+ * @returns A React component that renders a Text element with inherited font styles.
  */
-export const createMyTextComponent = <
-  P extends FontStyleProps & { style?: StyleProp<TextStyle> },
->(
-  Component: ComponentType<P>,
+export const createMyTextComponent = (
   defaultMapToFontFamily: FontFamilyMapper,
 ) =>
-  forwardRef<React.ElementRef<typeof Component>, P>(
+  forwardRef<Text, FontStyleProps & TextProps>(
     ({ mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
       const parentStyles = useContext(MyTextContext);
       const { currentFontStyles, combinedStyle } = useFontStyles(
@@ -43,7 +43,35 @@ export const createMyTextComponent = <
 
       return (
         <MyTextContext.Provider value={currentFontStyles}>
-          <Component ref={ref} style={combinedStyle} {...props} />
+          <Text ref={ref} style={combinedStyle} {...props} />
+        </MyTextContext.Provider>
+      );
+    },
+  );
+
+/**
+ * A factory function that creates a custom TextInput component that inherits font styles
+ * (fontFamily, fontStyle, fontWeight) from its parent MyText components unless explicitly overridden.
+ *
+ * @param defaultMapToFontFamily - The default function to map the font family.
+ * @returns A React component that renders a TextInput element with inherited font styles.
+ */
+export const createMyTextInputComponent = (
+  defaultMapToFontFamily: FontFamilyMapper,
+) =>
+  forwardRef<TextInput, FontStyleProps & TextInputProps>(
+    ({ mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
+      const parentStyles = useContext(MyTextContext);
+      const { currentFontStyles, combinedStyle } = useFontStyles(
+        mapToFontFamily ?? defaultMapToFontFamily,
+        mapToLineHeight ?? defaultMapToLineHeight,
+        style,
+        parentStyles,
+      );
+
+      return (
+        <MyTextContext.Provider value={currentFontStyles}>
+          <TextInput ref={ref} style={combinedStyle} {...props} />
         </MyTextContext.Provider>
       );
     },
