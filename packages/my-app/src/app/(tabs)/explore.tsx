@@ -6,6 +6,8 @@ import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { TextInput } from 'react-native-gesture-handler';
+import { MyTextInput } from 'react-native-my-text';
 
 export default function TabTwoScreen() {
   return (
@@ -21,6 +23,14 @@ export default function TabTwoScreen() {
       <ThemedText>
         This app includes example code to help you get started.
       </ThemedText>
+      <MyTextInput
+        style={{
+          fontWeight: 'bold',
+          fontFamily: 'ComicNeue',
+          color: 'white',
+          fontSize: 20,
+        }}
+      />
       <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{' '}
