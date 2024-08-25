@@ -1,5 +1,3 @@
-Here is a further cleaned-up version of the README with proper links:
-
 # Expo Experiments
 
 Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to experimenting with Expo and enhancing the development experience.
@@ -13,26 +11,31 @@ Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to 
 
 ## Scripts
 
-- `npm run dev`: Runs `npm run dev` on all the packages to set up an environment that has live updates. On `my-app`, it starts the Expo Development Server only; on the other packages, it starts `tsup --watch`.
+- `npm run dev`: Runs `npm run dev` on all packages to set up an environment with live updates. For `my-app`, it starts the Expo Development Server only; for other packages, it starts `tsup --watch`.
 - `npm start`: Starts the Expo Development Server only.
-- `npm test`: Runs `npm test` on all the packages.
-- `npm run lint`: Runs `npm run lint` on all the packages.
-- `npm run typecheck`: Runs `npm run typecheck` on all the packages.
+- `npm test`: Runs `npm test` on all packages.
+- `npm run lint`: Runs `npm run lint` on all packages.
+- `npm run typecheck`: Runs `npm run typecheck` on all packages.
 
 ## Concept
 
-- Rely on the IDE (Visual Studio Code) to manage type checks and lint checks.
-- Focus on React Native for iOS and Android; no React Web support.
+- Rely on the IDE (Visual Studio Code) for type checking and linting.
+- Focus on React Native for iOS and Android; no support for React Web.
+- Use npm scripts to execute command-line tools for development.
+- Tests are kept with code. But `__tests__` are also allowed for integration testing cross component boundaries.
 
 ## Tooling
 
-- [Lerna](https://lerna.js.org/): Used primarily for implementing the `dev` task on the root package, so the developer does not need to open multiple terminal windows to start them individually.
-- [tsup](https://tsup.egoist.dev/): Used to build TypeScript libraries.
+All tooling is managed through npm scripts:
+
+- [tsup](https://tsup.egoist.dev/): Used for building TypeScript libraries.
+- [Turbo](https://turbo.build/): Used primarily for implementing the `dev` task in the root package, eliminating the need to open multiple terminal windows to start tasks individually.
 
 ## Dropped Tooling
 
 The following tools were evaluated but eventually dropped:
 
+- [Lerna](https://lerna.js.org/): Initially used for implementing the `dev` task in the root package to avoid opening multiple terminal windows. However, it didn't handle Ctrl-C interruptions well.
 - [Bun](https://bun.sh/): Originally used but discontinued due to file locking issues on Windows.
-- [Lefthook](https://github.com/evilmartians/lefthook): Initially used because of [create-react-native-library](https://github.com/callstack/react-native-builder-bob), but replaced with [husky](https://typicode.github.io/husky) and [lint-staged](https://github.com/okonet/lint-staged) for simplicity.
-- [create-react-native-library](https://github.com/callstack/react-native-builder-bob): Initially used but removed due to its complexity and personal preference against its opinions.
+- [Lefthook](https://github.com/evilmartians/lefthook): Initially used due to [create-react-native-library](https://github.com/callstack/react-native-builder-bob), but replaced with [husky](https://typicode.github.io/husky) and [lint-staged](https://github.com/okonet/lint-staged) for simplicity.
+- [create-react-native-library](https://github.com/callstack/react-native-builder-bob): Initially used but removed due to its complexity and personal preferences against its design choices.

@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "test": "jest",
     "typecheck": "tsc -b",
+    "prepare": "tsc -b",
     "lint": "eslint ."
   },
   "jest": {

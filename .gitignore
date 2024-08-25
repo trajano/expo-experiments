@@ -6,3 +6,4 @@ Thumb.db
 desktop.ini
 %ProgramData%/
 *.heapsnapshot
+.turbo
