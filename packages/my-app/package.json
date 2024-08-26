@@ -9,8 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest",
-    "typecheck": "tsc -b",
-    "prepare": "tsc -b",
+    "typecheck": "tsc --noEmit",
+    "prepare": "tsc --noEmit",
     "lint": "eslint ."
   },
   "jest": {
