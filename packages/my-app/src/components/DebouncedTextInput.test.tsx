@@ -32,7 +32,7 @@ describe('DebouncedTextInput Component', () => {
   });
 
   it('should update the debounced value after the max wait timeout even with continuous input', () => {
-    const { getByPlaceholderText, queryByText, getByText } = render(
+    const { getByPlaceholderText, queryByText } = render(
       <DebouncedTextInput />,
     );
     const input = getByPlaceholderText('Type here...');

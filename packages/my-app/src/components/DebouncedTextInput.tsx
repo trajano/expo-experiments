@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDebounceState } from 'react-native-my-hooks';
 import { MyText, MyTextInput } from 'react-native-my-text';

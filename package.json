@@ -6,7 +6,8 @@
     "dev": "turbo dev",
     "test": "jest",
     "typecheck": "npm run typecheck --workspaces",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build": "turbo build"
   },
   "private": true,
   "workspaces": [

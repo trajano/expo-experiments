@@ -8,8 +8,17 @@
     "test": {
       "dependsOn": ["^test"]
     },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
     "prepare": {
-      "dependsOn": ["^prepare", "test"]
+      "dependsOn": ["^prepare"]
+    },
+    "build": {
+      "dependsOn": ["test", "typecheck", "lint", "prepare"]
     }
   }
 }

@@ -16,6 +16,7 @@ Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to 
 - `npm test`: Runs `npm test` on all packages.
 - `npm run lint`: Runs `npm run lint` on all packages.
 - `npm run typecheck`: Runs `npm run typecheck` on all packages.
+- `npm run build`: Runs `typecheck`, `lint`, `test`, `prepare` on all packages.
 
 ## Concept
 
