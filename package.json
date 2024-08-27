@@ -6,7 +6,7 @@
     "dev": "turbo dev",
     "test": "jest",
     "typecheck": "npm run typecheck --workspaces",
-    "prepare": "husky",
+    "prepare": "husky || turbo telemetry disable || true",
     "build": "turbo build"
   },
   "private": true,
