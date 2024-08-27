@@ -51,8 +51,12 @@ jobs:
         if: matrix.platform == 'ios'
         run: |
           xcodebuild -workspace MyAppGo.xcworkspace \
-            -configuration Release \
             -scheme MyAppGo \
-            -sdk iphoneos \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
             -derivedDataPath build
         working-directory: packages/my-app/ios
