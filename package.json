@@ -29,6 +29,7 @@
     "lerna": "^8.1.8",
     "lint-staged": "^15.2.9",
     "prettier": "^3.3.3",
+    "prettier-plugin-sh": "^0.14.0",
     "ts-node": "^10.9.2",
     "turbo": "^2.0.14"
   },

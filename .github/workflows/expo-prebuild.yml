@@ -44,7 +44,7 @@ jobs:
           java-version: '17'
       - name: Build Android App
         if: matrix.platform == 'android'
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleDebug
         working-directory: packages/my-app/android
 
       - name: Build iOS App
