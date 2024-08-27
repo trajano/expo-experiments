@@ -52,6 +52,7 @@ jobs:
         run: |
           xcodebuild -workspace MyAppGo.xcworkspace \
             -configuration Release \
+            -scheme MyAppGo \
             -sdk iphoneos \
             -derivedDataPath build
         working-directory: packages/my-app/ios

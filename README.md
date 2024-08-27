@@ -18,6 +18,8 @@ Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to 
 - `npm run typecheck`: Runs `npm run typecheck` on all packages.
 - `npm run build`: Runs `typecheck`, `lint`, `test`, `prepare` on all packages.
 
+- `docker build .`: Does an `npm ci` followed by `expo prebuild` followed by Android build.
+
 ## Concept
 
 - Rely on the IDE (Visual Studio Code) for type checking and linting.
@@ -31,6 +33,7 @@ All tooling is managed through npm scripts:
 
 - [tsup](https://tsup.egoist.dev/): Used for building TypeScript libraries.
 - [Turbo](https://turbo.build/): Used primarily for implementing the `dev` task in the root package, eliminating the need to open multiple terminal windows to start tasks individually.
+- [Docker](???) is used to run the expo prebuild and the Android build within Docker. Only Android will be built as xcodebuild does not work inside a Docker container.
 
 ## Dropped Tooling
 
