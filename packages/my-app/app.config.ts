@@ -5,14 +5,14 @@ import { ExpoConfig, ConfigContext } from '@expo/config';
  * The version code is calculated in the format: major * 10^(8 + runPadding) + date portion * 10^runPadding + run.
  *
  * @param version - A version string expected to be in the format `yyyyMMdd.##`, where `yyyyMMdd` is the date and `##` is the two-digit run number.
- * @param major - The major version number to be used in the version code calculation. Defaults to 1.
- * @param runPadding - The number of digits to pad the run portion of the version code. Defaults to 3.
+ * @param major - The major version number to be used in the version code calculation. Defaults to 0.
+ * @param runPadding - The number of digits to pad the run portion of the version code. Defaults to 2.
  * @returns The calculated Android version code as a number.
  */
 const androidVersionCode = (
   version: string,
-  major: number = 1,
-  runPadding: number = 3,
+  major: number = 0,
+  runPadding: number = 2,
 ): number => {
   const [datePart, runPart] = version.split('.');
   const dateNumber = parseInt(datePart, 10);
@@ -21,6 +21,9 @@ const androidVersionCode = (
     major * Math.pow(10, 8 + runPadding) +
     dateNumber * Math.pow(10, runPadding) +
     runNumber;
+  if (versionCode > 2100000000) {
+    throw new Error('Android limits version code to 2100000000');
+  }
   return versionCode;
 };
 
