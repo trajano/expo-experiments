@@ -2,11 +2,12 @@
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { type IconProps } from '@expo/vector-icons/build/createIconSet';
-import { type ComponentProps } from 'react';
+import { FC, type ComponentProps } from 'react';
+import { TextStyle } from 'react-native';
 
-export function TabBarIcon({
+export const TabBarIcon: FC<{ style?: TextStyle } & IconProps<any>> = ({
   style,
   ...rest
-}: IconProps<ComponentProps<typeof Ionicons>['name']>) {
+}: IconProps<ComponentProps<typeof Ionicons>['name']>) => {
   return <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...rest} />;
-}
+};

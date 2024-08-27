@@ -4,6 +4,7 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { FC } from 'react';
 import { useClockState } from 'react-native-my-hooks';
 import { MyText } from 'react-native-my-text';
 
@@ -12,7 +13,7 @@ const formatter = new Intl.DateTimeFormat('en-US', {
   minute: 'numeric',
   hour12: true, // Optional: Use `false` for 24-hour format
 });
-export default function HomeScreen() {
+const HomeScreen: FC = () => {
   const clock = useClockState();
   const formattedTime = formatter.format(clock);
   return (
@@ -66,7 +67,7 @@ export default function HomeScreen() {
       </ThemedView>
     </ParallaxScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   titleContainer: {
@@ -86,3 +87,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 });
+
+export default HomeScreen;

@@ -1,11 +1,11 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { FC } from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from 'react-native';
 
-export default function TabLayout() {
+const TabLayout: FC = () => {
   const colorScheme = useColorScheme();
   return (
     <Tabs
@@ -40,4 +40,5 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-}
+};
+export default TabLayout;

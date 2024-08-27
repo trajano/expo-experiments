@@ -9,6 +9,7 @@ const rules: Linter.RulesRecord = {
     },
   ],
 };
+
 module.exports = {
   extends: ['expo', 'prettier'],
   settings: {
@@ -16,5 +17,7 @@ module.exports = {
       typescript: { alwaysTryTypes: true },
     },
   },
+  // override the incorrect typing.
+  plugins: ['prefer-arrow'] as any,
   rules,
 } as Linter.Config;

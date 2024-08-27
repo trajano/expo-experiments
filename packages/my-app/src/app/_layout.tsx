@@ -6,18 +6,18 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import * as Nunito from '@expo-google-fonts/nunito';
 import * as ComicNeue from '@expo-google-fonts/comic-neue';
+import * as Nunito from '@expo-google-fonts/nunito';
+import { useColorScheme } from 'react-native';
 import { useExpoGoogleFonts } from 'react-native-my-text';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+const RootLayout: FC = () => {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
@@ -43,4 +43,5 @@ export default function RootLayout() {
       </Stack>
     </ThemeProvider>
   );
-}
+};
+export default RootLayout;
