@@ -44,7 +44,7 @@ jobs:
       - name: Build iOS App
         if: matrix.platform == 'ios'
         run: |
-          xcodebuild -workspace my-app.xcworkspace \
+          xcodebuild -workspace MyAppGo.xcworkspace \
             -scheme my-app \
             -configuration Release \
             -sdk iphoneos \
