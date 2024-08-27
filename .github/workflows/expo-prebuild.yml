@@ -36,6 +36,12 @@ jobs:
         run: npx expo prebuild --platform ${{ matrix.platform }}
         working-directory: packages/my-app
 
+      - name: Set up JDK 17
+        if: matrix.platform == 'android'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
       - name: Build Android App
         if: matrix.platform == 'android'
         run: ./gradlew assembleRelease
@@ -45,7 +51,6 @@ jobs:
         if: matrix.platform == 'ios'
         run: |
           xcodebuild -workspace MyAppGo.xcworkspace \
-            -scheme my-app \
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath build
