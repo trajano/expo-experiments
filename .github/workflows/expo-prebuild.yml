@@ -19,7 +19,8 @@ jobs:
             platform: android
           - os: macos-latest
             platform: ios
-
+    env:
+      GRADLE_OPTS: -Xmx2g
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v4
