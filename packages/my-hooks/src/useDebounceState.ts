@@ -38,10 +38,10 @@ type DebounceOptions = {
  * setValue(3);
  * ```
  */
-export function useDebounceState<T>(
+export const useDebounceState = <T>(
   initialValue: T,
   { debounceTimeout = 300, maxWaitTimeout = 1000 }: DebounceOptions = {},
-): [T, (value: T) => void] {
+): [T, (value: T) => void] => {
   const [state, setState] = useState(initialValue);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const maxWaitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -90,4 +90,4 @@ export function useDebounceState<T>(
   }, []);
 
   return [state, setDebouncedState];
-}
+};

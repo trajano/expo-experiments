@@ -12,10 +12,10 @@ import { useEffect, useReducer, useRef } from 'react';
  *   Android this should not go past 60 seconds.
  * @returns Current instant
  */
-export function useClockState(
+export const useClockState = (
   frequencyMs = 1000,
   delayTillIntervalStart?: number,
-): Date {
+): Date => {
   const [now, updateNow] = useReducer<(r: number) => number>(
     () => Date.now(),
     Date.now(),
@@ -40,4 +40,4 @@ export function useClockState(
     };
   }, [delayTillIntervalStart, frequencyMs]);
   return new Date(now);
-}
+};
