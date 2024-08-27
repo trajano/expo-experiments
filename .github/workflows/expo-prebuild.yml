@@ -35,3 +35,18 @@ jobs:
       - name: Prebuild for ${{ matrix.platform }}
         run: npx expo prebuild --platform ${{ matrix.platform }}
         working-directory: packages/my-app
+
+      - name: Build Android App
+        if: matrix.platform == 'android'
+        run: ./gradlew assembleRelease
+        working-directory: packages/my-app/android
+
+      - name: Build iOS App
+        if: matrix.platform == 'ios'
+        run: |
+          xcodebuild -workspace my-app.xcworkspace \
+            -scheme my-app \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build
+        working-directory: packages/my-app/ios
