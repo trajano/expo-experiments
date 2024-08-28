@@ -19,8 +19,6 @@ jobs:
             platform: android
           - os: macos-latest
             platform: ios
-    env:
-      GRADLE_OPTS: -Xmx4g
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v4
@@ -47,6 +45,8 @@ jobs:
         if: matrix.platform == 'android'
         run: ./gradlew assembleDebug
         working-directory: packages/my-app/android
+        env:
+          GRADLE_OPTS: -Xmx4g
 
       - name: Cache CocoaPods
         uses: actions/cache@v3
