@@ -47,6 +47,7 @@ jobs:
         working-directory: packages/my-app/android
         env:
           GRADLE_OPTS: -Xmx4g
+          JAVA_OPTS: -Xmx4g
 
       - name: Cache CocoaPods
         uses: actions/cache@v3

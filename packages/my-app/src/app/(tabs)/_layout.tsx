@@ -38,6 +38,18 @@ const TabLayout: FC = () => {
           ),
         }}
       />
+      <Tabs.Screen
+        name="formik"
+        options={{
+          title: 'Formik',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? 'code-slash' : 'code-slash-outline'}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 };
