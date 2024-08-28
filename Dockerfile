@@ -13,6 +13,7 @@ USER root
 RUN --mount=type=cache,target=/var/lib/apt/lists apt-get update \
   && apt-get install -y --no-install-recommends \
     ninja-build
+RUN yes | sdkmanager "platform-tools" "build-tools;34.0.0" "platforms;android-34"
 ENV GRADLE_OPTS=-Xmx4g
 RUN --mount=type=cache,target=/root/.gradle/wrapper/dists \
   ./gradlew assembleDebug
