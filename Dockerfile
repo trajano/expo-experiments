@@ -17,5 +17,7 @@ ENV GRADLE_OPTS=-Xmx4g
 RUN --mount=type=cache,target=/root/.gradle/wrapper/dists \
   ./gradlew assembleDebug
 
+# Output file is in /home/circleci/project/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk
+
 # RUN --mount=type=cache,target=/home/circleci/.gradle/wrapper/dists \
 #   ./gradlew assembleDebug
