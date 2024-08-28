@@ -9,5 +9,13 @@ RUN --mount=type=cache,target=/root/.npm --mount=type=tmpfs,target=/tmp volta ru
 FROM cimg/android:2024.08-node
 COPY --from=prebuild --chown=circleci:circleci /w/ /home/circleci/project/
 WORKDIR /home/circleci/project/packages/my-app/android
-RUN --mount=type=cache,target=/home/circleci/.gradle/wrapper/dists \
+USER root
+RUN --mount=type=cache,target=/var/lib/apt/lists apt-get update \
+  && apt-get install -y --no-install-recommends \
+    ninja-build
+ENV GRADLE_OPTS=-Xmx4g
+RUN --mount=type=cache,target=/root/.gradle/wrapper/dists \
   ./gradlew assembleDebug
+
+# RUN --mount=type=cache,target=/home/circleci/.gradle/wrapper/dists \
+#   ./gradlew assembleDebug
