@@ -48,6 +48,17 @@ jobs:
         run: ./gradlew assembleDebug
         working-directory: packages/my-app/android
 
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: |
+            Pods
+            ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+        if: matrix.platform == 'ios'
+
       - name: Build iOS App
         if: matrix.platform == 'ios'
         run: |
