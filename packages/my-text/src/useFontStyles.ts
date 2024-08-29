@@ -5,6 +5,9 @@ import type {
   LineHeightMapper,
 } from './MyText.types';
 
+const noopFontFamilyMapper: FontFamilyMapper = () => undefined;
+const noopLineHeightMapper: LineHeightMapper = () => undefined;
+
 /**
  * A custom hook that computes the current font styles and combined styles
  * based on the provided or inherited styles.
@@ -19,7 +22,10 @@ export const useFontStyles = (
   mapToFontFamily: FontFamilyMapper,
   mapToLineHeight: LineHeightMapper,
   style: StyleProp<TextStyle>,
-  parentStyles: FontStyleContext,
+  parentStyles: FontStyleContext = {
+    mapToFontFamily: noopFontFamilyMapper,
+    mapToLineHeight: noopLineHeightMapper,
+  },
 ) => {
   const flattenedStyle = StyleSheet.flatten(style) ?? {};
 

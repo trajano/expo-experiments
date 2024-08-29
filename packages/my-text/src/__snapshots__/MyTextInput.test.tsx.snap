@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MyTextE should render with embedded font family styles on iOS 1`] = `
+[
+  <Text
+    style={
+      {
+        "color": "white",
+        "fontFamily": undefined,
+        "fontStyle": undefined,
+        "fontWeight": undefined,
+        "lineHeight": undefined,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontFamily": undefined,
+          "fontStyle": undefined,
+          "fontWeight": undefined,
+          "lineHeight": undefined,
+        }
+      }
+    >
+      Email:
+    </Text>
+  </Text>,
+  <TextInput
+    style={
+      {
+        "borderColor": "#ccc",
+        "borderRadius": 5,
+        "borderWidth": 1,
+        "fontFamily": undefined,
+        "fontStyle": undefined,
+        "fontWeight": undefined,
+        "lineHeight": undefined,
+        "marginTop": 5,
+        "padding": 10,
+      }
+    }
+    testID="input"
+  />,
+]
+`;

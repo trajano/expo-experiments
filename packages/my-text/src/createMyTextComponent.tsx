@@ -50,8 +50,9 @@ export const createMyTextComponent = (
   );
 
 /**
- * A factory function that creates a custom TextInput component that inherits font styles
- * (fontFamily, fontStyle, fontWeight) from its parent MyText components unless explicitly overridden.
+ * A factory function that creates a custom TextInput component.  This does not inherit any style from
+ * a parent Text (since that's actually not supported).  However it does the mapping of the fonts and line
+ * heights.
  *
  * @param defaultMapToFontFamily - The default function to map the font family.
  * @returns A React component that renders a TextInput element with inherited font styles.
@@ -61,18 +62,12 @@ export const createMyTextInputComponent = (
 ) =>
   forwardRef<TextInput, FontStyleProps & TextInputProps>(
     ({ mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
-      const parentStyles = useContext(MyTextContext);
-      const { currentFontStyles, combinedStyle } = useFontStyles(
+      const { combinedStyle } = useFontStyles(
         mapToFontFamily ?? defaultMapToFontFamily,
         mapToLineHeight ?? defaultMapToLineHeight,
         style,
-        parentStyles,
       );
 
-      return (
-        <MyTextContext.Provider value={currentFontStyles}>
-          <TextInput ref={ref} style={combinedStyle} {...props} />
-        </MyTextContext.Provider>
-      );
+      return <TextInput ref={ref} style={combinedStyle} {...props} />;
     },
   );
