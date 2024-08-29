@@ -3,7 +3,7 @@
 Just a train of thought to have a component library that is free from styling.
 So I am thinking this would only have
 
-- `<View>`
+- `<View>` or `<Animated.View>` if applicable
 - `<Pressable>`
 - `<MyText>` which renders down to `<Text>`
 - `<MyTextInput>` which renders down to `<TextInput>`
