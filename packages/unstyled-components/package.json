@@ -52,5 +52,8 @@
   "eslintIgnore": [
     "node_modules/",
     "dist/"
-  ]
+  ],
+  "dependencies": {
+    "react-native-my-text": "*"
+  }
 }

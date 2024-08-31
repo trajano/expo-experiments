@@ -34,10 +34,16 @@ describe('useNotifications', () => {
   });
 
   it('ensures correct hook return values and proper re-renders with async operations', async () => {
-    const getExpoPushTokenAsyncMock = Notifications.getExpoPushTokenAsync as jest.Mock;
-    const getPermissionsAsyncMock = Notifications.getPermissionsAsync as jest.Mock;
-    const requestPermissionsAsyncMock = Notifications.requestPermissionsAsync as jest.Mock;
-    const setNotificationChannelAsyncMock = Notifications.setNotificationChannelAsync as jest.Mock;
+    const getExpoPushTokenAsyncMock =
+      Notifications.getExpoPushTokenAsync as jest.Mock;
+    const getPermissionsAsyncMock =
+      Notifications.getPermissionsAsync as jest.Mock;
+    const requestPermissionsAsyncMock =
+      Notifications.requestPermissionsAsync as jest.Mock;
+    const setNotificationChannelAsyncMock =
+      Notifications.setNotificationChannelAsync as jest.Mock;
+    const setNotificationHandlerMock =
+      Notifications.setNotificationHandler as jest.Mock;
 
     getExpoPushTokenAsyncMock.mockResolvedValue({ data: 'fake-token' });
 
@@ -64,7 +70,7 @@ describe('useNotifications', () => {
     setNotificationChannelAsyncMock.mockResolvedValue([]);
 
     // Use renderHook with a wrapper to track re-renders
-    const { result } = renderHook(() => useNotifications({}));
+    const { result } = renderHook(() => useNotifications());
 
     // Wait for all async operations to complete
     await act(() => Promise.resolve());
@@ -81,5 +87,17 @@ describe('useNotifications', () => {
 
     // Ensure requestPermissionsAsync is called only once
     expect(requestPermissionsAsyncMock).toHaveBeenCalledTimes(1);
+
+    expect(setNotificationHandlerMock).toHaveBeenCalledTimes(1);
+    const handleNotification =
+      setNotificationHandlerMock.mock.calls[0][0].handleNotification;
+    const expectedBehavior = {
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowAlert: true,
+      priority: Notifications.AndroidNotificationPriority.DEFAULT,
+    };
+    const resultBehavior = await handleNotification();
+    expect(resultBehavior).toEqual(expectedBehavior);
   });
 });

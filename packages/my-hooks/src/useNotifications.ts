@@ -15,8 +15,8 @@ export type UseNotificationsOptions = {
 };
 
 export type UseNotificationsResult = {
-  expoPushToken: Notifications.ExpoPushToken;
-  easProjectId: string;
+  expoPushToken?: Notifications.ExpoPushToken;
+  easProjectId?: string;
   permissionStatus: PermissionStatus;
   notificationPermissionsStatus: Notifications.NotificationPermissionsStatus;
   notificationChannels: Notifications.NotificationChannel[];
@@ -44,16 +44,21 @@ export const useNotifications = ({
     },
   },
   androidNotificationChannels = {},
-}: UseNotificationsOptions): UseNotificationsResult => {
-  let easProjectId: string;
+}: UseNotificationsOptions = {}): UseNotificationsResult => {
+  let easProjectId: string | undefined;
   if (Constants.executionEnvironment === ExecutionEnvironment.Standalone) {
-    easProjectId = Constants.easConfig.projectId;
+    easProjectId = Constants.easConfig?.projectId;
   } else {
-    easProjectId = Constants.expoConfig.extra.eas.projectId;
+    easProjectId = Constants.expoConfig?.extra?.eas.projectId;
   }
 
   const notificationPermissionsStatusRef =
-    useRef<Notifications.NotificationPermissionsStatus>();
+    useRef<Notifications.NotificationPermissionsStatus>({
+      granted: false,
+      canAskAgain: true,
+      expires: 'never',
+      status: PermissionStatus.UNDETERMINED,
+    });
   const notificationChannelsRef = useRef<Notifications.NotificationChannel[]>(
     [],
   );
@@ -68,7 +73,7 @@ export const useNotifications = ({
   useEffect(() => {
     (async () => {
       let nextExpoPushToken: Notifications.ExpoPushToken;
-      if (Device.isDevice) {
+      if (Device.isDevice && !!easProjectId) {
         nextExpoPushToken = await Notifications.getExpoPushTokenAsync({
           projectId: easProjectId,
         });
@@ -76,10 +81,27 @@ export const useNotifications = ({
       }
     })();
   }, [easProjectId]);
+
+  useEffect(() => {
+    Notifications.setNotificationHandler({
+      handleNotification: () =>
+        Promise.resolve({
+          shouldPlaySound: notificationBehavior.shouldPlaySound,
+          shouldSetBadge: notificationBehavior.shouldSetBadge,
+          shouldShowAlert: notificationBehavior.shouldShowAlert,
+          priority: notificationBehavior.priority,
+        }),
+    });
+  }, [
+    notificationBehavior.shouldPlaySound,
+    notificationBehavior.shouldSetBadge,
+    notificationBehavior.shouldShowAlert,
+    notificationBehavior.priority,
+  ]);
   useEffect(() => {
     (async () => {
       if (Platform.OS === 'android') {
-        notificationChannelsRef.current = await Promise.all(
+        notificationChannelsRef.current = (await Promise.all(
           Object.entries(androidNotificationChannels).map(
             ([channelId, notificationChannelInput]) =>
               Notifications.setNotificationChannelAsync(
@@ -87,12 +109,8 @@ export const useNotifications = ({
                 notificationChannelInput,
               ),
           ),
-        );
+        )) as Notifications.NotificationChannel[];
       }
-
-      Notifications.setNotificationHandler({
-        handleNotification: () => Promise.resolve(notificationBehavior),
-      });
 
       notificationPermissionsStatusRef.current =
         await Notifications.getPermissionsAsync();

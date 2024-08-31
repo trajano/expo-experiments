@@ -13,6 +13,7 @@ import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
 import { useExpoGoogleFonts } from 'react-native-my-text';
+import { useNotifications } from 'react-native-my-hooks';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -24,6 +25,8 @@ const RootLayout: FC = () => {
   });
   const [expoFontsLoaded] = useExpoGoogleFonts(Nunito);
   const [expoFontsLoaded2] = useExpoGoogleFonts(ComicNeue);
+
+  const notificationInfo = useNotifications();
 
   useEffect(() => {
     if (loaded && expoFontsLoaded && expoFontsLoaded2) {
