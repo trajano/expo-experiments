@@ -92,7 +92,7 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
   ensurePermissionsOnMount = true,
   notificationBehavior,
   notificationPermissions,
-  androidNotificationChannels = {},
+  androidNotificationChannels,
   children,
 }) => {
   let easProjectId: string | undefined;
@@ -176,7 +176,7 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
   // Effect to set up Android notification channels.
   useEffect(() => {
     (async () => {
-      if (Platform.OS === 'android') {
+      if (Platform.OS === 'android' && androidNotificationChannels) {
         await Promise.all(
           Object.entries(androidNotificationChannels).map(
             ([channelId, notificationChannelInput]) =>
