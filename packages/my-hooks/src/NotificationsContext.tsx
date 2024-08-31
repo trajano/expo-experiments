@@ -44,22 +44,8 @@ export type NotificationsProviderProps = PropsWithChildren<{
 }>;
 export const NotificationsProvider: FC<NotificationsProviderProps> = ({
   ensurePermissionsOnMount = true,
-  notificationBehavior = {
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowAlert: true,
-    priority: AndroidNotificationPriority.DEFAULT,
-  },
-  notificationPermissions = {
-    android: {},
-    ios: {
-      allowAlert: true,
-      allowBadge: true,
-      allowSound: true,
-      allowCriticalAlerts: true,
-      allowDisplayInCarPlay: true,
-    },
-  },
+  notificationBehavior,
+  notificationPermissions,
   androidNotificationChannels = {},
   children,
 }) => {
@@ -70,6 +56,31 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
     easProjectId = Constants.expoConfig?.extra?.eas.projectId;
   }
 
+  const memoizedNotificationBehavior = useMemo(
+    () =>
+      notificationBehavior ?? {
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        shouldShowAlert: true,
+        priority: AndroidNotificationPriority.DEFAULT,
+      },
+    [notificationBehavior],
+  );
+  const memoizedNotificationPermissions = useMemo(
+    () =>
+      notificationPermissions ?? {
+        android: {},
+        ios: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+          allowCriticalAlerts: true,
+          allowDisplayInCarPlay: true,
+        },
+      },
+    [notificationPermissions],
+  );
+
   const [expoPushToken, setExpoPushToken] = useState<ExpoPushToken>();
 
   const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>(
@@ -79,15 +90,16 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
   const [canAskAgain, setCanAskAgain] = useState(true);
 
   const ensurePermissionAsync = useCallback(async () => {
+    console.log(granted, canAskAgain, memoizedNotificationPermissions);
     if (!granted && canAskAgain) {
       const nextPermissions = await requestPermissionsAsync(
-        notificationPermissions,
+        memoizedNotificationPermissions,
       );
       setGranted(nextPermissions.granted);
       setCanAskAgain(nextPermissions.canAskAgain);
       setPermissionStatus(nextPermissions.status);
     }
-  }, [granted, canAskAgain, notificationPermissions]);
+  }, [granted, canAskAgain, memoizedNotificationPermissions]);
 
   useEffect(() => {
     (async () => {
@@ -103,20 +115,9 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
 
   useEffect(() => {
     setNotificationHandler({
-      handleNotification: () =>
-        Promise.resolve({
-          shouldPlaySound: notificationBehavior.shouldPlaySound,
-          shouldSetBadge: notificationBehavior.shouldSetBadge,
-          shouldShowAlert: notificationBehavior.shouldShowAlert,
-          priority: notificationBehavior.priority,
-        }),
+      handleNotification: () => Promise.resolve(memoizedNotificationBehavior),
     });
-  }, [
-    notificationBehavior.shouldPlaySound,
-    notificationBehavior.shouldSetBadge,
-    notificationBehavior.shouldShowAlert,
-    notificationBehavior.priority,
-  ]);
+  }, [memoizedNotificationBehavior]);
 
   useEffect(() => {
     (async () => {
@@ -147,14 +148,19 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
     (async () => {
       if (!granted && canAskAgain) {
         const nextPermissions = await requestPermissionsAsync(
-          notificationPermissions,
+          memoizedNotificationPermissions,
         );
         setGranted(nextPermissions.granted);
         setCanAskAgain(nextPermissions.canAskAgain);
         setPermissionStatus(nextPermissions.status);
       }
     })();
-  }, [ensurePermissionsOnMount, canAskAgain, granted, notificationPermissions]);
+  }, [
+    ensurePermissionsOnMount,
+    canAskAgain,
+    granted,
+    memoizedNotificationPermissions,
+  ]);
 
   const value = useMemo(
     () => ({
