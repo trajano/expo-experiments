@@ -36,7 +36,8 @@ The only style that may come about is `flex` related primarily to set the direct
   <Text>Stinky Tofu</Text>
 </UnstyledButton>
 ```
-Note I don't have to put the slots in the order.  It would render as
+
+Note I don't have to put the slots in the order. It would render as
 
 ```tsx
 <View style={{ wrapperStyle }} testID="test-id_wrapper">
@@ -94,3 +95,11 @@ Is the same as pressable except the Content is not customizable and instead ther
   <EndIcon />
 </View>
 ```
+
+### Tri-state checkbox
+
+Adds an _indeterminate_ state
+
+### Radio button
+
+### Standard checkbox

@@ -1,5 +1,12 @@
 import { Children, FC, isValidElement } from 'react';
-import { StyleProp, StyleSheet, View, ViewProps, ViewStyle, I18nManager } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewProps,
+  ViewStyle,
+  I18nManager,
+} from 'react-native';
 
 /**
  * Props for the UnstyledButton component.
@@ -34,19 +41,24 @@ export const UnstyledButton: FC<UnstyledButtonProps> & {
   EndIcon: FC<ViewProps>;
 } = ({ style, contentContainerStyle, children, testID, ...rest }) => {
   const startIcon = Children.toArray(children).find(
-    (child) => isValidElement(child) && child.type === UnstyledButton.StartIcon
+    (child) => isValidElement(child) && child.type === UnstyledButton.StartIcon,
   );
 
   const endIcon = Children.toArray(children).find(
-    (child) => isValidElement(child) && child.type === UnstyledButton.EndIcon
+    (child) => isValidElement(child) && child.type === UnstyledButton.EndIcon,
   );
 
   const mainContent = Children.toArray(children).filter(
-    (child) => child !== startIcon && child !== endIcon
+    (child) => child !== startIcon && child !== endIcon,
   );
 
   return (
-    <View style={style ? [styles.buttonStyle, style] : styles.buttonStyle} testID={`${testID}_wrapper`} {...rest}>
+    <View
+      accessibilityRole="button"
+      style={style ? [styles.buttonStyle, style] : styles.buttonStyle}
+      testID={`${testID}_wrapper`}
+      {...rest}
+    >
       {startIcon && isValidElement(startIcon) ? (
         <View {...startIcon.props} testID={`${testID}_startIcon`}>
           {startIcon.props.children}

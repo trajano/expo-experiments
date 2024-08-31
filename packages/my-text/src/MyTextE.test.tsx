@@ -2,7 +2,8 @@ import { render } from '@testing-library/react-native';
 import { createRef } from 'react';
 import { Text, TextInput } from 'react-native';
 import { mapToEmbeddedFontFamily } from './mapToEmbeddedFontFamily';
-import { MyTextE, MyTextInputE } from './MyText';
+import { MyTextE } from './MyText';
+import { MyTextInputE } from './MyTextInput';
 
 describe('MyTextE', () => {
   it('should render with embedded font family styles on iOS', () => {
