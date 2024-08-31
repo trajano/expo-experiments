@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { MyText, MyTextInput } from './MyText';
+import { MyText } from './MyText';
+import { MyTextInput } from './MyTextInput';
 
 describe('MyTextE', () => {
   it('should render with embedded font family styles on iOS', () => {

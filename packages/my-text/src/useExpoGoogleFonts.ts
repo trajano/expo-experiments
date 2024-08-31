@@ -1,4 +1,4 @@
-import { loadAsync, useFonts, type FontSource } from 'expo-font';
+import { loadAsync, type FontSource } from 'expo-font';
 import { useEffect, useMemo, useState } from 'react';
 
 /**

@@ -1,8 +1,5 @@
 import { TextInputProps, TextProps } from 'react-native';
-import {
-  createMyTextComponent,
-  createMyTextInputComponent,
-} from './createMyTextComponent';
+import { createMyTextComponent } from './createMyTextComponent';
 import {
   mapToEmbeddedFontFamily,
   mapToGoogleFontKey,
@@ -25,17 +22,3 @@ export const MyText = createMyTextComponent(mapToGoogleFontKey);
  * embedded font families instead of Google Fonts by default.
  */
 export const MyTextE = createMyTextComponent(mapToEmbeddedFontFamily);
-
-/**
- * MyTextInput is a custom TextInput component that inherits font styles
- * (fontFamily, fontStyle, fontWeight) from its parent MyText components
- * unless explicitly overridden. It presumes the use of Expo Google Fonts
- * and the fonts are loaded using the `useExpoGoogleFonts` hook.
- */
-export const MyTextInput = createMyTextInputComponent(mapToGoogleFontKey);
-
-/**
- * MyTextInputE is a custom TextInput component similar to MyTextInput, but it uses
- * embedded font families instead of Google Fonts by default.
- */
-export const MyTextInputE = createMyTextInputComponent(mapToEmbeddedFontFamily);

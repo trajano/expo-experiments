@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { createContext, forwardRef, useContext } from 'react';
-import { Text, TextInput, TextInputProps, TextProps } from 'react-native';
+import { Text, TextProps } from 'react-native';
 import {
   FontFamilyMapper,
   FontStyleContext,
@@ -10,7 +10,7 @@ import {
 import { mapToGoogleFontKey } from './mapToEmbeddedFontFamily';
 import { useFontStyles } from './useFontStyles';
 
-const defaultMapToLineHeight: LineHeightMapper = () => undefined;
+export const defaultMapToLineHeight: LineHeightMapper = () => undefined;
 
 /**
  * MyTextContext is a React Context that provides the font styles to
@@ -46,28 +46,5 @@ export const createMyTextComponent = (
           <Text ref={ref} style={combinedStyle} {...props} />
         </MyTextContext.Provider>
       );
-    },
-  );
-
-/**
- * A factory function that creates a custom TextInput component.  This does not inherit any style from
- * a parent Text (since that's actually not supported).  However it does the mapping of the fonts and line
- * heights.
- *
- * @param defaultMapToFontFamily - The default function to map the font family.
- * @returns A React component that renders a TextInput element with inherited font styles.
- */
-export const createMyTextInputComponent = (
-  defaultMapToFontFamily: FontFamilyMapper,
-) =>
-  forwardRef<TextInput, FontStyleProps & TextInputProps>(
-    ({ mapToFontFamily, mapToLineHeight, style, ...props }, ref) => {
-      const { combinedStyle } = useFontStyles(
-        mapToFontFamily ?? defaultMapToFontFamily,
-        mapToLineHeight ?? defaultMapToLineHeight,
-        style,
-      );
-
-      return <TextInput ref={ref} style={combinedStyle} {...props} />;
     },
   );
