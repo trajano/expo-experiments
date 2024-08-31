@@ -2,7 +2,6 @@
 export { useClockState } from './useClockState';
 export { useDebounceState } from './useDebounceState';
 export {
+  NotificationsProvider,
   useNotifications,
-  type UseNotificationsOptions,
-  type UseNotificationsResult,
-} from './useNotifications';
+} from './NotificationsContext';

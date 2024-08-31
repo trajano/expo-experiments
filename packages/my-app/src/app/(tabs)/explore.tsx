@@ -8,7 +8,6 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { FC } from 'react';
-import { useNotifications } from 'react-native-my-hooks';
 
 const TabTwoScreen: FC = () => {
   return (

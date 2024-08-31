@@ -13,7 +13,7 @@ import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
 import { useExpoGoogleFonts } from 'react-native-my-text';
-import { useNotifications } from 'react-native-my-hooks';
+import { NotificationsProvider, useNotifications } from 'react-native-my-hooks';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,28 +23,27 @@ const RootLayout: FC = () => {
   const [loaded] = useFonts({
     SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
   });
-  const [expoFontsLoaded] = useExpoGoogleFonts(Nunito);
-  const [expoFontsLoaded2] = useExpoGoogleFonts(ComicNeue);
-
-  const notificationInfo = useNotifications();
+  const [expoFontsLoaded] = useExpoGoogleFonts(Nunito, ComicNeue);
 
   useEffect(() => {
-    if (loaded && expoFontsLoaded && expoFontsLoaded2) {
+    if (loaded && expoFontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, expoFontsLoaded, expoFontsLoaded2]);
+  }, [loaded, expoFontsLoaded]);
 
-  if (!loaded) {
+  if (!loaded || !expoFontsLoaded) {
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <NotificationsProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </ThemeProvider>
+    </NotificationsProvider>
   );
 };
 export default RootLayout;
