@@ -259,5 +259,8 @@ describe('NotificationsContext', () => {
 
     // Ensure requestPermissionsAsync is never called since permission is already granted
     expect(requestPermissionsAsyncMock).not.toHaveBeenCalled();
+    fireEvent.press(getByTestId('ensurePermissionButton'));
+    await act(() => Promise.resolve());
+    expect(requestPermissionsAsyncMock).not.toHaveBeenCalled();
   });
 });
