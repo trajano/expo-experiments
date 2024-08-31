@@ -8,6 +8,18 @@ const rules: Linter.RulesRecord = {
       classPropertiesAllowed: false, // Disallow using class properties instead of function expressions.
     },
   ],
+  eqeqeq: ['error'],
+  'no-restricted-imports': [
+    'error',
+    {
+      paths: [
+        {
+          name: 'react',
+          importNames: ['default'],
+        },
+      ],
+    },
+  ],
 };
 
 module.exports = {

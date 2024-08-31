@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { forwardRef } from 'react';
 import { TextInput, TextInputProps } from 'react-native';
 import { defaultMapToLineHeight } from './createMyTextComponent';

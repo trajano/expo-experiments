@@ -12,8 +12,8 @@ import 'react-native-reanimated';
 import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
+import { NotificationsProvider } from 'react-native-my-hooks';
 import { useExpoGoogleFonts } from 'react-native-my-text';
-import { NotificationsProvider, useNotifications } from 'react-native-my-hooks';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
