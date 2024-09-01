@@ -16,7 +16,7 @@ exports[`UnstyledButton Component should render the wrapper, start icon, main co
       },
     ]
   }
-  testID="test-id_wrapper"
+  testID="test-id"
 >
   <View
     style={
@@ -24,7 +24,6 @@ exports[`UnstyledButton Component should render the wrapper, start icon, main co
         "marginRight": 5,
       }
     }
-    testID="test-id_startIcon"
   >
     <Image
       source={
@@ -38,6 +37,7 @@ exports[`UnstyledButton Component should render the wrapper, start icon, main co
           "width": 20,
         }
       }
+      testID="startIcon"
     />
   </View>
   <View
@@ -46,56 +46,24 @@ exports[`UnstyledButton Component should render the wrapper, start icon, main co
         "justifyContent": "center",
       }
     }
-    testID="test-id"
   >
-    <View
-      style={
-        {
-          "marginRight": 5,
-        }
-      }
-    >
-      <Image
-        source={
-          {
-            "uri": "startImage",
-          }
-        }
-        style={
-          {
-            "height": 20,
-            "width": 20,
-          }
-        }
-      />
-    </View>
     <Text>
       Hello world
     </Text>
     <Text>
       Stinky Tofu
     </Text>
-    <View
-      style={
-        {
-          "marginLeft": 5,
-        }
-      }
-    >
-      <Text>
-        ✓
-      </Text>
-    </View>
   </View>
   <View
     style={
       {
-        "marginLeft": 5,
+        "marginLeft": 15,
       }
     }
-    testID="test-id_endIcon"
   >
-    <Text>
+    <Text
+      testID="endIcon"
+    >
       ✓
     </Text>
   </View>
@@ -111,11 +79,9 @@ exports[`UnstyledButton Component should render without start and end icons if t
       "justifyContent": "center",
     }
   }
-  testID="test-id_wrapper"
+  testID="test-id"
 >
-  <View
-    testID="test-id"
-  >
+  <View>
     <Text>
       Hello world
     </Text>

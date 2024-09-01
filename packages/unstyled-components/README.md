@@ -14,11 +14,36 @@ I basically want to allow developers to focus on styling rather than functionali
 
 The components are unstyled but specific props to contain the style will be passed in. The most common one is `contentContainerStyle` to reflect some parity with React Native ScrollView and KeyboardAvoidingView.
 
-The only style that may come about is `flex` related primarily to set the direction to be a sane default but can still be overriden
+The only style that may come about is `flex` related primarily to set the direction to be a sane default but can still be overriden.
 
-## Components
+Accessibility is on the `Pressable` .
 
-### Pressable
+It does impose a few restrictions
+
+Groups of radio buttons or checkboxes must stay together and be close to a legend.
+
+The label to a field is relatively close by.
+
+This differs from most other component libraries in that the focus was not to provide a ready to use component but to provide the foundation to build the UIs to however you client wants it to look.
+
+## Visual Components
+
+These render the components with a typical order and layout.
+
+### IconContentRow
+
+This is the foundational component for every visual element.  It consists of
+
+```ascii
++--------+------------------+--------+
+|        |                  |        |
+| start  |     content      |  end   |
+|        |                  |        |
++--------+------------------+--------+
+```
+
+they are laid out in a `flexDirection:row` view
+### Button
 
 ```tsx
 <UnstyledButton
@@ -54,6 +79,20 @@ Note I don't have to put the slots in the order. It would render as
 </View>
 ```
 
+## Accessible components
+
+These are the ones that would provide the actual control behaviour. These would be `Pressable`
+
+Use as a group
+
+```tsx
+<UnstyledRadio.Fieldset>
+  <UnstyledRadio>
+  <UnstyledRadio>
+  <UnstyledRadio>
+</UnstyledRadio.Fieldset>
+```
+
 A Pressable would focus on the states
 
 ```tsx
@@ -85,18 +124,63 @@ Is the same as pressable except the Content is not customizable and instead ther
 </Pressable>
 ```
 
+### Picklists
+
+These will pop up an overlay view containing a FlashList
+
+### Dates or other controls
+
+These will pop up an overlay View, the overlay view is `position: absolute`
+
 ### Text Input Field
 
 ```tsx
 <View>
-  <StartIcon />
+  <View>
+  <View id="Label">
+    <IconContentRow>
+  </View>
+  <View id="field">
+  <IconContentRow>
+  </View>
+</View>
+  <View id="no-errors">
+    {// a viewbox if there's no errors }
+  </View>
+  <View id="errors">
+    <View>
+      <Error />
+    </View>
+    <View>
+      <Error />
+    </View>
+  </View>
+</View>
+```
 
-  <TextInput />
-  <EndIcon />
+### Fieldset
+
+```
+<View>
+<View>
+<Legend />
+</View>
+
+<View style={{flexDirection:row, flexWrap:"wrap"}}>
+  <Options>
+</View>
 </View>
 ```
 
 ### Tri-state checkbox
+
+```
+<Pressable>
+  <When Y><IconContentRow></When>
+  <When N><IconContentRow></When>
+  <When U><IconContentRow></When>
+</Pressable>
+```
 
 Adds an _indeterminate_ state
 

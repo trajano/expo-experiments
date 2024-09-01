@@ -1,4 +1,4 @@
-import { Children, FC, isValidElement } from 'react';
+import { Children, FC, isValidElement, ReactElement } from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -6,6 +6,8 @@ import {
   ViewProps,
   ViewStyle,
   I18nManager,
+  Animated,
+
 } from 'react-native';
 
 /**
@@ -49,29 +51,21 @@ export const UnstyledButton: FC<UnstyledButtonProps> & {
   );
 
   const mainContent = Children.toArray(children).filter(
-    (child) => child !== startIcon && child !== endIcon,
+    (child) => !(isValidElement(child) && (child.type === UnstyledButton.StartIcon || child.type === UnstyledButton.EndIcon)),
   );
 
   return (
     <View
-      accessibilityRole="button"
+      testID={testID}
       style={style ? [styles.buttonStyle, style] : styles.buttonStyle}
-      testID={`${testID}_wrapper`}
       {...rest}
     >
-      {startIcon && isValidElement(startIcon) ? (
-        <View {...startIcon.props} testID={`${testID}_startIcon`}>
-          {startIcon.props.children}
-        </View>
-      ) : null}
-      <View style={contentContainerStyle} testID={testID}>
+      {startIcon}
+      <View style={contentContainerStyle}>
         {mainContent}
       </View>
-      {endIcon && isValidElement(endIcon) ? (
-        <View {...endIcon.props} testID={`${testID}_endIcon`}>
-          {endIcon.props.children}
-        </View>
-      ) : null}
+      {endIcon}
+
     </View>
   );
 };
@@ -112,3 +106,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Horizontally center if space available
   },
 });
+
+export const AnimatedUnstyledButton = Animated.createAnimatedComponent(UnstyledButton);

@@ -17,7 +17,7 @@ describe('UnstyledPressable Component', () => {
         <UnstyledPressable.EndIcon testID="end-icon">
           <Animated.Image source={{ uri: 'end-icon.png' }} />
         </UnstyledPressable.EndIcon>
-      </UnstyledPressable>
+      </UnstyledPressable>,
     );
 
     expect(getByTestId('start-icon')).toBeTruthy();
@@ -32,7 +32,7 @@ describe('UnstyledPressable Component', () => {
         <UnstyledPressable.Content testID="content">
           <Animated.Image source={{ uri: 'content.png' }} />
         </UnstyledPressable.Content>
-      </UnstyledPressable>
+      </UnstyledPressable>,
     );
 
     const content = getByTestId('content');
@@ -64,7 +64,7 @@ describe('UnstyledPressable Component', () => {
         <UnstyledPressable.Content testID="content">
           <Animated.Image source={{ uri: 'content.png' }} />
         </UnstyledPressable.Content>
-      </UnstyledPressable>
+      </UnstyledPressable>,
     );
 
     const content = getByTestId('content');
