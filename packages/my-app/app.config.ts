@@ -1,4 +1,6 @@
 import { ExpoConfig, ConfigContext } from '@expo/config';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * Generates an Android version code based on the given version string, major version number, and run padding.
@@ -29,19 +31,33 @@ const androidVersionCode = (
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const version = (process.env.BUILD_BUILDNUMBER ?? config.version)!;
+
+  // Define the paths to check for the google-services.json file
+  const googleServicesFilePaths = [
+    '/run/secrets/google-services-json',
+    path.resolve(__dirname, '../../google-services.json'),
+  ];
+
+  // Find the first existing google-services.json file
+  const googleServicesFilePath = googleServicesFilePaths.find(fs.existsSync);
+
   return {
     ...config,
-    name: (process.env.APP_NAME ?? config.name)!,
+    name: (process.env.EXPO_PUBLIC_APP_NAME ?? config.name)!,
     slug: config.slug!,
     version,
     ios: {
       ...config.ios,
-      bundleIdentifier: (process.env.APP_ID ?? config.ios!.bundleIdentifier)!,
+      bundleIdentifier: (process.env.EXPO_PUBLIC_APP_ID ??
+        config.ios!.bundleIdentifier)!,
     },
     android: {
       ...config.android,
-      package: (process.env.APP_ID ?? config.android!.package)!,
+      package: (process.env.EXPO_PUBLIC_APP_ID ?? config.android!.package)!,
       versionCode: androidVersionCode(version),
+      ...(googleServicesFilePath && {
+        googleServicesFile: googleServicesFilePath,
+      }),
     },
   };
 };

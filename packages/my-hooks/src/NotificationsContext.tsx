@@ -33,6 +33,10 @@ export interface Notifications {
    * The Expo push token associated with the current device and user.
    */
   expoPushToken?: ExpoPushToken;
+  /**
+   * Error received when obtaining the push token.
+   */
+  expoPushTokenError?: Error;
 
   /**
    * The current permission status for notifications.
@@ -133,6 +137,7 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
   );
 
   const [expoPushToken, setExpoPushToken] = useState<ExpoPushToken>();
+  const [expoPushTokenError, setExpoPushTokenError] = useState<Error>();
   const [permissionStatus, setPermissionStatus] = useState<PermissionStatus>(
     PermissionStatus.UNDETERMINED,
   );
@@ -157,11 +162,13 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
   useEffect(() => {
     (async () => {
       let nextExpoPushToken: ExpoPushToken;
-      if (Device.isDevice && !!easProjectId) {
+      try {
         nextExpoPushToken = await getExpoPushTokenAsync({
           projectId: easProjectId,
         });
         setExpoPushToken(nextExpoPushToken);
+      } catch (e: unknown) {
+        setExpoPushTokenError(e as Error);
       }
     })();
   }, [easProjectId]);
