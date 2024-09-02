@@ -29,7 +29,7 @@ const FormikScreen: FC = () => {
   }, [register]);
   const onSubmit = async (data: FormValues) => {
     try {
-      const response = await fetch('https://httpbin.org/post', {
+      const response = await fetch('https://trajano.net/httpbin/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
