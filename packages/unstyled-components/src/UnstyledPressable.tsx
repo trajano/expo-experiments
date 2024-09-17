@@ -15,7 +15,7 @@ type State = 'default' | 'pressed' | 'focused';
 type UnstyledPressableProps = PropsWithChildren<
   {
     children: React.ReactNode;
-    contentContainerStyle: StyleProp<ViewStyle>;
+    contentContainerStyle?: StyleProp<ViewStyle>;
   } & Omit<ViewProps, 'style'>
 >;
 
