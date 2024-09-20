@@ -222,8 +222,14 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
       expoPushToken,
       permissionStatus,
       ensurePermissionAsync,
+      expoPushTokenError,
     }),
-    [expoPushToken, permissionStatus, ensurePermissionAsync],
+    [
+      expoPushToken,
+      permissionStatus,
+      expoPushTokenError,
+      ensurePermissionAsync,
+    ],
   );
 
   return (
