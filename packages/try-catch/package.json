@@ -1,5 +1,5 @@
 {
-  "name": "react-native-my-try",
+  "name": "react-native-try-catch",
   "description": "Try-Catch on react-native",
   "main": "./dist/index.js",
   "types": "./src/index.ts",

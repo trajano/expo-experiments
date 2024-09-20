@@ -5,9 +5,12 @@ Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to 
 ## Packages
 
 - **`my-app`**: The core Expo application.
-- **`my-text`**: An improved `<Text>` component, designed to provide a better user interface experience.
-- **`my-hooks`**: React hook experiments, originally sourced from [github.com/trajano/react-hooks](https://github.com/trajano/react-hooks).
-- **`my-empty`**: An empty starter project.
+- **`react-native-my-text`**: An improved `<Text>` component, designed to provide a better user interface experience.
+- **`react-native-my-hooks`**: React hook experiments, originally sourced from [github.com/trajano/react-hooks](https://github.com/trajano/react-hooks).
+- **`react-native-try-catch`**: An error boundary implementation for React Native utilizing the undocumented `ErrorUtils`.
+- **`react-native-my-empty`**: An empty starter project.
+- **`eslint-config-my`**: The ESLint config the for monorepo.
+- **`react-native-unstyled-components`**: This is a component library that provides unstyled, but functional components. Sort of the same concept as React Native Elements Base project.
 
 ## Scripts
 
@@ -33,7 +36,8 @@ All tooling is managed through npm scripts:
 
 - [tsup](https://tsup.egoist.dev/): Used for building TypeScript libraries.
 - [Turbo](https://turbo.build/): Used primarily for implementing the `dev` task in the root package, eliminating the need to open multiple terminal windows to start tasks individually.
-- [Docker](???) is used to run the expo prebuild and the Android build within Docker. Only Android will be built as xcodebuild does not work inside a Docker container.
+- [Docker](https://www.docker.com/) is used to run the expo prebuild and the Android build within Docker. Only Android will be built as xcodebuild does not work inside a Docker container.
+- [commitlint](https://commitlint.js.org/) for being masochistic.
 
 ## Dropped Tooling
 
