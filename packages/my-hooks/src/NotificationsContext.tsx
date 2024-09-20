@@ -1,15 +1,4 @@
-import * as Device from 'expo-device';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
-import {
-  createContext,
-  FC,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
 import { PermissionStatus } from 'expo-modules-core';
 import {
   AndroidNotificationPriority,
@@ -23,6 +12,16 @@ import {
   setNotificationChannelAsync,
   setNotificationHandler,
 } from 'expo-notifications';
+import {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Platform } from 'react-native';
 
 /**
