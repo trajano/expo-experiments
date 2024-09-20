@@ -6,3 +6,4 @@ docker cp ${container_id}:/app-debug.apk app-debug.apk
 docker cp ${container_id}:/app-release.apk app-release.apk
 adb install app-debug.apk
 adb install app-release.apk
+docker rm ${container_id}

@@ -1,8 +1,8 @@
 # Stage 1: Download Android command-line tools (build platform-specific)
-FROM --platform=$BUILDPLATFORM alpine/curl AS download-tools
+FROM --platform=$BUILDPLATFORM busybox:stable AS download-tools
+ADD https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip /w/commandlinetools.zip
 WORKDIR /w
-RUN curl --fail -sSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o commandlinetools.zip \
-  && unzip commandlinetools.zip
+RUN unzip commandlinetools.zip
 
 # Stage 2: Setup Android SDK (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS android-sdk
@@ -79,6 +79,6 @@ RUN --mount=type=cache,target=/home/ubuntu/.gradle,sharing=private,uid=1000,gid=
   ./gradlew assembleRelease
 
 # Final Stage: Multiplatform APK delivery (no specific platform)
-FROM busybox
+FROM busybox:stable
 COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-debug.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
