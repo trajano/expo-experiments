@@ -41,7 +41,7 @@ FROM prebuild-env AS prebuild-devclient
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=secret,id=google-services-json,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/tmp \
-  npx expo prebuild --platform all
+  npx expo prebuild --platform all --no-install
 
 # Stage 6: Prebuild Preview (build platform-specific)
 FROM prebuild-env AS prebuild-preview
@@ -50,7 +50,7 @@ ENV EXPO_PUBLIC_APP_NAME="My App"
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=secret,id=google-services-json,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/tmp \
-  npx expo prebuild --platform all
+  npx expo prebuild --platform all --no-install
 
 # Stage 7: Prepare Environment for Gradle APK Build (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS gradle-build-env
@@ -64,18 +64,18 @@ ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$ANDROID_SDK_ROOT/platform-tools/latest/bin:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
 WORKDIR /home/ubuntu/.gradle
 WORKDIR /home/ubuntu/work/packages/my-app/android
-ENV JAVA_OPTS="-Xmx4g -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
+ENV JAVA_OPTS="-Xmx4g -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
 
 # Stage 8: Build Dev Client APK (build platform-specific)
 FROM gradle-build-env AS devclient
 COPY --from=prebuild-devclient --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
-RUN --mount=type=cache,target=/home/ubuntu/.gradle,sharing=private,uid=1000,gid=1000 \
+RUN --mount=type=cache,id=assembleDebug,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleDebug
 
 # Stage 9: Build Preview APK (build platform-specific)
 FROM gradle-build-env AS preview-apk
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
-RUN --mount=type=cache,target=/home/ubuntu/.gradle,sharing=private,uid=1000,gid=1000 \
+RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleRelease
 
 # Final Stage: Multiplatform APK delivery (no specific platform)

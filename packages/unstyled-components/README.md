@@ -32,7 +32,7 @@ These render the components with a typical order and layout.
 
 ### IconContentRow
 
-This is the foundational component for every visual element.  It consists of
+This is the foundational component for every visual element. It consists of
 
 ```ascii
 +--------+------------------+--------+
@@ -43,6 +43,43 @@ This is the foundational component for every visual element.  It consists of
 ```
 
 they are laid out in a `flexDirection:row` view
+
+Question... what happens if we put the label?
+
+Actually no, that would make things too cluttered
+
+```ascii
++--------+---------+-----------+--------+
+|        |         |           |        |
+| start  |  label  |  content  |  end   |
+|        |         |           |        |
++--------+---------+-----------+--------+
+```
+
+So best leave it out.
+
+So if that's the case I will call it `<Foundation />` debating whether to suffix that with component like `<FoundationComponent />`. Heck I think I'll just call it `Base` since it's easier to type
+
+Anyway...
+
+```jsx
+<Base>
+  <Base.Start></Base.Start>
+  {everything else}
+  <Base.End></Base.End>
+</Base>
+```
+
+This should also work the same way.
+
+```jsx
+<Base>
+  <Base.Start></Base.Start>
+  <Base.End></Base.End>
+  {everything else}
+</Base>
+```
+
 ### Button
 
 ```tsx
