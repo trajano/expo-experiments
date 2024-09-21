@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # Stage 1: Download Android command-line tools (build platform-specific)
 FROM --platform=$BUILDPLATFORM busybox:stable AS download-tools
 ADD https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip /w/commandlinetools.zip
@@ -17,13 +19,14 @@ RUN yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
   "ndk;26.3.11579264" \
   "cmake;3.22.1"
 
-# Stage 3: Install Volta and Node.js (build platform-specific)
+# Stage 3: Install Volta, Node.js and EAS-CLI (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS volta
 USER ubuntu
 ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
 RUN curl https://get.volta.sh | bash \
-  && volta install node@latest npm@latest
+  && volta install node@latest npm@latest \
+  && npm i -g eas-cli@latest
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS prebuild-env
@@ -39,7 +42,7 @@ WORKDIR /home/ubuntu/work/packages/my-app
 # Stage 5: Prebuild Dev Client (build platform-specific)
 FROM prebuild-env AS prebuild-devclient
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
-  --mount=type=secret,id=google-services-json,uid=1000,gid=1000 \
+  --mount=type=secret,id=google-services-json,target=/home/ubuntu/work/google-services.json,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/tmp \
   npx expo prebuild --platform all --no-install
 
@@ -48,7 +51,7 @@ FROM prebuild-env AS prebuild-preview
 ENV EXPO_PUBLIC_APP_ID="net.trajano.myapp"
 ENV EXPO_PUBLIC_APP_NAME="My App"
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
-  --mount=type=secret,id=google-services-json,uid=1000,gid=1000 \
+  --mount=type=secret,id=google-services-json,target=/home/ubuntu/work/google-services.json,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/tmp \
   npx expo prebuild --platform all --no-install
 
@@ -77,6 +80,17 @@ FROM gradle-build-env AS preview-apk
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleRelease
+
+# EAS iOS build
+FROM prebuild-env AS eas
+ENV EAS_NO_VCS=1
+ENV EAS_PROJECT_ROOT=/home/ubuntu/work
+RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
+  --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
+  --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
+  --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
+  eas build --non-interactive --platform=ios --profile=development \
+  && eas build --non-interactive --platform=ios --profile=preview
 
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable

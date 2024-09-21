@@ -17,3 +17,7 @@ packages/*/.turbo/
 packages/*/node_modules/
 packages/my-app/android/
 packages/my-app/ios/
+packages/my-app/credentials/
+packages/my-app/credentials.json
+credentials.json
+google-services.json
