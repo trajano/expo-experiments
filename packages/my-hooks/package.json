@@ -18,18 +18,23 @@
     "babel-jest": "^29.7.0",
     "eslint-config-my": "*",
     "expo": "^51.0.29",
+    "expo-notifications": "^0.28.16",
     "jest": "^29.7.0",
     "jest-expo": "^51.0.4",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-test-renderer": "18.2.0",
     "tsup": "^8.2.4",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   },
   "resolutions": {
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
+    "expo-constants": "*",
+    "expo-device": "*",
+    "expo-modules-core": "*",
+    "expo-notifications": "*",
     "react": "*",
     "react-native": "*"
   },
@@ -47,5 +52,9 @@
   "eslintIgnore": [
     "node_modules/",
     "dist/"
-  ]
+  ],
+  "dependencies": {
+    "expo-constants": "*",
+    "expo-device": "*"
+  }
 }

@@ -1,12 +1,13 @@
-import { Image, Platform, StyleSheet } from 'react-native';
+import { Button, Image, Platform, StyleSheet } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { FC } from 'react';
-import { useClockState } from 'react-native-my-hooks';
+import { FC, useReducer } from 'react';
+import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText } from 'react-native-my-text';
+import { useRouter } from 'expo-router';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -15,7 +16,12 @@ const formatter = new Intl.DateTimeFormat('en-US', {
 });
 const HomeScreen: FC = () => {
   const clock = useClockState();
+  const router = useRouter();
   const formattedTime = formatter.format(clock);
+  const [pressCount, incrementPressCount] = useReducer((i) => i + 1, 0);
+
+  const { expoPushToken, permissionStatus } = useNotifications();
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -28,15 +34,26 @@ const HomeScreen: FC = () => {
     >
       <ThemedView style={styles.titleContainer}>
         <MyText style={{ fontSize: 30, fontWeight: 'black', color: 'white' }}>
-          Welcome on {formattedTime} !
+          Bon jour on {formattedTime} ! {pressCount}
         </MyText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <Button
+          title="go load"
+          onPress={() => {
+            incrementPressCount();
+            router.back();
+          }}
+        />
+        <ThemedText type="subtitle">
+          {JSON.stringify(expoPushToken, null, 2)}
+        </ThemedText>
         <ThemedText>
-          Edit{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{' '}
+          permissionStatus = {permissionStatus}
+          <ThemedText type="defaultSemiBold">
+            app/(tabs)/index.tsx
+          </ThemedText>{' '}
           to see changes. Press{' '}
           <ThemedText type="defaultSemiBold">
             {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}

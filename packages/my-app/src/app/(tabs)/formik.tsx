@@ -3,11 +3,11 @@ import { Button, StyleSheet } from 'react-native';
 
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedView } from '@/components/ThemedView';
-import * as Yup from 'yup';
-import { FC, useEffect } from 'react';
-import { MyText, MyTextInput } from 'react-native-my-text';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FC, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { MyText, MyTextInput } from 'react-native-my-text';
+import * as Yup from 'yup';
 type FormValues = {
   email: string;
   message: string;
@@ -18,18 +18,19 @@ const validationSchema = Yup.object().shape({
     .required('Email is required'),
   message: Yup.string().required('Message is required'),
 });
-
+const globalErrorUtils = global.ErrorUtils;
 const FormikScreen: FC = () => {
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>({
     resolver: yupResolver(validationSchema),
   });
+  const errorUtilInfo = `${globalErrorUtils} really? o=${!!globalErrorUtils} gf=${!!globalErrorUtils.getGlobalHandler}  gh=${!!globalErrorUtils.getGlobalHandler()} sg=${!!globalErrorUtils.setGlobalHandler}`;
   useEffect(() => {
     register('email');
     register('message');
   }, [register]);
   const onSubmit = async (data: FormValues) => {
     try {
-      const response = await fetch('https://httpbin.org/post', {
+      const response = await fetch('https://trajano.net/httpbin/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,6 +71,7 @@ const FormikScreen: FC = () => {
           numberOfLines={4}
           textAlignVertical="top"
         />
+        <MyText style={{ color: 'white' }}>{errorUtilInfo}</MyText>
       </ThemedView>
 
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />

@@ -1,0 +1,59 @@
+{
+  "name": "react-native-unstyled-components",
+  "description": "Components with no style",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "react-native": "./src/index.ts",
+  "scripts": {
+    "dev": "tsup --watch",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "prepare": "tsup"
+  },
+  "devDependencies": {
+    "@expo-google-fonts/nunito": "^0.2.3",
+    "@expo-google-fonts/source-sans-pro": "^0.2.3",
+    "@testing-library/react-native": "^12.6.0",
+    "@types/jest": "^29.5.5",
+    "@types/react": "^18.2.44",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-my": "*",
+    "expo": "^51.0.29",
+    "expo-font": "^12.0.9",
+    "jest": "^29.7.0",
+    "jest-expo": "^51.0.4",
+    "react": "18.2.0",
+    "react-native": "0.74.5",
+    "react-test-renderer": "18.2.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2"
+  },
+  "resolutions": {
+    "@types/react": "^18.2.44"
+  },
+  "peerDependencies": {
+    "expo-font": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "my"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "dist/"
+  ],
+  "dependencies": {
+    "react-native-my-text": "*"
+  }
+}

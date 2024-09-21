@@ -14,14 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.trajano.myapp.go"
+      "bundleIdentifier": "net.trajano.myapp.go"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundImage": "./src/assets/images/adaptive-background.png",
+        "backgroundColor": "#101010"
       },
-      "package": "com.trajano.myapp.go"
+      "package": "net.trajano.myapp.go"
     },
     "web": {
       "bundler": "metro",

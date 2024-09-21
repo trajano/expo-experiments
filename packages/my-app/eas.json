@@ -5,12 +5,7 @@
   "build": {
     "development": {
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
-      "ios": {
-        "developmentClient": true
-      }
+      "developmentClient": true
     },
     "preview": {
       "distribution": "internal",
@@ -18,8 +13,8 @@
         "buildType": "apk"
       },
       "env": {
-        "APP_ID": "com.trajano.myapp",
-        "APP_NAME": "My App"
+        "EXPO_PUBLIC_APP_ID": "net.trajano.myapp",
+        "EXPO_PUBLIC_APP_NAME": "My App"
       }
     },
     "production": {
@@ -31,6 +26,12 @@
     },
     "development-simulator": {
       "extends": "development",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "preview-simulator": {
+      "extends": "preview",
       "ios": {
         "simulator": true
       }
