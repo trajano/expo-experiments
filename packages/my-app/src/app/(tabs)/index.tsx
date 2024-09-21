@@ -46,6 +46,15 @@ const HomeScreen: FC = () => {
             router.back();
           }}
         />
+
+        <Button
+          title="go storybook"
+          onPress={() => {
+            incrementPressCount();
+            router.push('/storybook');
+          }}
+        />
+
         <ThemedText type="subtitle">
           {JSON.stringify(expoPushToken, null, 2)}
         </ThemedText>

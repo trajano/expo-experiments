@@ -4,7 +4,7 @@ Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to 
 
 ## Packages
 
-- **`my-app`**: The core Expo application.
+- **`my-app`**: The core Expo application. With Storybook embedded.
 - **`react-native-my-text`**: An improved `<Text>` component, designed to provide a better user interface experience.
 - **`react-native-my-hooks`**: React hook experiments, originally sourced from [github.com/trajano/react-hooks](https://github.com/trajano/react-hooks).
 - **`react-native-try-catch`**: An error boundary implementation for React Native utilizing the undocumented `ErrorUtils`.
@@ -38,6 +38,7 @@ All tooling is managed through npm scripts:
 - [Turbo](https://turbo.build/): Used primarily for implementing the `dev` task in the root package, eliminating the need to open multiple terminal windows to start tasks individually.
 - [Docker](https://www.docker.com/) is used to run the expo prebuild and the Android build within Docker. Only Android will be built as xcodebuild does not work inside a Docker container.
 - [commitlint](https://commitlint.js.org/) for being masochistic.
+- [Storybook](): for prototyping components, since my-app isn't really a full app it's just merged in. It may change in the future to be a separate app named `my-storybook` to separate the app from the storybook
 
 ## Dropped Tooling
 
