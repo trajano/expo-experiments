@@ -65,6 +65,7 @@
     "react-hook-form": "^7.53.0",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-my-components": "*",
     "react-native-my-empty": "*",
     "react-native-my-hooks": "*",
     "react-native-my-text": "*",
