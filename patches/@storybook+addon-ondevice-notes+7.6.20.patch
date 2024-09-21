@@ -1,0 +1,41 @@
+diff --git a/node_modules/@storybook/addon-ondevice-notes/dist/components/Notes.js b/node_modules/@storybook/addon-ondevice-notes/dist/components/Notes.js
+index ab91658..027b825 100644
+--- a/node_modules/@storybook/addon-ondevice-notes/dist/components/Notes.js
++++ b/node_modules/@storybook/addon-ondevice-notes/dist/components/Notes.js
+@@ -12,6 +12,26 @@ const react_native_markdown_display_1 = __importDefault(require("react-native-ma
+ const ErrorBoundary_1 = require("../ErrorBoundary");
+ const manager_api_1 = require("@storybook/manager-api");
+ exports.PARAM_KEY = 'notes';
++const darkModeStyles = {
++  body: {
++    color: 'white',
++  },
++  hr: {
++    backgroundColor: 'white',
++  },
++  blockquote: {
++    borderColor: 'white',
++  },
++  table: {
++    borderColor: 'white',
++  },
++  tr: {
++    borderColor: 'white',
++  },
++  blocklink: {
++    borderColor: 'white',
++  },
++};
+ const Notes = ({ active, api }) => {
+     const [story, setStory] = (0, react_1.useState)();
+     (0, react_1.useEffect)(() => {
+@@ -32,7 +52,8 @@ const Notes = ({ active, api }) => {
+     if (!text)
+         return null;
+     const textAfterFormatted = text ? text.trim() : '';
+-    return ((0, jsx_runtime_1.jsx)(react_native_1.View, { style: styles.container, children: textAfterFormatted && ((0, jsx_runtime_1.jsx)(ErrorBoundary_1.ErrorBoundary, { children: (0, jsx_runtime_1.jsx)(react_native_markdown_display_1.default, { children: textAfterFormatted }) })) }));
++    const markdownStyle = react_native_1.Appearance.getColorScheme() === "dark" ? darkModeStyles : {};
++    return ((0, jsx_runtime_1.jsx)(react_native_1.View, { style: styles.container, children: textAfterFormatted && ((0, jsx_runtime_1.jsx)(ErrorBoundary_1.ErrorBoundary, { children: (0, jsx_runtime_1.jsx)(react_native_markdown_display_1.default, { style: markdownStyle, children: textAfterFormatted }) })) }));
+ };
+ exports.Notes = Notes;
+ const styles = react_native_1.StyleSheet.create({

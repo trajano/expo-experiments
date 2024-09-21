@@ -30,6 +30,7 @@
     "@storybook/addon-ondevice-actions": "^7.6.20",
     "@storybook/addon-ondevice-backgrounds": "^7.6.20",
     "@storybook/addon-ondevice-controls": "^7.6.20",
+    "@storybook/addon-ondevice-notes": "^7.6.20",
     "@storybook/react-native": "^7.6.20",
     "expo": "^51.0.32",
     "expo-background-fetch": "~12.0.1",

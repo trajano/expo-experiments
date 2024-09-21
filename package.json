@@ -7,7 +7,8 @@
     "test": "jest",
     "typecheck": "npm run typecheck --workspaces",
     "prepare": "husky || turbo telemetry disable || true",
-    "build": "turbo build"
+    "build": "turbo build",
+    "postinstall": "patch-package"
   },
   "private": true,
   "workspaces": [
@@ -28,6 +29,7 @@
     "jest": "^29.7.0",
     "lerna": "^8.1.8",
     "lint-staged": "^15.2.10",
+    "patch-package": "^8.0.0",
     "prettier": "^3.3.3",
     "prettier-plugin-sh": "^0.14.0",
     "ts-node": "^10.9.2",
