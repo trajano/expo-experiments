@@ -1,13 +1,13 @@
-import { useState, useRef, FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useRef, useState } from 'react';
 import {
-  Pressable,
-  View,
-  ViewStyle,
-  StyleProp,
-  StyleSheet,
   Animated,
   Easing,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
   ViewProps,
+  ViewStyle,
 } from 'react-native';
 
 type State = 'default' | 'pressed' | 'focused';
