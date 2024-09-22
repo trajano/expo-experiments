@@ -1,2 +1,3 @@
 /** Empty starter module */
-export {};
+export { useThemeColor } from './hooks/useThemeColor';
+export { Colors } from './constants/Colors';

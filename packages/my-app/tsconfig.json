@@ -7,5 +7,12 @@
     },
     "moduleResolution": "Bundler"
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "../my-components/src/hooks/useThemeColor.ts",
+    "../my-components/src/constants/Colors.ts"
+  ]
 }
