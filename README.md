@@ -40,6 +40,14 @@ All tooling is managed through npm scripts:
 - [commitlint](https://commitlint.js.org/) for being masochistic.
 - [Storybook](): for prototyping components, since my-app isn't really a full app it's just merged in. It may change in the future to be a separate app named `my-storybook` to separate the app from the storybook
 
+### Updating deps
+
+Though [npm-check-updates](https://github.com/raineorshine/npm-check-updates) is not directly referenced (yet). The following command is used to update dependencies
+
+```sh
+npx -y npm-check-updates --deep @testing-library/react-native -u
+```
+
 ## Dropped Tooling
 
 The following tools were evaluated but eventually dropped:
