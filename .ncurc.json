@@ -1,0 +1,5 @@
+{
+  "target": "semver",
+  "reject": ["@types/react", "react", "react-native"],
+  "deep": true
+}

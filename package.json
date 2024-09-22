@@ -35,5 +35,5 @@
     "ts-node": "^10.9.2",
     "turbo": "^2.1.2"
   },
-  "packageManager": "npm@10.8.2"
+  "packageManager": "npm@10.8.3"
 }
