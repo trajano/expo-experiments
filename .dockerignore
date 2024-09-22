@@ -1,5 +1,6 @@
 %ProgramData%/
 *.apk
+*.md
 *.heapsnapshot
 *.sh
 .DS_Store
