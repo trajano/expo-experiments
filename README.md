@@ -1,72 +1,71 @@
 # Expo Experiments
 
-Welcome to the **Expo Experiments** repository. This is a monorepo dedicated to experimenting with Expo and enhancing the development experience.
+Welcome to the **Expo Experiments** monorepo, a dedicated space for experimenting with Expo and enhancing the mobile development experience. This repository hosts multiple packages focused on improving React Native workflows, component libraries, and development tools.
 
 ## Packages
 
-- **`my-app`**: The core Expo application. With Storybook embedded.
-- **`react-native-my-text`**: An improved `<Text>` component, designed to provide a better user interface experience.
-- **`react-native-my-hooks`**: React hook experiments, originally sourced from [github.com/trajano/react-hooks](https://github.com/trajano/react-hooks).
-- **`react-native-try-catch`**: An error boundary implementation for React Native utilizing the undocumented `ErrorUtils`.
-- **`react-native-my-empty`**: An empty starter project.
-- **`eslint-config-my`**: The ESLint config the for monorepo.
-- **`react-native-unstyled-components`**: This is a component library that provides unstyled, but functional components. Sort of the same concept as React Native Elements Base project.
+- **`my-app`**: The core Expo application, featuring integrated Storybook for component testing and prototyping.
+- **`react-native-my-text`**: An extended `<Text>` component that enhances user interface consistency and accessibility.
+- **`react-native-my-hooks`**: A collection of custom React hooks, inspired by [trajano's react-hooks](https://github.com/trajano/react-hooks), aimed at streamlining React Native development.
+- **`react-native-try-catch`**: An implementation of an error boundary for React Native, leveraging the undocumented `ErrorUtils` API for enhanced error handling.
+- **`react-native-my-empty`**: A starter template for React Native projects, providing a clean slate for rapid development.
+- **`eslint-config-my`**: ESLint configuration tailored specifically for this monorepo to ensure code consistency and quality.
+- **`react-native-unstyled-components`**: A library of unstyled, yet fully functional components, providing a flexible base for custom design systems.
 
 ## Scripts
 
-- `npm run dev`: Runs `npm run dev` on all packages to set up an environment with live updates. For `my-app`, it starts the Expo Development Server only; for other packages, it starts `tsup --watch`.
-- `npm start`: Starts the Expo Development Server only.
-- `npm test`: Runs `npm test` on all packages.
-- `npm run lint`: Runs `npm run lint` on all packages.
-- `npm run typecheck`: Runs `npm run typecheck` on all packages.
-- `npm run build`: Runs `typecheck`, `lint`, `test`, `prepare` on all packages.
+- `npm run dev`: Launches `npm run dev` for all packages, enabling live updates. For `my-app`, it starts the Expo Development Server, and for other packages, it initiates `tsup --watch`.
+- `npm start`: Starts the Expo Development Server for `my-app`.
+- `npm test`: Executes tests across all packages.
+- `npm run lint`: Lints all packages to ensure consistent code quality.
+- `npm run typecheck`: Runs TypeScript type checks across all packages.
+- `npm run build`: Runs type checks, lints, tests, and prepares the build for all packages.
+- `docker build .`: Builds the Android package inside a Docker container, starting with `npm ci` and followed by `expo prebuild`.
 
-- `docker build .`: Does an `npm ci` followed by `expo prebuild` followed by Android build.
+## Development Concepts
 
-## Concept
-
-- Rely on the IDE (Visual Studio Code) for type checking and linting.
-- Focus on React Native for iOS and Android; no support for React Web.
-- Use npm scripts to execute command-line tools for development.
-- Tests are kept with code. But `__tests__` are also allowed for integration testing cross component boundaries.
+- **IDE-Driven**: Development relies on Visual Studio Code for type checking and linting.
+- **Mobile Focus**: The monorepo is focused on React Native development for iOS and Android, with no support for React Web.
+- **Automated Scripts**: npm scripts are used to streamline command-line tools for development tasks.
+- **Test Integration**: Unit and integration tests are embedded within the code for closer proximity to the codebase, but `__tests__` folders are also utilized for larger integration tests across components.
 
 ## Tooling
 
-All tooling is managed through npm scripts:
+The following tools are utilized in the development workflow:
 
-- [tsup](https://tsup.egoist.dev/): Used for building TypeScript libraries.
-- [Turbo](https://turbo.build/): Used primarily for implementing the `dev` task in the root package, eliminating the need to open multiple terminal windows to start tasks individually.
-- [Docker](https://www.docker.com/) is used to run the expo prebuild and the Android build within Docker. Only Android will be built as xcodebuild does not work inside a Docker container.
-- [commitlint](https://commitlint.js.org/) for being masochistic.
-- [Storybook](): for prototyping components, since my-app isn't really a full app it's just merged in. It may change in the future to be a separate app named `my-storybook` to separate the app from the storybook
+- **[tsup](https://tsup.egoist.dev/)**: A simple bundler for building TypeScript libraries efficiently.
+- **[Turbo](https://turbo.build/)**: Speeds up monorepo development tasks like running `dev` commands across multiple packages simultaneously.
+- **[Docker](https://www.docker.com/)**: Manages the build environment, including Expo prebuild and Android builds within containers.
+- **[commitlint](https://commitlint.js.org/)**: Enforces conventional commit messages for version control. Allowed types include: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, and `test`.
+- **[React Native Storybook](https://storybook.js.org/tutorials/intro-to-storybook/react-native/en/get-started/)**: Embedded in `my-app` for component prototyping. In the future, `my-storybook` might be separated as a standalone app for better structure.
 
-### Updating deps
+## Dependency Updates
 
-Though [npm-check-updates](https://github.com/raineorshine/npm-check-updates) is not directly referenced (yet). The following command is used to update dependencies
+To keep dependencies up-to-date, the following command is used (though not directly referenced):
 
 ```sh
 npx -y npm-check-updates --deep -u
 ```
 
-Then run the following inside any Expo app folder to make sure the updates are not going to break anything in Expo.
+After updating, run the following in any Expo app folder to ensure compatibility:
 
 ```sh
 npx expo install --fix
 ```
 
-## Dropped Tooling
+## Deprecated Tools
 
-The following tools were evaluated but eventually dropped:
+The following tools were evaluated but eventually replaced:
 
-- [Lerna](https://lerna.js.org/): Initially used for implementing the `dev` task in the root package to avoid opening multiple terminal windows. However, it didn't handle Ctrl-C interruptions well.
-- [Bun](https://bun.sh/): Originally used but discontinued due to file locking issues on Windows.
-- [Lefthook](https://github.com/evilmartians/lefthook): Initially used due to [create-react-native-library](https://github.com/callstack/react-native-builder-bob), but replaced with [husky](https://typicode.github.io/husky) and [lint-staged](https://github.com/okonet/lint-staged) for simplicity.
-- [create-react-native-library](https://github.com/callstack/react-native-builder-bob): Initially used but removed due to its complexity and personal preferences against its design choices.
+- **[Lerna](https://lerna.js.org/)**: Initially used to manage the `dev` task in the root package but discarded due to issues with handling process interruptions.
+- **[Bun](https://bun.sh/)**: Discontinued due to file-locking issues on Windows.
+- **[Lefthook](https://github.com/evilmartians/lefthook)**: Originally used but replaced with [Husky](https://typicode.github.io/husky) and [lint-staged](https://github.com/okonet/lint-staged) for simplicity.
+- **[create-react-native-library](https://github.com/callstack/react-native-builder-bob)**: Dropped due to its complexity and a preference for more streamlined approaches.
 
-## Shell scripts
+## Shell Scripts
 
-The shell scripts are primarily for my local development environment:
+Custom shell scripts are utilized for local development:
 
-- build.sh runs the docker build and installs on my ADB connected devices
-- eas.sh deploys to EAS using my EAS token and credentials
-- update-deps.sh performs an update of the dependencies
+- `build.sh`: Builds the project using Docker and installs the resulting APK on connected ADB devices.
+- `eas.sh`: Deploys to Expo Application Services (EAS) using a pre-configured token and credentials.
+- `update-deps.sh`: Automates dependency updates across the monorepo.
