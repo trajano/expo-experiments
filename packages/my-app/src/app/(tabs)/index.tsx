@@ -2,12 +2,12 @@ import { Button, Image, Platform, StyleSheet } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useRouter } from 'expo-router';
 import { FC, useReducer } from 'react';
+import { ThemedText } from 'react-native-my-components';
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText } from 'react-native-my-text';
-import { useRouter } from 'expo-router';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
