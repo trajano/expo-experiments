@@ -45,7 +45,13 @@ All tooling is managed through npm scripts:
 Though [npm-check-updates](https://github.com/raineorshine/npm-check-updates) is not directly referenced (yet). The following command is used to update dependencies
 
 ```sh
-npx -y npm-check-updates --deep @testing-library/react-native -u
+npx -y npm-check-updates --deep -u
+```
+
+Then run the following inside any Expo app folder to make sure the updates are not going to break anything in Expo.
+
+```sh
+npx expo install --fix
 ```
 
 ## Dropped Tooling
@@ -56,3 +62,11 @@ The following tools were evaluated but eventually dropped:
 - [Bun](https://bun.sh/): Originally used but discontinued due to file locking issues on Windows.
 - [Lefthook](https://github.com/evilmartians/lefthook): Initially used due to [create-react-native-library](https://github.com/callstack/react-native-builder-bob), but replaced with [husky](https://typicode.github.io/husky) and [lint-staged](https://github.com/okonet/lint-staged) for simplicity.
 - [create-react-native-library](https://github.com/callstack/react-native-builder-bob): Initially used but removed due to its complexity and personal preferences against its design choices.
+
+## Shell scripts
+
+The shell scripts are primarily for my local development environment:
+
+- build.sh runs the docker build and installs on my ADB connected devices
+- eas.sh deploys to EAS using my EAS token and credentials
+- update-deps.sh performs an update of the dependencies
