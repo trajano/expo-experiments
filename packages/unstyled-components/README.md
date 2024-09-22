@@ -26,6 +26,8 @@ The label to a field is relatively close by.
 
 This differs from most other component libraries in that the focus was not to provide a ready to use component but to provide the foundation to build the UIs to however you client wants it to look.
 
+I am thinking there would be some sort of Strategy pattern for some of the complex inputs such as Dates and Pickers that have native equivalents.
+
 ## Visual Components
 
 These render the components with a typical order and layout.
