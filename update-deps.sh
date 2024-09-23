@@ -8,4 +8,4 @@ popd
 
 # Commit only package.json and package-lock.json
 git add package.json **/package.json package-lock.json
-git commit -m "chore: updated deps"
+git commit -m "chore(deps): updated deps"
