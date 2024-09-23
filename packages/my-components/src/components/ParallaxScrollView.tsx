@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, ViewStyle } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -43,7 +43,7 @@ export const ParallaxScrollView: FC<Props> = ({
           ),
         },
       ],
-    };
+    } as ViewStyle;
   });
 
   return (
