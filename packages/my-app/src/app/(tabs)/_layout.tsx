@@ -1,7 +1,8 @@
 import { Tabs } from 'expo-router';
 import { FC } from 'react';
 
-import { TabBarIcon, Colors } from 'react-native-my-components';
+import { Colors } from 'react-native-my-components';
+import { TabBarIcon } from '@/components/TabBarIcon';
 import { useColorScheme } from 'react-native';
 
 const TabLayout: FC = () => {

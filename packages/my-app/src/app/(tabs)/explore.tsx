@@ -2,10 +2,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import { FC } from 'react';
 import { Platform, StyleSheet } from 'react-native';
+import { Collapsible } from '@/components/Collapsible';
+import { ExternalLink } from '@/components/ExternalLink';
 import {
-  Collapsible,
   DebouncedTextInput,
-  ExternalLink,
   ParallaxScrollView,
   ThemedText,
   ThemedView,

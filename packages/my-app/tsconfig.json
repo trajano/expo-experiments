@@ -11,13 +11,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "../my-components/src/components/TabBarIcon.tsx",
-    "../my-components/src/components/Collapsible.tsx",
-    "../my-components/src/components/DebouncedTextInput.test.tsx",
-    "../my-components/src/components/DebouncedTextInput.tsx",
-    "../my-components/src/components/ExternalLink.tsx",
-    "../my-components/src/components/ParallaxScrollView.tsx",
-    "../my-components/src/components/ThemedView.tsx"
+    "expo-env.d.ts"
   ]
 }
