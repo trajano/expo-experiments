@@ -1,11 +1,13 @@
 import { Button, Image, Platform, StyleSheet } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedView } from '@/components/ThemedView';
 import { useRouter } from 'expo-router';
 import { FC, useReducer } from 'react';
-import { ThemedText } from 'react-native-my-components';
+import {
+  HelloWave,
+  ParallaxScrollView,
+  ThemedText,
+  ThemedView,
+} from 'react-native-my-components';
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText } from 'react-native-my-text';
 

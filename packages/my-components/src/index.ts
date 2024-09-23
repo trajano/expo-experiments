@@ -1,4 +1,10 @@
-/** Empty starter module */
-export { useThemeColor } from './hooks/useThemeColor';
-export { Colors } from './constants/Colors';
+export { Collapsible } from './components/Collapsible';
+export { DebouncedTextInput } from './components/DebouncedTextInput';
+export { ExternalLink } from './components/ExternalLink';
+export { HelloWave } from './components/HelloWave';
+export { ParallaxScrollView } from './components/ParallaxScrollView';
+export { TabBarIcon } from './components/TabBarIcon';
 export { ThemedText } from './components/ThemedText';
+export { ThemedView } from './components/ThemedView';
+export { Colors } from './constants/Colors';
+export { useThemeColor } from './hooks/useThemeColor';

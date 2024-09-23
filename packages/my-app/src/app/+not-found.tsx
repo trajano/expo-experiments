@@ -1,8 +1,7 @@
 import { Link, Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
-import { ThemedText } from 'react-native-my-components';
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedText, ThemedView } from 'react-native-my-components';
 import { FC } from 'react';
 
 const NotFoundScreen: FC = () => {

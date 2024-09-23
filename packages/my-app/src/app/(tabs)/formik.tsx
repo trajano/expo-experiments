@@ -1,12 +1,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Button, StyleSheet } from 'react-native';
 
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedView } from '@/components/ThemedView';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { MyText, MyTextInput } from 'react-native-my-text';
+import { ParallaxScrollView, ThemedView } from 'react-native-my-components';
 import * as Yup from 'yup';
 type FormValues = {
   email: string;

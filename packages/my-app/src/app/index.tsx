@@ -12,7 +12,7 @@ const LoaderScreen: FC = () => {
   const progress = useRef(new Animated.Value(0)).current; // Animated value to control progress
   const [loadedItems, incrementLoadedItems] = useReducer((i) => i + 1, 0);
   const totalItemsToLoad = 10;
-  const [backgroundColor, setBgColor] = useState('#eee');
+  const [backgroundColor, setBackgroundColor] = useState('#eee');
 
   // Simulate loading items with random intervals
   useEffect(() => {
@@ -33,7 +33,7 @@ const LoaderScreen: FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      setBgColor('#eee');
+      setBackgroundColor('#eee');
       // Interpolate the progress based on the number of loaded items
       Animated.timing(progress, {
         toValue: (loadedItems / totalItemsToLoad) * (86 / 151), // Interpolate from 0 to 86
@@ -44,7 +44,7 @@ const LoaderScreen: FC = () => {
 
       // Once all items are loaded, play the remaining frames
       if (loadedItems === totalItemsToLoad) {
-        setBgColor('#ee0');
+        setBackgroundColor('#ee0');
         setTimeout(() => {
           // Final animation from frame 86 to 151 over 1 second
           Animated.timing(progress, {

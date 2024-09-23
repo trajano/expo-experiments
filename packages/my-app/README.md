@@ -1,21 +1,31 @@
-# Welcome to your Expo app 👋
+# My app
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The purpose of this app is to push some ideas especially foundational level functionalities of Expo along with Storybook.
 
-## EAS targets
+Some high level ideas:
 
-### `eas build --non-interactive --platform=all --profile=development`
+1. expo-update updates
+2. splash-screen with some sort of loader that ties into expo-update
+3. popup if there's a new update while the app is running
+4. push notification registration
+5. send notification registration
+6. i18n and switching
+7. dark/light mode switch
+8. local authentication
+9. Google Authentication (maybe?)
+10. Apple Authentication (maybe?)
 
-Creates dev client for all platforms.
+Crazier ideas later:
 
-### `eas build --non-interactive --platform=ios --profile=development-simulator`
+1. custom Expo Update server? Maybe I'll add it in as another package.
 
-Creates dev client for the iOS simulator
+What would be in this app:
 
-### `eas build --non-interactive --platform=all --profile=preview`
+1. expo-router screens
+2. assets
+3. Stories on the screen level??? does that even make sense?
 
-Preview app that can be installed on registered devices
+What won't be in this app:
 
-### `eas build --non-interactive --platform=all`
-
-Production build
+1. Components, moved to react-native-my-components
+2. Component level stories. They're in react-native-my-components.

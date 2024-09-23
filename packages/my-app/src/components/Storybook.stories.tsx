@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { HelloWave } from './HelloWave';
-import { StyleSheet, Text, View } from 'react-native';
 import { FC } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 const TestComponent: FC = () => {
   return (
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const meta: Meta<typeof HelloWave> = {
+const meta: Meta<typeof TestComponent> = {
   title: 'Storybook View',
   component: TestComponent,
   parameters: {
@@ -41,7 +40,7 @@ const meta: Meta<typeof HelloWave> = {
 
 export default meta;
 
-type Story = StoryObj<typeof HelloWave>;
+type Story = StoryObj<typeof TestComponent>;
 
 export const Default: Story = {
   args: {},

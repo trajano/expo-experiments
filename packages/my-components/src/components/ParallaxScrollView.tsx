@@ -7,7 +7,7 @@ import Animated, {
   useScrollViewOffset,
 } from 'react-native-reanimated';
 
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedView } from './ThemedView';
 
 const HEADER_HEIGHT = 250;
 
@@ -16,7 +16,7 @@ type Props = PropsWithChildren<{
   headerBackgroundColor: { dark: string; light: string };
 }>;
 
-const ParallaxScrollView: FC<Props> = ({
+export const ParallaxScrollView: FC<Props> = ({
   children,
   headerImage,
   headerBackgroundColor,
@@ -79,5 +79,3 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 });
-
-export default ParallaxScrollView;
