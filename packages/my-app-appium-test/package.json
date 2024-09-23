@@ -1,43 +1,28 @@
 {
-  "name": "react-native-my-empty",
-  "description": "Empty starter module",
+  "name": "my-app-appium-test",
+  "description": "Appium Tests for my-app",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "react-native": "./src/index.ts",
   "scripts": {
     "dev": "tsup --watch",
-    "test": "jest",
+    "test": "cross-env NODE_OPTIONS='--experimental-vm-modules' jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "prepare": "tsup"
   },
   "devDependencies": {
-    "@testing-library/react-native": "^12.7.2",
     "@types/jest": "^29.5.13",
-    "@types/react": "^18.2.44",
     "babel-jest": "^29.7.0",
+    "cross-env": "^7.0.3",
     "eslint-config-my": "*",
-    "expo": "^51.0.33",
     "jest": "^29.7.0",
-    "jest-expo": "^51.0.4",
-    "react": "18.2.0",
-    "react-native": "0.74.5",
-    "react-test-renderer": "18.2.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.2"
-  },
-  "resolutions": {
-    "@types/react": "^18.2.44"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
-  },
-  "jest": {
-    "preset": "jest-expo",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/dist/"
-    ]
   },
   "eslintConfig": {
     "extends": [
@@ -47,5 +32,8 @@
   "eslintIgnore": [
     "node_modules/",
     "dist/"
-  ]
+  ],
+  "dependencies": {
+    "webdriverio": "^9.0.9"
+  }
 }
