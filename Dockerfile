@@ -82,7 +82,7 @@ RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,g
   ./gradlew assembleRelease
 
 # EAS iOS build
-FROM prebuild-env AS eas
+FROM prebuild-env AS eas-build
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
@@ -91,6 +91,18 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
   eas build --non-interactive --platform=ios --profile=development \
   && eas build --non-interactive --platform=ios --profile=preview
+
+# EAS iOS build
+FROM prebuild-env AS eas-update
+ENV EAS_NO_VCS=1
+ENV EAS_PROJECT_ROOT=/home/ubuntu/work
+ARG EAS_UPDATE_CHANNEL=preview
+ARG EAS_UPDATE_MESSAGE=Docker build
+RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
+  --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
+  --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
+  --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
+  eas update --channel=${EAS_UPDATE_CHANNEL} --non-interactive --message="${EAS_UPDATE_MESSAGE}"
 
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable

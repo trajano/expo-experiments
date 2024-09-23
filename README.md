@@ -67,5 +67,6 @@ The following tools were evaluated but eventually replaced:
 Custom shell scripts are utilized for local development:
 
 - `build.sh`: Builds the project using Docker and installs the resulting APK on connected ADB devices.
-- `eas.sh`: Deploys to Expo Application Services (EAS) using a pre-configured token and credentials.
+- `eas-build.sh`: Builds iOS packages using Expo Application Services (EAS) using a pre-configured token and credentials.
+- `eas-update.sh`: Sends the update package to Expo Application Services (EAS) using a pre-configured token and credentials.
 - `update-deps.sh`: Automates dependency updates across the monorepo.
