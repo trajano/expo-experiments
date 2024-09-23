@@ -77,7 +77,8 @@
     "react-native-try-catch": "*",
     "react-native-web": "~0.19.12",
     "yup": "^1.4.0",
-    "expo-updates": "~0.25.25"
+    "expo-updates": "~0.25.25",
+    "expo-auth-session": "~5.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

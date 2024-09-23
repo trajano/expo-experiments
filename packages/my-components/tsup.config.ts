@@ -1,9 +1,10 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src', '!src/__tests__/**', '!src/**/*.test.*'],
+  entry: ['src/index.ts'],
   sourcemap: 'inline',
   loader: {
     '.snap': 'js',
+    '.js': 'jsx',
   },
 });
