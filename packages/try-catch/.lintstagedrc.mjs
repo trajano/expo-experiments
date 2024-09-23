@@ -1,1 +1,1 @@
-export { libConfig } from '../../.lintstagedrc.mjs';
+export { libConfig as default } from '../../.lintstagedrc.mjs';
