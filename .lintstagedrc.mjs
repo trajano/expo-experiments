@@ -3,6 +3,9 @@ const baseConfig = {
   Dockerfile: 'prettier --write',
   // chances are JS files are used for configuration only, only TypeScript files would be considered part of the application
   '*.{js,mjs}': 'eslint --fix',
+  'credentials.json': [
+    "echo 'Error: credentials.json is staged for commit. Please remove it before committing.' && exit 1",
+  ],
   'google-services.json': [
     "echo 'Error: google-services.json is staged for commit. Please remove it before committing.' && exit 1",
   ],
