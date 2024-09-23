@@ -76,7 +76,8 @@
     "react-native-svg": "15.2.0",
     "react-native-try-catch": "*",
     "react-native-web": "~0.19.12",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "expo-updates": "~0.25.25"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

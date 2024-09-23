@@ -15,14 +15,16 @@
       "env": {
         "EXPO_PUBLIC_APP_ID": "net.trajano.myapp",
         "EXPO_PUBLIC_APP_NAME": "My App"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "extends": "preview",
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
-      }
+      },
+      "channel": "production"
     },
     "development-simulator": {
       "extends": "development",
@@ -34,7 +36,8 @@
       "extends": "preview",
       "ios": {
         "simulator": true
-      }
+      },
+      "channel": "preview"
     }
   }
 }
