@@ -1,6 +1,7 @@
 #!/bin/sh
 set -ex
 npx -y npm-check-updates -u
+npm i
 pushd packages/my-app
 npx -y expo-doctor
 npx expo install --check

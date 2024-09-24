@@ -104,6 +104,10 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
   eas update --channel=${EAS_UPDATE_CHANNEL} --non-interactive --message="${EAS_UPDATE_MESSAGE}"
 
+# Appium build
+FROM appium/appium AS appium
+COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
+
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable
 COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-debug.apk
