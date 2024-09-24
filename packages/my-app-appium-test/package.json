@@ -34,6 +34,6 @@
     "dist/"
   ],
   "dependencies": {
-    "webdriverio": "^9.0.9"
+    "webdriverio": "^9.1.0"
   }
 }
