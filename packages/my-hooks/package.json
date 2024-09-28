@@ -27,9 +27,6 @@
     "tsup": "^8.3.0",
     "typescript": "^5.6.2"
   },
-  "resolutions": {
-    "@types/react": "^18.2.44"
-  },
   "peerDependencies": {
     "expo-constants": "*",
     "expo-device": "*",
