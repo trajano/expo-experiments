@@ -3,8 +3,8 @@ set -ex
 npx -y npm-check-updates -u
 npm i
 pushd packages/my-app
+npx expo install --fix
 npx -y expo-doctor
-npx expo install --check
 popd
 
 # Commit only package.json and package-lock.json
