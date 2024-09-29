@@ -51,6 +51,7 @@ const HomeScreen: FC = () => {
 
         <Button
           title="go storybook"
+          testID="go-storybook-button"
           onPress={() => {
             incrementPressCount();
             router.push('/storybook');
@@ -73,7 +74,9 @@ const HomeScreen: FC = () => {
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText testID="explore" type="subtitle">
+          Step 2: Explore
+        </ThemedText>
         <ThemedText>
           Tap the Explore tab to learn{' '}
           <MyText style={{ fontWeight: 'bold' }}>

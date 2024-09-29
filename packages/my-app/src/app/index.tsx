@@ -62,7 +62,7 @@ const LoaderScreen: FC = () => {
   );
 
   return (
-    <View style={styles.animationContainer}>
+    <View style={styles.animationContainer} testID="splash-view">
       <AnimatedLottieView
         ref={animation}
         style={{
@@ -70,6 +70,7 @@ const LoaderScreen: FC = () => {
           height: 200,
           backgroundColor,
         }}
+        testID="splash"
         progress={progress} // Casting to number to fix typing issue
         source={require('../assets/cat-loader-2.json')}
       />

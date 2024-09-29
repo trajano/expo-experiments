@@ -26,3 +26,5 @@ docker run -p 6080:6080 -e EMULATOR_DEVICE="Samsung Galaxy S10" -e WEB_VNC=false
 ```
 
 How do we connect? Even if the image does have appium built in.
+
+Another problem is dealing with updates, it takes a few minutes to build the APK again, it would be nice to push an update of the javascript parts only. That would require EAS unless there's a local update server.

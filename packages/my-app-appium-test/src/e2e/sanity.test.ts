@@ -12,12 +12,12 @@ describe('sanity check', () => {
     });
   }, 30000);
   it('should show battery', async () => {
-    const batteryItem = await driver.$('//*[@text="Battery"]');
+    const batteryItem = driver.$('//*[@text="Battery"]');
     await batteryItem.click();
   });
   afterEach(async () => {
     if (driver) {
-      await driver.pause(1000);
+      // await driver.pause(1000);
       await driver.deleteSession();
     }
   });
