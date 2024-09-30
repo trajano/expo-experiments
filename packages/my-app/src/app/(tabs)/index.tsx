@@ -1,4 +1,10 @@
-import { Button, Image, Platform, StyleSheet } from 'react-native';
+import {
+  Button,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { useRouter } from 'expo-router';
 import { FC, useReducer } from 'react';
@@ -57,6 +63,16 @@ const HomeScreen: FC = () => {
             router.push('/storybook');
           }}
         />
+
+        <TouchableOpacity
+          testID="go-storybook-touchable"
+          onPress={() => {
+            incrementPressCount();
+            router.push('/storybook');
+          }}
+        >
+          <ThemedText type="subtitle">Meh?</ThemedText>
+        </TouchableOpacity>
 
         <ThemedText type="subtitle">
           {JSON.stringify(expoPushToken, null, 2)}
