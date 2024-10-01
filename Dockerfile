@@ -79,8 +79,7 @@ RUN --mount=type=cache,id=assembleDebug,target=/home/ubuntu/.gradle,uid=1000,gid
 FROM gradle-build-env AS preview-apk
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
-  ./gradlew assembleDebug \
-  && ./gradlew assembleRelease
+  ./gradlew assembleRelease
 
 # EAS iOS build
 FROM prebuild-env AS eas-build
@@ -107,23 +106,9 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
 
 # Appium build
 FROM appium/appium AS appium
-ENV APPIUM_ADDITIONAL_PARAMS=--log-level=warn
-COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-debug.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
-
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS maestro
-RUN --mount=type=cache,target=/var/lib/apt/lists apt-get update \
-  && apt-get install -y --no-install-recommends ninja-build unzip
-COPY --from=volta --chown=ubuntu:ubuntu /home/ubuntu/.volta /home/ubuntu/.volta
-COPY --from=android-sdk /opt/android-sdk/ /opt/android-sdk/
-ADD https://get.maestro.mobile.dev /tmp/maestro.sh
-RUN bash /tmp/maestro.sh
-USER ubuntu
-ENV ANDROID_SDK_ROOT=/opt/android-sdk
-ENV VOLTA_HOME=/home/ubuntu/.volta
 
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable
 COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-dev-client.apk
-COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-debug.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
