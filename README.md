@@ -69,5 +69,5 @@ Custom shell scripts are utilized for local development:
 - `build.sh`: Builds the project using Docker and installs the resulting APK on connected ADB devices.
 - `eas-build.sh`: Builds iOS packages using Expo Application Services (EAS) using a pre-configured token and credentials.
 - `eas-update.sh`: Sends the update package to Expo Application Services (EAS) using a pre-configured token and credentials.
+- `e2e.sh`: Builds the using Docker and starts up Appium with connection to a local device. Then starts up the E2E tests.
 - `update-deps.sh`: Automates dependency updates across the monorepo.
-- `start-appium.sh`: Builds the using Docker and starts up Appium with connection to a local device.
