@@ -10,14 +10,18 @@ RUN unzip commandlinetools.zip
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS android-sdk
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 COPY --from=download-tools /w/cmdline-tools /opt/android-sdk/cmdline-tools/latest
-RUN yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
+RUN --mount=type=cache,target=/root/.android/cache \
+  yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
   "platform-tools" \
   "build-tools;34.0.0" \
   "platforms;android-34" \
   "ndk;25.1.8937393" \
   "ndk;26.1.10909125" \
   "ndk;26.3.11579264" \
-  "cmake;3.22.1"
+  "cmake;3.22.1" \
+  && yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+# "system-images;android-34;google_apis;x86_64" \
+# "emulator" \
 
 # Stage 3: Install Volta, Node.js and EAS-CLI (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS volta
@@ -106,6 +110,15 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
 
 # Appium build
 FROM appium/appium AS appium
+# COPY --from=android-sdk /opt/android-sdk/ /opt/android/
+# USER root
+# RUN echo 'KERNEL=="kvm", GROUP="kvm", MODE="0660"' > /lib/udev/rules.d/50-udev-default.rules
+# RUN groupadd -r kvm && gpasswd -a androidusr kvm
+# USER androidusr
+# echo | avdmanager -s create avd --name foo -k 'system-images;android-34;google_apis;x86_64' --force
+# RUN echo "no" | avdmanager -s create avd --name emulator -k 'system-images;android-34;google_apis;x86_64'
+#  /opt/android/emulator/emulator -avd foo -no-boot-anim -gpu off -accel on
+# /opt/android/emulator/emulator -avd foo -no-accel -gpu swiftshader_indirect -no-window -no-metrics
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
 
 # Final Stage: Multiplatform APK delivery (no specific platform)

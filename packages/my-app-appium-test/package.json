@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "test": "cross-env NODE_OPTIONS='--experimental-vm-modules' jest --testPathIgnorePatterns='/src/e2e/'",
-    "test:e2e": "cross-env NODE_OPTIONS='--experimental-vm-modules' jest --testPathPatterns='/src/e2e/'",
+    "test:e2e": "cross-env NODE_OPTIONS='--experimental-vm-modules' jest --runInBand",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "prepare": "tsup"

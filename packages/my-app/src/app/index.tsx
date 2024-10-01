@@ -13,6 +13,7 @@ const LoaderScreen: FC = () => {
   const [loadedItems, incrementLoadedItems] = useReducer((i) => i + 1, 0);
   const totalItemsToLoad = 10;
   const [backgroundColor, setBackgroundColor] = useState('#eee');
+  const [shown, setShown] = useState(true);
 
   // Simulate loading items with random intervals
   useEffect(() => {
@@ -33,6 +34,7 @@ const LoaderScreen: FC = () => {
 
   useFocusEffect(
     useCallback(() => {
+      setShown(true);
       setBackgroundColor('#eee');
       // Interpolate the progress based on the number of loaded items
       Animated.timing(progress, {
@@ -58,24 +60,31 @@ const LoaderScreen: FC = () => {
           });
         }, 500); // Small delay before playing the final animation
       }
+      return () => {
+        setShown(false);
+      };
     }, [loadedItems, progress, router]),
   );
 
-  return (
-    <View style={styles.animationContainer} testID="splash-view">
-      <AnimatedLottieView
-        ref={animation}
-        style={{
-          width: 200,
-          height: 200,
-          backgroundColor,
-        }}
-        testID="splash"
-        progress={progress} // Casting to number to fix typing issue
-        source={require('../assets/cat-loader-2.json')}
-      />
-    </View>
-  );
+  if (shown) {
+    return (
+      <View style={styles.animationContainer} testID="splash-view">
+        <AnimatedLottieView
+          ref={animation}
+          style={{
+            width: 200,
+            height: 200,
+            backgroundColor,
+          }}
+          testID="splash"
+          progress={progress} // Casting to number to fix typing issue
+          source={require('../assets/cat-loader-2.json')}
+        />
+      </View>
+    );
+  } else {
+    return null;
+  }
 };
 
 const styles = StyleSheet.create({

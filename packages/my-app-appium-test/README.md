@@ -28,3 +28,9 @@ docker run -p 6080:6080 -e EMULATOR_DEVICE="Samsung Galaxy S10" -e WEB_VNC=false
 How do we connect? Even if the image does have appium built in.
 
 Another problem is dealing with updates, it takes a few minutes to build the APK again, it would be nice to push an update of the javascript parts only. That would require EAS unless there's a local update server.
+
+Maestro and Detox were too painful to run on Windows with Git Bash so I dropped it in the end.
+
+Appium at least once configured (which was a pain and a half to get going) was at least the most sensible E2E one that would run on Windows + Docker. Only thing missing now is running the test on an Android emulator.
+
+The problem with running in an emulator inside Docker is without proper /dev/kvm access (which is difficult on Docker Desktop unless I cheat and `root`) is it is so painfully slow it's not worth the hassle. For now I'll stop with real device, theoretically stuff like BrowserStack or LamdaTest can run on their devices if need be.

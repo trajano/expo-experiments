@@ -4,9 +4,9 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const TestComponent: FC = () => {
   return (
-    <View style={styles.outerBox}>
-      <View style={styles.innerBox}>
-        <Text>Inner text</Text>
+    <View testID="outer-box" style={styles.outerBox}>
+      <View testID="inner-box" style={styles.innerBox}>
+        <Text testID="inner-text">Inner text</Text>
       </View>
     </View>
   );
