@@ -46,7 +46,7 @@
   "dependencies": {
     "react-native-my-hooks": "*",
     "react-native-my-text": "*",
-    "react-native-unistyles": "^2.9.2",
+    "react-native-unistyles": "^2.10.0",
     "react-native-unstyled-components": "*"
   }
 }
