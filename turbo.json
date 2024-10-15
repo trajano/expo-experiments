@@ -18,7 +18,8 @@
       "dependsOn": ["^prepare"]
     },
     "build": {
-      "dependsOn": ["test", "typecheck", "lint", "prepare"]
+      "dependsOn": ["test", "typecheck", "lint", "prepare"],
+      "outputs": ["dist/**"]
     }
   }
 }
