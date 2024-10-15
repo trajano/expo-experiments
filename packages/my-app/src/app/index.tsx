@@ -1,10 +1,15 @@
-import { FC, useEffect, useReducer, useRef, useState } from 'react';
-import { Animated, Easing } from 'react-native';
-import LottieView from 'lottie-react-native';
-import { StyleSheet, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
+import { useRouter } from 'expo-router';
+import LottieView from 'lottie-react-native';
+import {
+  FC,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const LoaderScreen: FC = () => {
   const animation = useRef<LottieView>(null);
