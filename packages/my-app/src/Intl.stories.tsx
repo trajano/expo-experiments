@@ -27,7 +27,7 @@ const IntlEvaluationTable: FC = () => {
         <View key={method} style={styles.row}>
           <MyText style={styles.text}>{`Intl.${method}`}</MyText>
           <MyText style={styles.text}>
-            {(Intl as any)[method] ? 'Exists' : 'Does not exist'}
+            {(Intl as any)[method] ? '✅' : '❎'}
           </MyText>
         </View>
       ))}
