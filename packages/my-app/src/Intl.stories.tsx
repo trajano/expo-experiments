@@ -17,6 +17,8 @@ const IntlEvaluationTable: FC = () => {
     'PluralRules',
     'RelativeTimeFormat',
     'Segmenter',
+    'getCanonicalLocales',
+    'supportedValuesOf',
   ];
 
   return (
