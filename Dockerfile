@@ -109,16 +109,7 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   eas update --channel=${EAS_UPDATE_CHANNEL} --non-interactive --message="${EAS_UPDATE_MESSAGE}"
 
 # Appium build
-FROM appium/appium AS appium
-# COPY --from=android-sdk /opt/android-sdk/ /opt/android/
-# USER root
-# RUN echo 'KERNEL=="kvm", GROUP="kvm", MODE="0660"' > /lib/udev/rules.d/50-udev-default.rules
-# RUN groupadd -r kvm && gpasswd -a androidusr kvm
-# USER androidusr
-# echo | avdmanager -s create avd --name foo -k 'system-images;android-34;google_apis;x86_64' --force
-# RUN echo "no" | avdmanager -s create avd --name emulator -k 'system-images;android-34;google_apis;x86_64'
-#  /opt/android/emulator/emulator -avd foo -no-boot-anim -gpu off -accel on
-# /opt/android/emulator/emulator -avd foo -no-accel -gpu swiftshader_indirect -no-window -no-metrics
+FROM appium/appium:v2.11.4-p1 AS appium
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
 
 # Final Stage: Multiplatform APK delivery (no specific platform)
