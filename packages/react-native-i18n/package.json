@@ -18,6 +18,7 @@
     "babel-jest": "^29.7.0",
     "eslint-config-my": "*",
     "expo": "^51.0.37",
+    "expo-localization": "^15.0.3",
     "jest": "^29.7.0",
     "jest-expo": "^51.0.4",
     "react": "18.2.0",
@@ -28,7 +29,9 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "expo-localization": "*",
+    "@config-plugins/android-jsc-intl": "*"
   },
   "jest": {
     "preset": "jest-expo",
@@ -44,5 +47,8 @@
   "eslintIgnore": [
     "node_modules/",
     "dist/"
-  ]
+  ],
+  "dependencies": {
+    "i18n-js": "^4.4.3"
+  }
 }
