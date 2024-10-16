@@ -12,7 +12,7 @@ const StorybookUIRoot = view.getStorybookUI({
       title: Constants.expoConfig?.name,
       url: 'https://trajano.net',
       imageSource: require('@/assets/images/favicon.png'),
-    },
+    } as any,
   },
 });
 
