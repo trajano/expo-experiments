@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { FC } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ColorValue, StyleSheet, Text, View } from 'react-native';
 
-const TestComponent: FC = () => {
+const TestComponent: FC<{ text: string; backgroundColor: ColorValue }> = ({
+  text,
+  backgroundColor,
+}) => {
   return (
     <View testID="outer-box" style={styles.outerBox}>
-      <View testID="inner-box" style={styles.innerBox}>
-        <Text testID="inner-text">Inner text</Text>
+      <View testID="inner-box" style={[styles.innerBox, { backgroundColor }]}>
+        <Text testID="inner-text">{text}</Text>
       </View>
     </View>
   );
@@ -24,7 +27,6 @@ const styles = StyleSheet.create({
   innerBox: {
     width: 200, // 200px width
     height: 200, // 200px height
-    backgroundColor: 'yellow', // Yellow background for the inner box
     justifyContent: 'center', // Center content vertically inside the box
     alignItems: 'center', // Center content horizontally inside the box
   },
@@ -43,5 +45,8 @@ export default meta;
 type Story = StoryObj<typeof TestComponent>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    text: 'Inner text',
+    backgroundColor: '#a819b9',
+  },
 };
