@@ -9,7 +9,8 @@ RUN unzip commandlinetools.zip
 # Stage 2: Setup Android SDK (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS android-sdk
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
-COPY --from=download-tools /w/cmdline-tools /opt/android-sdk/cmdline-tools/latest
+COPY --from=download-tools --chmod=644 /w/cmdline-tools /opt/android-sdk/cmdline-tools/latest
+COPY --from=download-tools --chmod=755 /w/cmdline-tools/bin/* /opt/android-sdk/cmdline-tools/latest/bin/
 RUN --mount=type=cache,target=/root/.android/cache \
   yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
   "platform-tools" \
@@ -34,7 +35,7 @@ RUN curl https://get.volta.sh | bash \
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS prebuild-env
-COPY --from=volta --chown=ubuntu:ubuntu /home/ubuntu/.volta /home/ubuntu/.volta
+COPY --from=volta --chown=ubuntu:ubuntu --chmod=700 /home/ubuntu/.volta /home/ubuntu/.volta
 USER ubuntu
 ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
