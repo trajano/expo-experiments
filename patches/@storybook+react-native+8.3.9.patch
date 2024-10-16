@@ -1,0 +1,19 @@
+diff --git a/node_modules/@storybook/react-native/dist/index.d.ts b/node_modules/@storybook/react-native/dist/index.d.ts
+index f8eaa96..09905cc 100644
+--- a/node_modules/@storybook/react-native/dist/index.d.ts
++++ b/node_modules/@storybook/react-native/dist/index.d.ts
+@@ -1,5 +1,5 @@
+ import * as _storybook_core_types from '@storybook/core/types';
+-import { StoryIndex, PreparedStory, NormalizedStoriesSpecifier, StorybookConfig as StorybookConfig$1 } from '@storybook/core/types';
++import { StoryIndex, PreparedStory, NormalizedStoriesSpecifier, StorybookConfig as StorybookConfig$1, CoreConfig } from '@storybook/core/types';
+ import { ReactRenderer } from '@storybook/react';
+ import * as react_jsx_runtime from 'react/jsx-runtime';
+ import { Channel } from '@storybook/core/channels';
+@@ -92,6 +92,7 @@ interface StorybookConfig {
+     stories: StorybookConfig$1['stories'];
+     addons: string[];
+     reactNative?: ReactNativeOptions;
++    core?: CoreConfig
+ }
+ 
+ export { StorybookConfig, getProjectAnnotations, prepareStories, start, updateView };

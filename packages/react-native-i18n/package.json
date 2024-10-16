@@ -17,7 +17,7 @@
     "@types/react": "^18.2.44",
     "babel-jest": "^29.7.0",
     "eslint-config-my": "*",
-    "expo": "^51.0.37",
+    "expo": "^51.0.38",
     "expo-localization": "^15.0.3",
     "jest": "^29.7.0",
     "jest-expo": "^51.0.4",
@@ -49,6 +49,6 @@
     "dist/"
   ],
   "dependencies": {
-    "i18n-js": "^4.4.3"
+    "i18n-js": "^4.5.0"
   }
 }
