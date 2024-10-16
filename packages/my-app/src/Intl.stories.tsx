@@ -69,8 +69,6 @@ const IntlEvaluationTable: FC = () => {
 
 const styles = StyleSheet.create({
   outerBox: {
-    flex: 1,
-    width: '100%', // Fills the width of the parent
     borderWidth: 1,
     borderColor: 'red',
   },
