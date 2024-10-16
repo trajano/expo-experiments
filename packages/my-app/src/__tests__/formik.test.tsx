@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react-native';
-import FormikScreen from './formik';
+import FormikScreen from '@/app/(tabs)/formik';
 
 jest.mock('react-native-my-components', () => {
   return {

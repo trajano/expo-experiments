@@ -8,9 +8,12 @@
     "moduleResolution": "Bundler"
   },
   "include": [
+    ".storybook/*.ts",
+    ".storybook/*.tsx",
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "metro.config.js"
   ]
 }

@@ -11,4 +11,7 @@ export default <StorybookConfig>{
     '@storybook/addon-ondevice-actions',
     '@storybook/addon-ondevice-backgrounds',
   ],
+  core: {
+    disableTelemetry: true,
+  },
 };

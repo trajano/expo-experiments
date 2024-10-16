@@ -1,11 +1,11 @@
-import React from 'react';
-import { ScrollView, Appearance, StyleSheet } from 'react-native';
 import { withBackgrounds } from '@storybook/addon-ondevice-backgrounds';
 import type { Preview } from '@storybook/react';
+import { ComponentType } from 'react';
+import { Appearance, ScrollView, StyleSheet } from 'react-native';
 
 const preview: Preview = {
   decorators: [
-    (Story) => (
+    (Story: ComponentType) => (
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Story />
       </ScrollView>
@@ -36,5 +36,4 @@ const styles = StyleSheet.create({
     flexGrow: 1, // Ensures content can grow and scroll when necessary
   },
 });
-
 export default preview;

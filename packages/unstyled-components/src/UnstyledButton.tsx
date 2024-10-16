@@ -1,13 +1,12 @@
-import { Children, FC, isValidElement, ReactElement } from 'react';
+import { Children, FC, isValidElement } from 'react';
 import {
+  Animated,
+  I18nManager,
   StyleProp,
   StyleSheet,
   View,
   ViewProps,
   ViewStyle,
-  I18nManager,
-  Animated,
-
 } from 'react-native';
 
 /**
@@ -51,7 +50,12 @@ export const UnstyledButton: FC<UnstyledButtonProps> & {
   );
 
   const mainContent = Children.toArray(children).filter(
-    (child) => !(isValidElement(child) && (child.type === UnstyledButton.StartIcon || child.type === UnstyledButton.EndIcon)),
+    (child) =>
+      !(
+        isValidElement(child) &&
+        (child.type === UnstyledButton.StartIcon ||
+          child.type === UnstyledButton.EndIcon)
+      ),
   );
 
   return (
@@ -61,11 +65,8 @@ export const UnstyledButton: FC<UnstyledButtonProps> & {
       {...rest}
     >
       {startIcon}
-      <View style={contentContainerStyle}>
-        {mainContent}
-      </View>
+      <View style={contentContainerStyle}>{mainContent}</View>
       {endIcon}
-
     </View>
   );
 };
@@ -107,4 +108,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export const AnimatedUnstyledButton = Animated.createAnimatedComponent(UnstyledButton);
+export const AnimatedUnstyledButton =
+  Animated.createAnimatedComponent(UnstyledButton);

@@ -1,4 +1,10 @@
-import { Button, Image, Platform, StyleSheet } from 'react-native';
+import {
+  Button,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { useRouter } from 'expo-router';
 import { FC, useReducer } from 'react';
@@ -51,11 +57,22 @@ const HomeScreen: FC = () => {
 
         <Button
           title="go storybook"
+          testID="go-storybook-button"
           onPress={() => {
             incrementPressCount();
             router.push('/storybook');
           }}
         />
+
+        <TouchableOpacity
+          testID="go-storybook-touchable"
+          onPress={() => {
+            incrementPressCount();
+            router.push('/storybook');
+          }}
+        >
+          <ThemedText type="subtitle">Meh?</ThemedText>
+        </TouchableOpacity>
 
         <ThemedText type="subtitle">
           {JSON.stringify(expoPushToken, null, 2)}
@@ -73,7 +90,9 @@ const HomeScreen: FC = () => {
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText testID="explore" type="subtitle">
+          Step 2: Explore
+        </ThemedText>
         <ThemedText>
           Tap the Explore tab to learn{' '}
           <MyText style={{ fontWeight: 'bold' }}>
