@@ -20,10 +20,10 @@
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-my-text": "*",
-    "react-native-reanimated": "^3.15.3",
+    "react-native-reanimated": "^3.15.5",
     "react-test-renderer": "18.2.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "resolutions": {
     "@types/react": "^18.2.44"
@@ -50,7 +50,7 @@
   "dependencies": {
     "react-native-my-hooks": "*",
     "react-native-my-text": "*",
-    "react-native-unistyles": "^2.9.2",
+    "react-native-unistyles": "^2.10.0",
     "react-native-unstyled-components": "*"
   }
 }
