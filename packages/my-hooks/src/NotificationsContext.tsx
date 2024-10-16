@@ -13,6 +13,7 @@ import {
   setNotificationHandler,
 } from 'expo-notifications';
 import {
+  ComponentType,
   createContext,
   FC,
   PropsWithChildren,
@@ -246,3 +247,26 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
  * @returns The notifications context value.
  */
 export const useNotifications = () => useContext(NotificationsContext);
+
+export const WithNotifications = <P extends object>(
+  Component: ComponentType<P>,
+): FC<P & NotificationsProviderProps> => {
+  const WrappedComponent = ({
+    ensurePermissionsOnMount,
+    notificationBehavior,
+    notificationPermissions,
+    androidNotificationChannels,
+    ...props
+  }: P & NotificationsProviderProps) => (
+    <NotificationsProvider
+      ensurePermissionsOnMount={ensurePermissionsOnMount}
+      notificationBehavior={notificationBehavior}
+      notificationPermissions={notificationPermissions}
+      androidNotificationChannels={androidNotificationChannels}
+    >
+      <Component {...(props as P)} />
+    </NotificationsProvider>
+  );
+  WrappedComponent.displayName = `WithNotifications(${Component.displayName || Component.name || 'Component'}`;
+  return WrappedComponent;
+};
