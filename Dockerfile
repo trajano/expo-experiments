@@ -123,5 +123,6 @@ COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outp
 
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable
+USER bin
 COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-dev-client.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
