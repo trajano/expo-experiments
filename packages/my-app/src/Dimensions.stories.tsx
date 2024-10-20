@@ -26,7 +26,7 @@ const DimensionsView: FC = () => {
     OrientationLock.UNKNOWN,
   );
   useEffect(() => {
-    addOrientationChangeListener(
+    const subscription = addOrientationChangeListener(
       ({
         orientationInfo: nextOrientationInfo,
         orientationLock: nextOrientationLock,
@@ -35,6 +35,7 @@ const DimensionsView: FC = () => {
         setOrientationLock(nextOrientationLock);
       },
     );
+    return subscription.remove();
   }, []);
   return (
     <View style={styles.container}>
