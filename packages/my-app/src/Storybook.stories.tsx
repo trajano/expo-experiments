@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { FC } from 'react';
 import { ColorValue, StyleSheet, Text, View } from 'react-native';
-import { PreviewViewMode } from '@sb';
+import { PreviewViewMode } from '@sb/preview';
 
 const TestComponent: FC<{ text: string; backgroundColor: ColorValue }> = ({
   text,
