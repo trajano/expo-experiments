@@ -15,10 +15,11 @@ config.resolver.nodeModulesPaths = [
   path.resolve(__dirname, 'node_modules'),
   path.resolve(monorepoRoot, 'node_modules'),
 ];
+const testRegex = /^.*\/[^/]+\.test\.[^/]+$/;
 if (Array.isArray(config.resolver.blockList)) {
-  config.resolver.blockList = [...config.resolver.blockList, /.*\.test\..*/];
+  config.resolver.blockList = [...config.resolver.blockList, testRegex];
 } else if (typeof config.resolver.blockList === 'object') {
-  config.resolver.blockList = [config.resolver.blockList, /.*\.test\..*/];
+  config.resolver.blockList = [config.resolver.blockList, testRegex];
 }
 
 module.exports = withStorybook(config, {
