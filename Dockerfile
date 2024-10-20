@@ -35,7 +35,7 @@ RUN curl https://get.volta.sh | bash \
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS prebuild-env
-COPY --from=volta --chown=ubuntu:ubuntu --chmod=700 /home/ubuntu/.volta /home/ubuntu/.volta
+COPY --from=volta --chown=ubuntu:ubuntu /home/ubuntu/.volta /home/ubuntu/.volta
 USER ubuntu
 ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
