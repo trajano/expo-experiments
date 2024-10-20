@@ -3,7 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@sb/*": ["./.storybook/*"]
     },
     "moduleResolution": "Bundler"
   },

@@ -2,14 +2,12 @@ import { render } from '@testing-library/react-native';
 import { createRef } from 'react';
 import { Text, TextInput } from 'react-native';
 import { mapToEmbeddedFontFamily } from './mapToEmbeddedFontFamily';
-import { MyTextE } from './MyText';
-import { MyTextInputE } from './MyTextInput';
-import { StrongE as Strong, EmE as Em } from './variants';
+import { MyText, Strong, Em, MyTextInput } from './embedded';
 
-describe('MyTextE', () => {
+describe('MyText via embedded', () => {
   it('should render with embedded font family styles on iOS', () => {
     const { getByText, toJSON } = render(
-      <MyTextE style={{ fontSize: 16 }}>Test Text</MyTextE>,
+      <MyText style={{ fontSize: 16 }}>Test Text</MyText>,
     );
 
     const renderedText = getByText('Test Text');
@@ -24,17 +22,17 @@ describe('MyTextE', () => {
 
   it('should handle variants', () => {
     const { getByText, toJSON } = render(
-      <MyTextE style={{ fontSize: 16 }}>
+      <MyText style={{ fontSize: 16 }}>
         <Strong>
           <Em>Test Text</Em>
         </Strong>
-      </MyTextE>,
+      </MyText>,
     );
 
     const renderedText = getByText('Test Text');
 
     // The `mapToEmbeddedFontFamily` is expected to map the font family correctly.
-    // font size is not transfered because it is not managed by MyTextE
+    // font size is not transfered because it is not managed by MyText
     expect(renderedText.props.style).toMatchObject({
       fontFamily: mapToEmbeddedFontFamily(undefined, undefined, undefined), // Assuming default values are passed
       fontWeight: 'bold',
@@ -46,7 +44,7 @@ describe('MyTextE', () => {
   it('should forward the ref to the underlying Text component', () => {
     const ref = createRef<Text>();
 
-    const { getByText } = render(<MyTextE ref={ref}>Test Text</MyTextE>);
+    const { getByText } = render(<MyText ref={ref}>Test Text</MyText>);
 
     const renderedText = getByText('Test Text');
 
@@ -58,7 +56,7 @@ describe('MyTextE', () => {
   it('should forward the ref to the underlying Text component', () => {
     const ref = createRef<TextInput>();
 
-    const { getByTestId } = render(<MyTextInputE testID="input" ref={ref} />);
+    const { getByTestId } = render(<MyTextInput testID="input" ref={ref} />);
 
     const inputField = getByTestId('input');
 

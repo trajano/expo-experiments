@@ -31,7 +31,7 @@ ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
 RUN curl https://get.volta.sh | bash \
   && volta install node@latest npm@latest \
-  && npm i -g eas-cli@latest
+  && npm i -g --ignore-scripts eas-cli@latest
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS prebuild-env
@@ -123,5 +123,6 @@ COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outp
 
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable
+USER bin
 COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-dev-client.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk

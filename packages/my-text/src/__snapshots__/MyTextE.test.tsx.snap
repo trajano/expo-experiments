@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MyTextE should handle variants 1`] = `
+<Text
+  style={
+    {
+      "fontFamily": undefined,
+      "fontSize": 16,
+      "fontStyle": undefined,
+      "fontWeight": undefined,
+      "lineHeight": undefined,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "fontFamily": undefined,
+        "fontStyle": undefined,
+        "fontWeight": "bold",
+        "lineHeight": undefined,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontFamily": undefined,
+          "fontStyle": "italic",
+          "fontWeight": "bold",
+          "lineHeight": undefined,
+        }
+      }
+    >
+      Test Text
+    </Text>
+  </Text>
+</Text>
+`;
+
+exports[`MyTextE should render with embedded font family styles on iOS 1`] = `
+<Text
+  style={
+    {
+      "fontFamily": undefined,
+      "fontSize": 16,
+      "fontStyle": undefined,
+      "fontWeight": undefined,
+      "lineHeight": undefined,
+    }
+  }
+>
+  Test Text
+</Text>
+`;

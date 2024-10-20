@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { view } from './storybook.requires';
+export { PreviewViewMode } from './preview';
 
 const StorybookUIRoot = view.getStorybookUI({
   storage: {

@@ -57,3 +57,40 @@ exports[`MyText component should correctly apply styles to each text segment wit
   </Text>
 </Text>
 `;
+
+exports[`MyText component should handle variants 1`] = `
+<Text
+  style={
+    {
+      "fontFamily": "Nunito_400Regular",
+      "fontStyle": undefined,
+      "fontWeight": undefined,
+      "lineHeight": undefined,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "fontFamily": "Nunito_700Bold",
+        "fontStyle": undefined,
+        "fontWeight": undefined,
+        "lineHeight": undefined,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontFamily": "Nunito_700Bold_Italic",
+          "fontStyle": undefined,
+          "fontWeight": undefined,
+          "lineHeight": undefined,
+        }
+      }
+    >
+      Test Text
+    </Text>
+  </Text>
+</Text>
+`;

@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react-native';
-import { MyText } from './MyText'; // Adjust the import path as necessary
+import { MyText } from './MyText';
+import { Strong, Em } from './variants';
 describe('MyText component', () => {
   it('should apply the correct Google Font key based on fontFamily, fontWeight, and fontStyle', () => {
     const { getByText, toJSON } = render(
@@ -11,6 +12,27 @@ describe('MyText component', () => {
         }}
       >
         Test Text
+      </MyText>,
+    );
+
+    const textElement = getByText('Test Text');
+
+    expect(textElement.props.style.fontFamily).toBe('Nunito_700Bold_Italic');
+    expect(textElement.props.style.fontStyle).toBeUndefined();
+    expect(textElement.props.style.fontWeight).toBeUndefined();
+    expect(toJSON()).toMatchSnapshot();
+  });
+
+  it('should handle variants', () => {
+    const { getByText, toJSON } = render(
+      <MyText
+        style={{
+          fontFamily: 'Nunito',
+        }}
+      >
+        <Strong>
+          <Em>Test Text</Em>
+        </Strong>
       </MyText>,
     );
 

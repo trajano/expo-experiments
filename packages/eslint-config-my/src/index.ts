@@ -10,6 +10,7 @@ const rules: Linter.RulesRecord = {
     },
   ],
   eqeqeq: ['error'],
+  'import/no-unresolved': ['error'],
   'no-restricted-imports': [
     'error',
     {
@@ -32,11 +33,18 @@ const rules: Linter.RulesRecord = {
 module.exports = {
   extends: ['expo', 'prettier'],
   settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
     'import/resolver': {
-      typescript: { alwaysTryTypes: true },
+      typescript: {
+        alwaysTryTypes: true,
+        // both are needed, the first one is for CLI and the second one is for VS Code.
+        project: ['../../packages/*/tsconfig.json', 'packages/*/tsconfig.json'],
+      },
     },
   },
   // override the incorrect typing.
-  plugins: ['prefer-arrow'] as any,
+  plugins: ['prefer-arrow', 'import'] as any,
   rules,
 } as Linter.Config;

@@ -2,6 +2,8 @@
 
 Welcome to the **Expo Experiments** monorepo, a dedicated space for experimenting with Expo and enhancing the mobile development experience. This repository hosts multiple packages focused on improving React Native workflows, component libraries, and development tools.
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=trajano_expo-experiments&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=trajano_expo-experiments)
+
 ## Packages
 
 - **`my-app`**: The core Expo application, featuring integrated Storybook for component testing and prototyping.
