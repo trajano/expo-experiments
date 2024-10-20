@@ -30,6 +30,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-screen-orientation",
       "expo-secure-store",
       "expo-tracking-transparency",
       "expo-video",
