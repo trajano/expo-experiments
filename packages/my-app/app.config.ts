@@ -1,6 +1,6 @@
 import { ExpoConfig, ConfigContext } from '@expo/config';
 import * as fs from 'fs';
-import * as path from 'path';
+import * as path from 'node:path';
 
 /**
  * Generates an Android version code based on the given version string, major version number, and run padding.
