@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+import {
+  addOrientationChangeListener,
+  Orientation,
+  OrientationLock,
+  ScreenOrientationInfo,
+} from 'expo-screen-orientation';
 import {
   Dimensions,
   StyleSheet,
@@ -11,6 +17,25 @@ const DimensionsView: FC = () => {
   const screenDimensions = Dimensions.get('screen');
   const windowDimensionsViaGet = Dimensions.get('window');
   const windowDimensions = useWindowDimensions();
+  const [orientationInfo, setOrientationInfo] = useState<ScreenOrientationInfo>(
+    {
+      orientation: Orientation.UNKNOWN,
+    },
+  );
+  const [orientationLock, setOrientationLock] = useState<OrientationLock>(
+    OrientationLock.UNKNOWN,
+  );
+  useEffect(() => {
+    addOrientationChangeListener(
+      ({
+        orientationInfo: nextOrientationInfo,
+        orientationLock: nextOrientationLock,
+      }) => {
+        setOrientationInfo(nextOrientationInfo);
+        setOrientationLock(nextOrientationLock);
+      },
+    );
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.sectionHeader}>
@@ -19,6 +44,22 @@ const DimensionsView: FC = () => {
       <MyText style={styles.text}>
         {JSON.stringify(windowDimensions, null, 2)}
       </MyText>
+      <View style={styles.sectionHeader}>
+        <MyText style={styles.sectionHeaderText}>Screen Orientation</MyText>
+      </View>
+      <MyText style={styles.text}>
+        {JSON.stringify(orientationInfo, null, 2)}
+      </MyText>
+      <MyText style={styles.text}>
+        {JSON.stringify(
+          {
+            orientationLock: OrientationLock[orientationLock],
+          },
+          null,
+          2,
+        )}
+      </MyText>
+
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>
           Dimensions.get("screen")
