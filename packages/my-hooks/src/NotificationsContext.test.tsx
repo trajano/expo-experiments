@@ -5,6 +5,7 @@ import { Button, Text } from 'react-native';
 import {
   NotificationsProvider,
   useNotifications,
+  WithNotifications,
 } from './NotificationsContext';
 
 jest.mock('expo-notifications', () => {
@@ -113,6 +114,26 @@ describe('NotificationsContext', () => {
       <NotificationsProvider ensurePermissionsOnMount={false}>
         <TestComponent />
       </NotificationsProvider>,
+    );
+    await act(() => Promise.resolve());
+    expect(getByTestId('expoPushToken').props.children).toBe('No token');
+    expect(getByTestId('permissionStatus').props.children).toBe('undetermined');
+    expect(toJSON()).toMatchSnapshot();
+    expect(requestPermissionsAsyncMock).not.toHaveBeenCalled();
+  });
+
+  it('provides the correct initial context values without ensuring on mount using HoC', async () => {
+    // Mock getPermissionsAsync to return not granted initially and granted thereafter
+    getPermissionsAsyncMock.mockResolvedValueOnce({
+      granted: false,
+      canAskAgain: true,
+      status: PermissionStatus.UNDETERMINED,
+      expires: 'never',
+    });
+
+    const TestedComponent = WithNotifications(TestComponent);
+    const { getByTestId, toJSON } = render(
+      <TestedComponent ensurePermissionsOnMount={false} />,
     );
     await act(() => Promise.resolve());
     expect(getByTestId('expoPushToken').props.children).toBe('No token');
