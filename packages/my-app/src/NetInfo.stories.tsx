@@ -1,25 +1,10 @@
-import {
-  addEventListener,
-  NetInfoState,
-  NetInfoStateType,
-} from '@react-native-community/netinfo';
+import { useNetInfo } from '@react-native-community/netinfo';
 import type { Meta, StoryObj } from '@storybook/react';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MyText } from 'react-native-my-text';
 const NetInfoView: FC = () => {
-  const [netInfoState, setNetInfoState] = useState<NetInfoState>({
-    type: NetInfoStateType.unknown,
-    isConnected: null,
-    isInternetReachable: null,
-    details: null,
-  });
-  useEffect(() => {
-    const unsubscribe = addEventListener((nextState) => {
-      setNetInfoState(nextState);
-    });
-    return unsubscribe;
-  }, []);
+  const netInfoState = useNetInfo();
   return (
     <View style={styles.container}>
       <MyText style={styles.text}>
