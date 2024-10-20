@@ -2,7 +2,7 @@ import { useNetInfo, addEventListener } from '@react-native-community/netinfo';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FC, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { MyText } from 'react-native-my-text';
+import { MyText, Strong } from 'react-native-my-text';
 import * as Network from 'expo-network';
 
 const NetInfoView: FC = () => {
@@ -34,9 +34,12 @@ const NetInfoView: FC = () => {
       <MyText style={styles.text}>
         {JSON.stringify(netInfoState, null, 2)}
       </MyText>
-      <MyText style={styles.text}>IP Address: {ipAddress}</MyText>
       <MyText style={styles.text}>
-        Network State: {Network.NetworkStateType[networkState.type!]}
+        <Strong>IP Address</Strong>: {ipAddress}
+      </MyText>
+      <MyText style={styles.text}>
+        <Strong>Network State:</Strong>{' '}
+        {Network.NetworkStateType[networkState.type!]}
       </MyText>
       <MyText style={styles.text}>
         {JSON.stringify(networkState, null, 2)}
