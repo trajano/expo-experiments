@@ -11,6 +11,10 @@ const baseConfig = {
   ],
 };
 export default baseConfig;
+export const notestConfig = {
+  ...baseConfig,
+  '*.{ts,tsx}': ['npm run lint -- --fix', () => 'tsc --noEmit'],
+};
 export const libConfig = {
   ...baseConfig,
   '*.{ts,tsx}': [

@@ -1,0 +1,16 @@
+diff --git a/node_modules/@wdio/types/build/Capabilities.d.ts b/node_modules/@wdio/types/build/Capabilities.d.ts
+index 7a92dce..5c9acff 100644
+--- a/node_modules/@wdio/types/build/Capabilities.d.ts
++++ b/node_modules/@wdio/types/build/Capabilities.d.ts
+@@ -669,6 +669,11 @@ export interface AppiumAndroidCapabilities {
+         [key: string]: any;
+     };
+     'appium:userProfile'?: number;
++    /**
++     * https://appium.io/docs/en/2.11/guides/settings/#initializing-settings-via-capabilities
++     */
++    'appium:settings'?: Record<string, any>
++    [key: `appium:settings[${string}]`]: any;
+ }
+ /**
+  * Appium xcuitest Capabilities

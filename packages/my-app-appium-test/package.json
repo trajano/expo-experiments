@@ -1,0 +1,40 @@
+{
+  "name": "my-app-appium-test",
+  "description": "Appium Tests for my-app",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "react-native": "./src/index.ts",
+  "scripts": {
+    "dev": "tsup --watch",
+    "test": "cross-env NODE_OPTIONS='--experimental-vm-modules' jest --testPathIgnorePatterns='/src/e2e/'",
+    "test:e2e": "cross-env NODE_OPTIONS='--experimental-vm-modules' jest --runInBand",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "prepare": "tsup"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "babel-jest": "^29.7.0",
+    "cross-env": "^7.0.3",
+    "eslint-config-my": "*",
+    "jest": "^29.7.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "eslintConfig": {
+    "extends": [
+      "my"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "dist/"
+  ],
+  "dependencies": {
+    "webdriverio": "^9.2.1"
+  }
+}

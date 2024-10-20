@@ -1,4 +1,5 @@
 import { Linter } from 'eslint';
+
 const rules: Linter.RulesRecord = {
   'prefer-arrow/prefer-arrow-functions': [
     'error',
@@ -18,6 +19,12 @@ const rules: Linter.RulesRecord = {
           importNames: ['default'],
         },
       ],
+    },
+  ],
+  '@typescript-eslint/no-unused-vars': [
+    'error',
+    {
+      caughtErrorsIgnorePattern: '^_',
     },
   ],
 };

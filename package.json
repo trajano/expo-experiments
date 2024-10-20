@@ -3,7 +3,7 @@
   "scripts": {
     "start": "cd packages/my-app && expo start -c",
     "lint": "npm run lint --workspaces",
-    "dev": "turbo dev",
+    "dev": "turbo dev --concurrency 20",
     "test": "jest",
     "typecheck": "npm run typecheck --workspaces",
     "prepare": "husky || turbo telemetry disable || true",
@@ -15,11 +15,15 @@
     "packages/*"
   ],
   "volta": {
-    "node": "18.20.4",
-    "npm": "10.8.2"
+    "node": "20.18.0",
+    "npm": "10.8.3"
   },
   "eslintConfig": {
     "root": true
+  },
+  "resolutions": {
+    "@types/react": "18.2.44",
+    "react-native-reanimated": "3.10.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
@@ -33,7 +37,10 @@
     "prettier": "^3.3.3",
     "prettier-plugin-sh": "^0.14.0",
     "ts-node": "^10.9.2",
-    "turbo": "^2.1.2"
+    "turbo": "^2.2.1"
   },
-  "packageManager": "npm@10.8.3"
+  "packageManager": "npm@10.8.3",
+  "dependencies": {
+    "wait-on": "^8.0.1"
+  }
 }

@@ -4,4 +4,5 @@ export { useDebounceState } from './useDebounceState';
 export {
   NotificationsProvider,
   useNotifications,
+  WithNotifications,
 } from './NotificationsContext';

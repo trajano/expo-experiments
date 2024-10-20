@@ -1,10 +1,15 @@
-import { FC, useEffect, useReducer, useRef, useState } from 'react';
-import { Animated, Easing } from 'react-native';
-import LottieView from 'lottie-react-native';
-import { StyleSheet, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
+import { useRouter } from 'expo-router';
+import LottieView from 'lottie-react-native';
+import {
+  FC,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const LoaderScreen: FC = () => {
   const animation = useRef<LottieView>(null);
@@ -13,6 +18,7 @@ const LoaderScreen: FC = () => {
   const [loadedItems, incrementLoadedItems] = useReducer((i) => i + 1, 0);
   const totalItemsToLoad = 10;
   const [backgroundColor, setBackgroundColor] = useState('#eee');
+  const [shown, setShown] = useState(true);
 
   // Simulate loading items with random intervals
   useEffect(() => {
@@ -33,6 +39,7 @@ const LoaderScreen: FC = () => {
 
   useFocusEffect(
     useCallback(() => {
+      setShown(true);
       setBackgroundColor('#eee');
       // Interpolate the progress based on the number of loaded items
       Animated.timing(progress, {
@@ -58,23 +65,31 @@ const LoaderScreen: FC = () => {
           });
         }, 500); // Small delay before playing the final animation
       }
+      return () => {
+        setShown(false);
+      };
     }, [loadedItems, progress, router]),
   );
 
-  return (
-    <View style={styles.animationContainer}>
-      <AnimatedLottieView
-        ref={animation}
-        style={{
-          width: 200,
-          height: 200,
-          backgroundColor,
-        }}
-        progress={progress} // Casting to number to fix typing issue
-        source={require('../assets/cat-loader-2.json')}
-      />
-    </View>
-  );
+  if (shown) {
+    return (
+      <View style={styles.animationContainer} testID="splash-view">
+        <AnimatedLottieView
+          ref={animation}
+          style={{
+            width: 200,
+            height: 200,
+            backgroundColor,
+          }}
+          testID="splash"
+          progress={progress} // Casting to number to fix typing issue
+          source={require('../assets/cat-loader-2.json')}
+        />
+      </View>
+    );
+  } else {
+    return null;
+  }
 };
 
 const styles = StyleSheet.create({

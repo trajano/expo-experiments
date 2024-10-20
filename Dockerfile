@@ -9,15 +9,20 @@ RUN unzip commandlinetools.zip
 # Stage 2: Setup Android SDK (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS android-sdk
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
-COPY --from=download-tools /w/cmdline-tools /opt/android-sdk/cmdline-tools/latest
-RUN yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
+COPY --from=download-tools --chmod=644 /w/cmdline-tools /opt/android-sdk/cmdline-tools/latest
+COPY --from=download-tools --chmod=755 /w/cmdline-tools/bin/* /opt/android-sdk/cmdline-tools/latest/bin/
+RUN --mount=type=cache,target=/root/.android/cache \
+  yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
   "platform-tools" \
   "build-tools;34.0.0" \
   "platforms;android-34" \
   "ndk;25.1.8937393" \
   "ndk;26.1.10909125" \
   "ndk;26.3.11579264" \
-  "cmake;3.22.1"
+  "cmake;3.22.1" \
+  && yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+# "system-images;android-34;google_apis;x86_64" \
+# "emulator" \
 
 # Stage 3: Install Volta, Node.js and EAS-CLI (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS volta
@@ -75,13 +80,22 @@ COPY --from=prebuild-devclient --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ub
 RUN --mount=type=cache,id=assembleDebug,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleDebug
 
-# Stage 9: Build Preview APK (build platform-specific)
+# Stage 9: Build Preview APKs (build platform-specific)
 FROM gradle-build-env AS preview-apk
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleRelease
 
 # EAS iOS build
+FROM prebuild-env AS eas-build-ios-devclient
+ENV EAS_NO_VCS=1
+ENV EAS_PROJECT_ROOT=/home/ubuntu/work
+RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
+  --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
+  --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
+  --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
+  eas build --non-interactive --platform=ios --profile=development
+
 FROM prebuild-env AS eas-build
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
@@ -89,8 +103,7 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
   --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
-  eas build --non-interactive --platform=ios --profile=development \
-  && eas build --non-interactive --platform=ios --profile=preview
+  eas build --non-interactive --platform=ios --profile=preview
 
 # EAS iOS build
 FROM prebuild-env AS eas-update
@@ -104,7 +117,11 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
   eas update --channel=${EAS_UPDATE_CHANNEL} --non-interactive --message="${EAS_UPDATE_MESSAGE}"
 
+# Appium build
+FROM appium/appium:v2.11.4-p1 AS appium
+COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
+
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable
-COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-debug.apk
+COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-dev-client.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk

@@ -39,7 +39,7 @@ const FormikScreen: FC = () => {
       const result = await response.json();
       alert(JSON.stringify(result, null, 2)); // Display the response in an alert
       reset(); // Reset the form after submission
-    } catch (error: unknown) {
+    } catch (_ignore: unknown) {
       alert('Error submitting form');
     }
   };

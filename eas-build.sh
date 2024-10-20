@@ -4,4 +4,10 @@
 # Also, credentials.json should be downloaded using 'eas credentials' in interactive mode.
 docker build --secret id=EXPO_TOKEN \
   --secret id=eas-credentials-json,src=./credentials.json \
-  --target eas-build .
+  --target eas-build . &
+
+docker build --secret id=EXPO_TOKEN \
+  --secret id=eas-credentials-json,src=./credentials.json \
+  --target eas-build-ios-devclient . &
+
+wait

@@ -22,6 +22,8 @@ const TabLayout: FC = () => {
             <TabBarIcon
               name={focused ? 'home' : 'home-outline'}
               color={color}
+              testID="home-tab-button"
+              accessibilityLabel="home tab button"
             />
           ),
         }}
@@ -34,6 +36,8 @@ const TabLayout: FC = () => {
             <TabBarIcon
               name={focused ? 'code-slash' : 'code-slash-outline'}
               color={color}
+              testID="explore-tab-button"
+              accessibilityLabel="explore-tab-button"
             />
           ),
         }}
@@ -46,6 +50,8 @@ const TabLayout: FC = () => {
             <TabBarIcon
               name={focused ? 'code-slash' : 'code-slash-outline'}
               color={color}
+              testID="formik-tab-button"
+              accessibilityLabel="formik tab button"
             />
           ),
         }}

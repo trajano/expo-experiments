@@ -30,6 +30,7 @@ const UnstyledPressable: FC<UnstyledPressableProps> & {
   Content: FC<SubComponentProps>;
   EndIcon: FC<SubComponentProps>;
 } = ({ children, contentContainerStyle }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, setState] = useState<State>('default');
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -69,6 +70,7 @@ const UnstyledPressable: FC<UnstyledPressableProps> & {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SubComponent: FC<SubComponentProps> = ({ children, when, style }) => {
   return <View style={style}>{children}</View>;
 };
