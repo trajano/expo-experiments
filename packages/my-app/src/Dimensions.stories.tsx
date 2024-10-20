@@ -35,7 +35,7 @@ const DimensionsView: FC = () => {
         setOrientationLock(nextOrientationLock);
       },
     );
-    return subscription.remove();
+    return () => subscription.remove();
   }, []);
   return (
     <View style={styles.container}>
