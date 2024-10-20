@@ -29,7 +29,13 @@
       "output": "static",
       "favicon": "./src/assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "@config-plugins/android-jsc-intl"],
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-tracking-transparency",
+      "expo-video",
+      "@config-plugins/android-jsc-intl"
+    ],
     "experiments": {
       "typedRoutes": true
     },
