@@ -1,14 +1,45 @@
-import { useNetInfo } from '@react-native-community/netinfo';
+import { useNetInfo, addEventListener } from '@react-native-community/netinfo';
 import type { Meta, StoryObj } from '@storybook/react';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MyText } from 'react-native-my-text';
+import * as Network from 'expo-network';
+
 const NetInfoView: FC = () => {
   const netInfoState = useNetInfo();
+  const [ipAddress, setIpAddress] = useState('');
+  const [networkState, setNetworkState] = useState<Network.NetworkState>({
+    type: Network.NetworkStateType.UNKNOWN,
+  });
+  useEffect(() => {
+    let mounted = true;
+    const unsubscribe = addEventListener(async () => {
+      // though this can also update netInfoState, useNetInfo is utilized.
+      // this effect is primarily to get the values from expo-network that
+      // does not have a listener pattern.
+      const nextIpAddress = await Network.getIpAddressAsync();
+      const nextNetworkState = await Network.getNetworkStateAsync();
+      if (mounted) {
+        setIpAddress(nextIpAddress);
+        setNetworkState(nextNetworkState);
+      }
+    });
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
+  }, []);
   return (
     <View style={styles.container}>
       <MyText style={styles.text}>
         {JSON.stringify(netInfoState, null, 2)}
+      </MyText>
+      <MyText style={styles.text}>IP Address: {ipAddress}</MyText>
+      <MyText style={styles.text}>
+        Network State: {Network.NetworkStateType[networkState.type!]}
+      </MyText>
+      <MyText style={styles.text}>
+        {JSON.stringify(networkState, null, 2)}
       </MyText>
     </View>
   );
