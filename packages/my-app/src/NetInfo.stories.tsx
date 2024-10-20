@@ -49,11 +49,10 @@ const styles = StyleSheet.create({
 });
 
 const meta: Meta<typeof NetInfoView> = {
-  title: 'Debug',
+  title: 'NetInfo',
   component: NetInfoView,
   parameters: {
-    notes:
-      'This checks the functionality of the ECMAScript Internationalization API.',
+    notes: 'This checks Network information.',
   },
 };
 
