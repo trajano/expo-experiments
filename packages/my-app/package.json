@@ -60,7 +60,7 @@
     "lottie-react-native": "6.7.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.53.0",
+    "react-hook-form": "^7.53.1",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.2",
     "react-native-i18n": "*",
@@ -74,8 +74,9 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "15.2.0",
     "react-native-try-catch": "*",
-    "react-native-web": "~0.19.12",
-    "yup": "^1.4.0"
+    "react-native-web": "~0.19.13",
+    "yup": "^1.4.0",
+    "@react-native-community/netinfo": "11.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",
@@ -84,7 +85,7 @@
     "@storybook/addon-ondevice-backgrounds": "^8.3.9",
     "@storybook/addon-ondevice-controls": "^8.3.9",
     "@storybook/addon-ondevice-notes": "^8.3.9",
-    "@storybook/react": "^8.3.5",
+    "@storybook/react": "^8.3.6",
     "@storybook/react-native": "^8.3.9",
     "@testing-library/react-native": "^12.7.2",
     "@types/jest": "^29.5.13",
