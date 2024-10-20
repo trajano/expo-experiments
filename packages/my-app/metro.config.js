@@ -15,6 +15,11 @@ config.resolver.nodeModulesPaths = [
   path.resolve(__dirname, 'node_modules'),
   path.resolve(monorepoRoot, 'node_modules'),
 ];
+if (Array.isArray(config.resolver.blockList)) {
+  config.resolver.blockList = [...config.resolver.blockList, /.*\.test\..*/];
+} else if (typeof config.resolver.blockList === 'object') {
+  config.resolver.blockList = [config.resolver.blockList, /.*\.test\..*/];
+}
 
 module.exports = withStorybook(config, {
   enabled: true,
