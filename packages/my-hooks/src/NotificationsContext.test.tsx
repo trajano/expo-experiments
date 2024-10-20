@@ -182,6 +182,43 @@ describe('NotificationsContext', () => {
     expect(requestPermissionsAsyncMock).toHaveBeenCalledTimes(1);
   });
 
+  it('fetches and updates expo push token on mount using HoC', async () => {
+    getExpoPushTokenAsyncMock.mockResolvedValue({
+      type: 'expo',
+      data: 'fake-token',
+    });
+
+    // Mock getPermissionsAsync to return not granted initially and granted thereafter
+    getPermissionsAsyncMock
+      .mockResolvedValueOnce({
+        granted: false,
+        canAskAgain: true,
+        status: PermissionStatus.UNDETERMINED,
+        expires: 'never',
+      })
+      .mockResolvedValue({
+        granted: true,
+        canAskAgain: false,
+        status: PermissionStatus.GRANTED,
+        expires: 'never',
+      });
+
+    // Mock requestPermissionsAsync to return granted status
+    requestPermissionsAsyncMock.mockResolvedValue({
+      granted: true,
+      canAskAgain: false,
+      status: PermissionStatus.GRANTED,
+      expires: 'never',
+    });
+
+    const TestedComponent = WithNotifications(TestComponent);
+    const { getByTestId } = render(<TestedComponent />);
+
+    await act(() => Promise.resolve());
+    expect(getByTestId('expoPushToken').props.children).toBe('fake-token');
+    expect(requestPermissionsAsyncMock).toHaveBeenCalledTimes(1);
+  });
+
   it('calls ensurePermissionAsync and updates permission status', async () => {
     // Mock getPermissionsAsync to return not granted initially and granted thereafter
     getPermissionsAsyncMock
