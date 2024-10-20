@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   centeredContainer: {
     flexGrow: 1,
-    alignContent: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
   },
 });
