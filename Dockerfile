@@ -31,7 +31,7 @@ ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
 RUN curl https://get.volta.sh | bash \
   && volta install node@latest npm@latest \
-  && npm i -g eas-cli@latest
+  && npm i -g --ignore-scripts eas-cli@latest
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS prebuild-env
