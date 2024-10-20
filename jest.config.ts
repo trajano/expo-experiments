@@ -38,7 +38,6 @@ const projects: Config.InitialOptions['projects'] = readdirSync(packagesDir, {
 
 const config: Config.InitialOptions = {
   projects,
-  coverageProvider: 'v8',
 };
 
 export default config;
