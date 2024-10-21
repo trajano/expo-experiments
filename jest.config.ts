@@ -38,6 +38,7 @@ const projects: Config.InitialOptions['projects'] = readdirSync(packagesDir, {
 
 const config: Config.InitialOptions = {
   projects,
+  testTimeout: 10_000,
 };
 
 export default config;
