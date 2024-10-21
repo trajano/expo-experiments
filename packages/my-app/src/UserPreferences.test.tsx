@@ -47,7 +47,7 @@ describe('UserPreferences', () => {
   beforeEach(async () => {
     await AsyncStorage.clear();
   });
-  it('Use provider', async () => {
+  it('Use provider and update', async () => {
     const { getByTestId, toJSON } = render(
       <UserPreferencesProvider
         userPreferencesInitial={{}}
@@ -73,6 +73,42 @@ describe('UserPreferences', () => {
     );
     await act(() => fireEvent.press(getByTestId('setSomethingNull')));
     expect(await AsyncStorage.getItem('storage')).toBe(JSON.stringify({}));
+    expect(toJSON()).toMatchSnapshot();
+  }, 10_000);
+
+  it('Use provider with initial state and update', async () => {
+    const initialState = { foo: 'abc' };
+    const { getByTestId, toJSON } = render(
+      <UserPreferencesProvider
+        userPreferencesInitial={initialState}
+        userPreferencesStorageKey="storage"
+      >
+        <TestComponent />
+      </UserPreferencesProvider>,
+    );
+    expect(await AsyncStorage.getItem('storage')).toBeNull();
+    await act(() => Promise.resolve());
+    expect(await AsyncStorage.getItem('storage')).toEqual(
+      JSON.stringify(initialState),
+    );
+    expect(getByTestId('props').props.children).toBe(
+      JSON.stringify(initialState),
+    );
+    await act(() => fireEvent.press(getByTestId('setSomething')));
+    expect(getByTestId('props').props.children).toBe(
+      JSON.stringify({ foo: 'bar' }),
+    );
+    expect(await AsyncStorage.getItem('storage')).toBe(
+      JSON.stringify({ foo: 'bar' }),
+    );
+    await act(() => fireEvent.press(getByTestId('setSomethingElse')));
+    expect(await AsyncStorage.getItem('storage')).toBe(
+      JSON.stringify({ foo: 'baz' }),
+    );
+    await act(() => fireEvent.press(getByTestId('setSomethingNull')));
+    expect(await AsyncStorage.getItem('storage')).toBe(
+      JSON.stringify(initialState),
+    );
     expect(toJSON()).toMatchSnapshot();
   }, 10_000);
 
