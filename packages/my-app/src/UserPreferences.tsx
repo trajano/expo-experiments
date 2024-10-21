@@ -152,7 +152,7 @@ export const WithUserPreferences = <
     </UserPreferencesProvider>
   );
 
-  WrappedComponent.displayName = `WithUserPreferences(${Component.displayName || Component.name || 'Component'})`;
+  WrappedComponent.displayName = `WithUserPreferences(${Component.displayName ?? Component.name ?? 'Component'})`;
 
   return WrappedComponent;
 };

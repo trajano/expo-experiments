@@ -67,7 +67,7 @@ export const WithDoNothing = <P extends object>(
     </DoNothingProvider>
   );
 
-  WrappedComponent.displayName = `WithDoNothing(${Component.displayName || Component.name || 'Component'})`;
+  WrappedComponent.displayName = `WithDoNothing(${Component.displayName ?? Component.name ?? 'Component'})`;
 
   return WrappedComponent;
 };
