@@ -15,6 +15,12 @@ const TestComponent: React.FC = () => {
   const setSomething = useCallback(async () => {
     await setAsync('foo', 'bar');
   }, [setAsync]);
+  const setSomethingElse = useCallback(async () => {
+    await setAsync('foo', 'baz');
+  }, [setAsync]);
+  const setSomethingNull = useCallback(async () => {
+    await setAsync('foo', null);
+  }, [setAsync]);
   return (
     <>
       <Text testID="props">{JSON.stringify(preferences)}</Text>
@@ -22,6 +28,16 @@ const TestComponent: React.FC = () => {
         onPress={setSomething}
         title="setSomething"
         testID="setSomething"
+      />
+      <Button
+        onPress={setSomethingElse}
+        title="setSomethingElse"
+        testID="setSomethingElse"
+      />
+      <Button
+        onPress={setSomethingNull}
+        title="setSomethingNull"
+        testID="setSomethingNull"
       />
     </>
   );
@@ -44,14 +60,19 @@ describe('UserPreferences', () => {
     await act(() => Promise.resolve());
     expect(await AsyncStorage.getItem('storage')).toEqual('{}');
     expect(getByTestId('props').props.children).toBe(JSON.stringify({}));
-    const button = getByTestId('setSomething');
-    await act(() => fireEvent.press(button));
+    await act(() => fireEvent.press(getByTestId('setSomething')));
     expect(getByTestId('props').props.children).toBe(
       JSON.stringify({ foo: 'bar' }),
     );
     expect(await AsyncStorage.getItem('storage')).toBe(
       JSON.stringify({ foo: 'bar' }),
     );
+    await act(() => fireEvent.press(getByTestId('setSomethingElse')));
+    expect(await AsyncStorage.getItem('storage')).toBe(
+      JSON.stringify({ foo: 'baz' }),
+    );
+    await act(() => fireEvent.press(getByTestId('setSomethingNull')));
+    expect(await AsyncStorage.getItem('storage')).toBe(JSON.stringify({}));
     expect(toJSON()).toMatchSnapshot();
   });
 
