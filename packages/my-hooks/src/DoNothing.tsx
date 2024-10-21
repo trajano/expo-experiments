@@ -18,10 +18,11 @@ import {
 export interface DoNothing {}
 
 /**
- * The DoNothingContext provides an empty context value. It can be used as a placeholder
- * or template when creating new React contexts.
+ * The DoNothingContext provides an empty context value. This is exported
+ * so that it can be used by tests, but generally the {@link DoNothingProvider}
+ * is used.
  */
-const DoNothingContext = createContext<DoNothing>({});
+export const DoNothingContext = createContext<DoNothing>({});
 
 /**
  * Props type for the DoNothingProvider component, which wraps its children in the DoNothingContext.

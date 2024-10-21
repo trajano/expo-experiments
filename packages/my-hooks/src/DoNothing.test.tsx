@@ -1,6 +1,11 @@
-import { render } from '@testing-library/react-native';
+import { render, renderHook } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { DoNothingProvider, useDoNothing, WithDoNothing } from './DoNothing';
+import {
+  DoNothingContext,
+  DoNothingProvider,
+  useDoNothing,
+  WithDoNothing,
+} from './DoNothing';
 
 const TestComponent: React.FC = () => {
   const doNothingProps = useDoNothing();
@@ -17,6 +22,16 @@ describe('DoNothing', () => {
     );
     expect(getByTestId('props').props.children).toBe('{}');
     expect(toJSON()).toMatchSnapshot();
+  });
+
+  it('Use Hook', async () => {
+    const wrapper = ({ children }) => (
+      <DoNothingContext.Provider value={{}}>
+        {children}
+      </DoNothingContext.Provider>
+    );
+    const { result } = renderHook(() => useDoNothing(), { wrapper });
+    expect(result.current).toEqual({});
   });
 
   it('Use HoC', async () => {

@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserPreferences Use HoC 1`] = `
+[
+  <Text
+    testID="props"
+  >
+    {}
+  </Text>,
+  <View
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+    testID="setSomething"
+  >
+    <View
+      style={
+        [
+          {},
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "#007AFF",
+              "fontSize": 18,
+              "margin": 8,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        setSomething
+      </Text>
+    </View>
+  </View>,
+]
+`;
+
+exports[`UserPreferences Use provider 1`] = `
+[
+  <Text
+    testID="props"
+  >
+    {"foo":"bar"}
+  </Text>,
+  <View
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+    testID="setSomething"
+  >
+    <View
+      style={
+        [
+          {},
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "#007AFF",
+              "fontSize": 18,
+              "margin": 8,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        setSomething
+      </Text>
+    </View>
+  </View>,
+]
+`;

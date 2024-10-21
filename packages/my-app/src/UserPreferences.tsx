@@ -24,7 +24,7 @@ export interface UserPreferences<
  * The UserPreferencesContext provides an empty context value. It can be used as a placeholder
  * or template when creating new React contexts.
  */
-const UserPreferencesContext = createContext<UserPreferences>({
+export const UserPreferencesContext = createContext<UserPreferences>({
   preferences: {},
   setAsync: () => Promise.resolve(),
 });
