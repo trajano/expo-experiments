@@ -35,7 +35,7 @@ export type DoNothingProps = PropsWithChildren<{}>;
  * @returns A provider that passes an empty value to all of its children.
  */
 export const DoNothingProvider: FC<DoNothingProps> = ({ children }) => {
-  const value = useMemo(() => ({}), []);
+  const value = useMemo<DoNothing>(() => ({}), []);
 
   return (
     <DoNothingContext.Provider value={value}>
