@@ -1,7 +1,9 @@
-import { Alert, DevSettings } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DevSettings } from 'react-native';
 
 if (__DEV__) {
-  DevSettings.addMenuItem('Show Secret Dev Screen', () => {
-    Alert.alert('Showing secret dev screen!');
+  DevSettings.addMenuItem('Clear AsyncStorage and Reload', async () => {
+    await AsyncStorage.clear();
+    DevSettings.reload();
   });
 }
