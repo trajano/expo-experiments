@@ -11,12 +11,13 @@ import {
   useState,
 } from 'react';
 
+// Question: should I allow null?
 type Storable = string | boolean | number;
 export interface UserPreferences<
   Q extends Record<string, Storable> = Record<string, Storable>,
 > {
   preferences: Q;
-  setAsync(key: string, value: Storable | null): Promise<void>;
+  setAsync<K extends keyof Q>(key: K, value: Q[K] | null): Promise<void>;
 }
 
 /**
@@ -56,8 +57,22 @@ export const UserPreferencesProvider: FC<UserPreferencesProps> = ({
   const setAsync = useCallback(
     async (key: string, value: Storable | null) => {
       let nextPreferences = JSON.parse(preferencesJSON);
-      if (value === null) {
+      if (
+        value === null &&
+        (userPreferencesInitial[key] === undefined ||
+          userPreferencesInitial[key] === null)
+      ) {
+        // delete the key if there's no intial preference data
         delete nextPreferences[key];
+      } else if (
+        value === null &&
+        !(
+          userPreferencesInitial[key] === undefined ||
+          userPreferencesInitial[key] === null
+        )
+      ) {
+        // reset to default value if cleared
+        nextPreferences[key] = userPreferencesInitial[key];
       } else {
         nextPreferences[key] = value;
       }
@@ -68,7 +83,7 @@ export const UserPreferencesProvider: FC<UserPreferencesProps> = ({
       );
       setPreferencesJSON(nextPreferencesJSON);
     },
-    [userPreferencesStorageKey, preferencesJSON],
+    [userPreferencesStorageKey, userPreferencesInitial, preferencesJSON],
   );
   useEffect(() => {
     let mounted = true;
