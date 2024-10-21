@@ -14,6 +14,7 @@ import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
 import { useExpoGoogleFonts } from 'react-native-my-text';
+import { WithUserPreferences } from '@/UserPreferences';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,4 +47,23 @@ const RootLayout: FC = () => {
     </ThemeProvider>
   );
 };
-export default WithNotifications(RootLayout);
+export type MyAppUserPreferences = {
+  locale: string;
+  theme: string;
+  count: number;
+};
+const CompositeApp = WithUserPreferences(WithNotifications(RootLayout));
+const MyApp = () => (
+  <CompositeApp
+    userPreferencesStorageKey="myAppStorage"
+    userPreferencesInitial={
+      {
+        locale: '',
+        theme: '',
+        count: 0,
+      } as MyAppUserPreferences
+    }
+  />
+);
+
+export default MyApp;
