@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import * as ExpoApplication from 'expo-application';
+import ExpoConstants from 'expo-constants';
+import * as ExpoFileSystem from 'expo-file-system';
+import * as Localization from 'expo-localization';
+import * as ExpoManifests from 'expo-manifests';
+import * as ExpoUpdates from 'expo-updates';
 import { FC } from 'react';
 import { Platform as RNPlatform, StyleSheet, View } from 'react-native';
 import { MyText } from 'react-native-my-text';
-import * as ExpoManifests from 'expo-manifests';
-import ExpoConstants from 'expo-constants';
-import * as ExpoApplication from 'expo-application';
-import * as ExpoUpdates from 'expo-updates';
-import * as Localization from 'expo-localization';
-import * as ExpoFileSystem from 'expo-file-system';
-const DebugView: FC<{ content: object }> = ({ content }) => {
+const ConstantsView: FC<{ content: object }> = ({ content }) => {
   return (
     <View style={styles.container}>
       <MyText style={styles.text}>{JSON.stringify(content, null, 2)}</MyText>
@@ -35,18 +35,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const meta: Meta<typeof DebugView> = {
-  title: 'Debug',
-  component: DebugView,
+const meta: Meta<typeof ConstantsView> = {
+  title: 'Constants',
+  component: ConstantsView,
   parameters: {
-    notes:
-      'This checks the functionality of the ECMAScript Internationalization API.',
+    notes: 'This checks constant values',
   },
 };
 
 export default meta;
 
-type Story = StoryObj<typeof DebugView>;
+type Story = StoryObj<typeof ConstantsView>;
 
 export const Constants: Story = {
   args: { content: ExpoConstants },
