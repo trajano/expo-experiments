@@ -24,9 +24,14 @@ test('(tabs)/index', () => {
   expect(mockRouter.back).toHaveBeenCalled();
 
   act(() => {
+    fireEvent.press(getByTestId('go-sitemap-button'));
+  });
+  expect(mockRouter.push).toHaveBeenCalledWith('/_sitemap');
+
+  act(() => {
     fireEvent.press(getByTestId('go-storybook-button'));
   });
   expect(mockRouter.push).toHaveBeenCalledWith('/storybook');
 
-  expect(getByTestId('press-count').props.children).toBe(2);
+  expect(getByTestId('press-count').props.children).toBe(3);
 });

@@ -68,6 +68,15 @@ const HomeScreen: FC = () => {
           }}
         />
 
+        <Button
+          title="go sitemap"
+          testID="go-sitemap-button"
+          onPress={() => {
+            incrementPressCount();
+            router.push('/_sitemap');
+          }}
+        />
+
         <TouchableOpacity
           testID="open-settings-button"
           onPress={() => Linking.openSettings()}
