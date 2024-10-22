@@ -1,3 +1,6 @@
+import { VibrateButton } from '@/components/VibrateButton';
+import { useRouter } from 'expo-router';
+import { FC, useReducer } from 'react';
 import {
   Button,
   Image,
@@ -6,9 +9,6 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-
-import { useRouter } from 'expo-router';
-import { FC, useReducer } from 'react';
 import {
   HelloWave,
   ParallaxScrollView,
@@ -23,6 +23,7 @@ const formatter = new Intl.DateTimeFormat('en-US', {
   minute: 'numeric',
   hour12: true, // Optional: Use `false` for 24-hour format
 });
+
 const HomeScreen: FC = () => {
   const clock = useClockState();
   const router = useRouter();
@@ -86,29 +87,50 @@ const HomeScreen: FC = () => {
           </ThemedText>{' '}
           to open developer tools.
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText testID="explore" type="subtitle">
-          Step 2: Explore
-        </ThemedText>
+
         <ThemedText>
-          Tap the Explore tab to learn{' '}
-          <MyText style={{ fontWeight: 'bold' }}>
-            more <MyText style={{ fontStyle: 'italic' }}>about</MyText> what's
-          </MyText>{' '}
-          included in this starter app.
+          The following only makes sense on Android devices as iOS does not
+          recognize the patterns.
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{' '}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{' '}
-          directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+        <VibrateButton
+          title="Shave and a Haircut"
+          pattern={[
+            0, // no gap
+            200, // shave
+            400,
+            100, // and
+            100,
+            100, // a
+            200,
+            400, // hair
+            200,
+            300, // cut
+            1000, // long pause
+            400, // two
+            200,
+            400, // bits
+          ]}
+        />
+        <VibrateButton
+          title="Super Mario Bros."
+          pattern={[200, 100, 200, 100, 300, 100, 300, 200, 500]}
+        />
+        <VibrateButton
+          title="Peppa Pig"
+          pattern={[300, 100, 300, 100, 300, 100, 400, 500, 300]}
+        />
+        <VibrateButton
+          title="Tetris"
+          pattern={[200, 150, 200, 150, 300, 150, 400, 150, 500]}
+        />
+        <VibrateButton
+          title="Dramatic Chipmunk"
+          pattern={[500, 300, 500, 300, 700]}
+        />
+        <VibrateButton
+          title="Dramatic Cue"
+          pattern={[400, 200, 400, 200, 1000]}
+        />
       </ThemedView>
     </ParallaxScrollView>
   );
