@@ -115,23 +115,58 @@ const HomeScreen: FC = () => {
         />
         <VibrateButton
           title="Super Mario Bros."
-          pattern={[200, 100, 200, 100, 300, 100, 300, 200, 500]}
+          pattern={[
+            0,
+            100, // dun
+            200,
+            100, // dun
+            200,
+            100, // dun
+            300,
+            100, // dun
+            100,
+            100, // dun
+            100,
+            150, // dun
+            400,
+            300, //dun
+          ]}
         />
         <VibrateButton
           title="Peppa Pig"
-          pattern={[300, 100, 300, 100, 300, 100, 400, 500, 300]}
-        />
-        <VibrateButton
-          title="Tetris"
-          pattern={[200, 150, 200, 150, 300, 150, 400, 150, 500]}
+          pattern={[
+            0,
+            300, // dun
+            100,
+            100, // dah
+            100,
+            100, // dah
+            100,
+            400, // daaah
+            100,
+            200, // daah
+            200,
+            400, // don
+            200,
+            100, // dah
+            100,
+            100, // dah
+            100,
+            100, // dah
+            100,
+            500, // dah
+          ]}
         />
         <VibrateButton
           title="Dramatic Chipmunk"
-          pattern={[500, 300, 500, 300, 700]}
-        />
-        <VibrateButton
-          title="Dramatic Cue"
-          pattern={[400, 200, 400, 200, 1000]}
+          pattern={[
+            0,
+            500, // dun
+            200,
+            400, // dun
+            300,
+            1000, // DUUN
+          ]}
         />
       </ThemedView>
     </ParallaxScrollView>

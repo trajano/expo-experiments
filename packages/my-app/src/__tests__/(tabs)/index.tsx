@@ -1,4 +1,4 @@
-import Index from './index';
+import Index from '@/app/(tabs)/index';
 import { Linking } from 'react-native';
 import { render, act, fireEvent } from '@testing-library/react-native';
 import { Router, useRouter } from 'expo-router';
