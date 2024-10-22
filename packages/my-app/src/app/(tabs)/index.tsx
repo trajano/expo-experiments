@@ -16,7 +16,7 @@ import {
   ThemedView,
 } from 'react-native-my-components';
 import { useClockState, useNotifications } from 'react-native-my-hooks';
-import { MyText } from 'react-native-my-text';
+import { MyText, Strong } from 'react-native-my-text';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -44,13 +44,15 @@ const HomeScreen: FC = () => {
     >
       <ThemedView style={styles.titleContainer}>
         <MyText style={{ fontSize: 30, fontWeight: 'black', color: 'white' }}>
-          Bon jour on {formattedTime} ! {pressCount}
+          Bon jour on {formattedTime} !
+          <Strong testID="press-count">{pressCount}</Strong>
         </MyText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <Button
           title="go load"
+          testID="go-load-button"
           onPress={() => {
             incrementPressCount();
             router.back();
@@ -67,7 +69,7 @@ const HomeScreen: FC = () => {
         />
 
         <TouchableOpacity
-          testID="go-storybook-touchable"
+          testID="open-settings-button"
           onPress={() => Linking.openSettings()}
         >
           <ThemedText type="subtitle">Open Settings</ThemedText>
