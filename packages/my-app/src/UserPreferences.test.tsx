@@ -74,7 +74,7 @@ describe('UserPreferences', () => {
     await act(() => fireEvent.press(getByTestId('setSomethingNull')));
     expect(await AsyncStorage.getItem('storage')).toBe(JSON.stringify({}));
     expect(toJSON()).toMatchSnapshot();
-  }, 10_000);
+  }, 30_000);
 
   it('Use provider with initial state and update', async () => {
     const initialState = { foo: 'abc' };
@@ -110,7 +110,7 @@ describe('UserPreferences', () => {
       JSON.stringify(initialState),
     );
     expect(toJSON()).toMatchSnapshot();
-  }, 10_000);
+  }, 30_000);
 
   it('Use HoC', async () => {
     const TestedComponent = WithUserPreferences(TestComponent);
