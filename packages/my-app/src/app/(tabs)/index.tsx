@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Linking,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -66,12 +67,9 @@ const HomeScreen: FC = () => {
 
         <TouchableOpacity
           testID="go-storybook-touchable"
-          onPress={() => {
-            incrementPressCount();
-            router.push('/storybook');
-          }}
+          onPress={() => Linking.openSettings()}
         >
-          <ThemedText type="subtitle">Meh?</ThemedText>
+          <ThemedText type="subtitle">Open Settings</ThemedText>
         </TouchableOpacity>
 
         <ThemedText type="subtitle">

@@ -10,6 +10,7 @@ import { FC, useEffect, useState } from 'react';
 import {
   Dimensions,
   StyleSheet,
+  useColorScheme,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -17,6 +18,7 @@ import { MyText } from 'react-native-my-text';
 const DimensionsView: FC = () => {
   const screenDimensions = Dimensions.get('screen');
   const windowDimensionsViaGet = Dimensions.get('window');
+  const colorScheme = useColorScheme();
   const windowDimensions = useWindowDimensions();
   const [orientation, setOrientation] = useState<Orientation>(
     Orientation.UNKNOWN,
@@ -74,6 +76,10 @@ const DimensionsView: FC = () => {
           2,
         )}
       </MyText>
+      <View style={styles.sectionHeader}>
+        <MyText style={styles.sectionHeaderText}>useColorScheme</MyText>
+      </View>
+      <MyText style={styles.text}>{colorScheme}</MyText>
 
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>

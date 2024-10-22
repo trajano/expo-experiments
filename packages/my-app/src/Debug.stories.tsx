@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform as RNPlatform, StyleSheet, View } from 'react-native';
 import { MyText } from 'react-native-my-text';
 import * as ExpoManifests from 'expo-manifests';
 import ExpoConstants from 'expo-constants';
@@ -118,6 +118,15 @@ export const FileSystem: Story = {
 
 export const Manifests: Story = {
   args: { content: ExpoManifests },
+  parameters: {
+    backgrounds: {
+      default: 'plain',
+    },
+  },
+};
+
+export const Platform: Story = {
+  args: { content: RNPlatform },
   parameters: {
     backgrounds: {
       default: 'plain',
