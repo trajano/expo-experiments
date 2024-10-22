@@ -15,11 +15,11 @@
       "dependsOn": ["^typecheck"]
     },
     "prepare": {
-      "dependsOn": ["^prepare"]
+      "dependsOn": ["^prepare"],
+      "outputs": ["dist/**"]
     },
     "build": {
-      "dependsOn": ["test", "typecheck", "lint", "prepare"],
-      "outputs": ["dist/**"]
+      "dependsOn": ["test", "typecheck", "lint", "prepare"]
     }
   }
 }
