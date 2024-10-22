@@ -54,7 +54,8 @@
     },
     "owner": "trajano",
     "updates": {
-      "url": "https://u.expo.dev/82884520-3f2f-4a6f-a85f-e6257469b267"
+      "url": "https://u.expo.dev/82884520-3f2f-4a6f-a85f-e6257469b267",
+      "checkAutomatically": "NEVER"
     },
     "runtimeVersion": {
       "policy": "appVersion"
