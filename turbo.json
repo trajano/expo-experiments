@@ -3,10 +3,15 @@
   "tasks": {
     "dev": {
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "env": ["EXPO_PUBLIC_*", "BUILD_BUILDNUMBER"]
     },
     "test": {
       "dependsOn": ["^test"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^test:e2e"],
+      "env": ["APPIUM_*"]
     },
     "lint": {
       "dependsOn": ["^lint"]

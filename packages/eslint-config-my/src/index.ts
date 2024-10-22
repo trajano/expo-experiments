@@ -31,7 +31,7 @@ const rules: Linter.RulesRecord = {
 };
 
 module.exports = {
-  extends: ['expo', 'prettier'],
+  extends: ['expo', 'prettier', 'turbo'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
