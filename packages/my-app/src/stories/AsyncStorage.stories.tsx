@@ -7,8 +7,8 @@ import { PreviewViewMode } from '@sb/preview';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import { MyText } from 'react-native-my-text';
-import { useUserPreferences } from './UserPreferences';
-import { MyAppUserPreferences } from './app/_layout';
+import { useUserPreferences } from '../UserPreferences';
+import { MyAppUserPreferences } from '../app/_layout';
 const fetchAsyncStorageAsync = async (): Promise<string> => {
   const keys = await AsyncStorage.getAllKeys();
   const kvp = await AsyncStorage.multiGet(keys);
