@@ -15,7 +15,7 @@
     "@expo-google-fonts/nunito": "^0.2.3",
     "@expo-google-fonts/source-sans-pro": "^0.2.3",
     "@testing-library/react-native": "^12.7.2",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "@types/react": "^18.2.44",
     "babel-jest": "^29.7.0",
     "eslint": "^8.57.1",

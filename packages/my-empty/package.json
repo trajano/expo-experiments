@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@testing-library/react-native": "^12.7.2",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "@types/react": "^18.2.44",
     "babel-jest": "^29.7.0",
     "eslint-config-my": "*",

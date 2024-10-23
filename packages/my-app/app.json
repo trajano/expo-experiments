@@ -17,6 +17,11 @@
       "bundleIdentifier": "net.trajano.myapp.go",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "UISupportsDocumentBrowser": true,
+        "UIFileSharingEnabled": false,
+        "LSSupportsOpeningDocumentsInPlace": false
       }
     },
     "android": {

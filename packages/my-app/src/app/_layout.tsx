@@ -4,6 +4,7 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import '@/devMenu';
+import '@/logging';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { FC, useEffect } from 'react';

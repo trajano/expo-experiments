@@ -1,6 +1,6 @@
 {
   "extends": "expo/tsconfig.base",
-  "include": ["src"],
+  "include": ["src", "jest-setup.ts"],
   "compilerOptions": {
     // this is needed to get jest to run from my-app
     "jsx": "react-jsx"
