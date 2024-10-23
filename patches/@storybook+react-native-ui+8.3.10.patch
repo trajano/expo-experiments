@@ -1,0 +1,105 @@
+diff --git a/node_modules/@storybook/react-native-ui/src/BrandLogo.tsx b/node_modules/@storybook/react-native-ui/src/BrandLogo.tsx
+new file mode 100644
+index 0000000..e1463e7
+--- /dev/null
++++ b/node_modules/@storybook/react-native-ui/src/BrandLogo.tsx
+@@ -0,0 +1,57 @@
++import { Theme } from "@storybook/react-native-theming";
++import React, { FC, useCallback, useMemo } from "react";
++import { Image, ImageSourcePropType, Linking, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View } from 'react-native';
++import { DarkLogo } from './icon/DarkLogo';
++import { Logo } from './icon/Logo';
++
++const DefaultBrandLogo: FC<{ theme: Theme }> = ({ theme }) => theme.base === 'light' ? (
++  <Logo height={25} width={125} />
++) : (
++  <DarkLogo height={25} width={125} />
++)
++const ThemedBrandLogo: FC<{ theme: Theme & { brand: NonNullable<Theme['brand']> } }> = ({ theme }) => {
++  const brandTitleStyle = useMemo<StyleProp<TextStyle>>(() => {
++    return [styles.brandTitle, { color: theme.color.primary, fontSize: theme.typography.size.m1 }]
++  }, [theme]);
++  const imageSource = useMemo<ImageSourcePropType | undefined>(() => {
++    if (theme.brand.imageSource) { return theme.brand.imageSource; }
++    else if (theme.brand.image) { return { uri: theme.brand.image }; }
++    else { return undefined; }
++  }, [theme]);
++  return <View style={styles.brandLogo}>
++    {imageSource && <Image source={imageSource} resizeMode="contain" style={styles.brandImage} />}
++    <Text style={brandTitleStyle} numberOfLines={1} ellipsizeMode="tail">{theme.brand.title}</Text>
++  </View>
++
++}
++export const BrandLogo: FC<{ theme: Theme }> = ({ theme }) => {
++  const openBrandUrl = useCallback(() => {
++    Linking.openURL(theme.brand!.url!);
++  }, [theme]);
++  if (!theme.brand) {
++    return <DefaultBrandLogo theme={theme} />
++  } else if (theme.brand?.url) {
++    return <TouchableOpacity style={styles.brandLogoContainer} onPress={openBrandUrl}><ThemedBrandLogo theme={theme} /></TouchableOpacity>
++  } else {
++    return <View style={styles.brandLogoContainer}><ThemedBrandLogo theme={theme} /></View>
++  }
++}
++const styles = StyleSheet.create({
++  brandLogoContainer: {
++    paddingHorizontal: 10,
++    flexDirection: "row",
++    justifyContent: 'flex-start',
++  },
++  brandLogo: {
++    flexDirection: "row",
++    alignItems: 'center',
++    gap: 15,
++  },
++  brandImage: {
++    width: 25,
++    height: 25,
++  },
++  brandTitle: {
++
++  }
++})
+\ No newline at end of file
+diff --git a/node_modules/@storybook/react-native-ui/src/Layout.tsx b/node_modules/@storybook/react-native-ui/src/Layout.tsx
+index 20aeabc..2036408 100644
+--- a/node_modules/@storybook/react-native-ui/src/Layout.tsx
++++ b/node_modules/@storybook/react-native-ui/src/Layout.tsx
+@@ -13,8 +13,7 @@ import { MobileMenuDrawer, MobileMenuDrawerRef } from './MobileMenuDrawer';
+ import { Sidebar } from './Sidebar';
+ import { DEFAULT_REF_ID } from './constants';
+ import { BottomBarToggleIcon } from './icon/BottomBarToggleIcon';
+-import { DarkLogo } from './icon/DarkLogo';
+-import { Logo } from './icon/Logo';
++import { BrandLogo } from './BrandLogo';
+ import { MenuIcon } from './icon/MenuIcon';
+ 
+ export const Layout = ({
+@@ -74,12 +73,7 @@ export const Layout = ({
+                   justifyContent: 'space-between',
+                 }}
+               >
+-                {theme.base === 'light' ? (
+-                  <Logo height={25} width={125} />
+-                ) : (
+-                  <DarkLogo height={25} width={125} />
+-                )}
+-
++                <BrandLogo theme={theme} />
+                 <IconButton onPress={() => setDesktopSidebarOpen(false)} Icon={MenuIcon} />
+               </View>
+ 
+@@ -137,11 +131,7 @@ export const Layout = ({
+ 
+       <MobileMenuDrawer ref={mobileMenuDrawerRef} onStateChange={setDrawerOpen}>
+         <View style={{ paddingLeft: 16, paddingTop: 4, paddingBottom: 4 }}>
+-          {theme.base === 'light' ? (
+-            <Logo height={25} width={125} />
+-          ) : (
+-            <DarkLogo height={25} width={125} />
+-          )}
++          <BrandLogo theme={theme} />
+         </View>
+         <Sidebar
+           extra={[]}
