@@ -32,11 +32,20 @@ export const backgroundFetchLog = logger.createLogger({
   asyncFunc: InteractionManager.runAfterInteractions,
 });
 
-export const notificationLogs = logger.createLogger({
+export const notificationLog = logger.createLogger({
   transport,
   transportOptions: {
     FS: FileSystem,
     fileName: `notification_${new Date().toLocaleDateString()}.txt`,
+  },
+  asyncFunc: InteractionManager.runAfterInteractions,
+});
+
+export const locationLog = logger.createLogger({
+  transport,
+  transportOptions: {
+    FS: FileSystem,
+    fileName: `location_${new Date().toLocaleDateString()}.txt`,
   },
   asyncFunc: InteractionManager.runAfterInteractions,
 });
