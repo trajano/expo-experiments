@@ -23,5 +23,23 @@ const log = logger.createLogger({
   asyncFunc: InteractionManager.runAfterInteractions,
 });
 
+export const backgroundFetchLog = logger.createLogger({
+  transport,
+  transportOptions: {
+    FS: FileSystem,
+    fileName: `background_fetch_${new Date().toLocaleDateString()}.txt`,
+  },
+  asyncFunc: InteractionManager.runAfterInteractions,
+});
+
+export const notificationLogs = logger.createLogger({
+  transport,
+  transportOptions: {
+    FS: FileSystem,
+    fileName: `notification_${new Date().toLocaleDateString()}.txt`,
+  },
+  asyncFunc: InteractionManager.runAfterInteractions,
+});
+
 log.patchConsole();
-console.log('log patched');
+console.debug('log patched');

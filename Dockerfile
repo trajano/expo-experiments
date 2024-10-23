@@ -86,7 +86,7 @@ COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubun
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleRelease
 
-# EAS iOS build
+# EAS build
 FROM prebuild-env AS eas-build-ios-devclient
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
@@ -96,7 +96,7 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
   eas build --non-interactive --platform=ios --profile=development
 
-FROM prebuild-env AS eas-build
+FROM prebuild-env AS eas-build-ios
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
@@ -105,7 +105,25 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
   eas build --non-interactive --platform=ios --profile=preview
 
-# EAS iOS build
+FROM prebuild-env AS eas-build-android-devclient
+ENV EAS_NO_VCS=1
+ENV EAS_PROJECT_ROOT=/home/ubuntu/work
+RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
+  --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
+  --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
+  --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
+  eas build --non-interactive --platform=android --profile=development
+
+FROM prebuild-env AS eas-build-android
+ENV EAS_NO_VCS=1
+ENV EAS_PROJECT_ROOT=/home/ubuntu/work
+RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
+  --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
+  --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
+  --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
+  eas build --non-interactive --platform=android --profile=preview
+
+# EAS update
 FROM prebuild-env AS eas-update
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work

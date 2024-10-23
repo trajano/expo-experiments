@@ -16,6 +16,8 @@ import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
 import { useExpoGoogleFonts } from 'react-native-my-text';
 import { WithUserPreferences } from '@/UserPreferences';
+import { WithMyBackgroundFetch } from '@/MyBackgroundFetch';
+import { BACKGROUND_FETCH_TASK } from '@/tasks';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -53,9 +55,12 @@ export type MyAppUserPreferences = {
   theme: string;
   count: number;
 };
-const CompositeApp = WithUserPreferences(WithNotifications(RootLayout));
+const CompositeApp = WithMyBackgroundFetch(
+  WithUserPreferences(WithNotifications(RootLayout)),
+);
 const MyApp = () => (
   <CompositeApp
+    backgroundFetchTaskName={BACKGROUND_FETCH_TASK}
     userPreferencesStorageKey="myAppStorage"
     userPreferencesInitial={
       {
