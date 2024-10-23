@@ -1,14 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FC, useEffect, useState } from 'react';
 import {
   addOrientationChangeListener,
+  getOrientationAsync,
+  getOrientationLockAsync,
   Orientation,
   OrientationLock,
-  ScreenOrientationInfo,
 } from 'expo-screen-orientation';
+import { FC, useEffect, useState } from 'react';
 import {
   Dimensions,
   StyleSheet,
+  useColorScheme,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -16,26 +18,39 @@ import { MyText } from 'react-native-my-text';
 const DimensionsView: FC = () => {
   const screenDimensions = Dimensions.get('screen');
   const windowDimensionsViaGet = Dimensions.get('window');
+  const colorScheme = useColorScheme();
   const windowDimensions = useWindowDimensions();
-  const [orientationInfo, setOrientationInfo] = useState<ScreenOrientationInfo>(
-    {
-      orientation: Orientation.UNKNOWN,
-    },
+  const [orientation, setOrientation] = useState<Orientation>(
+    Orientation.UNKNOWN,
   );
   const [orientationLock, setOrientationLock] = useState<OrientationLock>(
     OrientationLock.UNKNOWN,
   );
   useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const nextOrientation = await getOrientationAsync();
+      const nextOrientationLock = await getOrientationLockAsync();
+      if (mounted) {
+        setOrientation(nextOrientation);
+        setOrientationLock(nextOrientationLock);
+      }
+    })();
     const subscription = addOrientationChangeListener(
       ({
         orientationInfo: nextOrientationInfo,
         orientationLock: nextOrientationLock,
       }) => {
-        setOrientationInfo(nextOrientationInfo);
-        setOrientationLock(nextOrientationLock);
+        if (mounted) {
+          setOrientation(nextOrientationInfo.orientation);
+          setOrientationLock(nextOrientationLock);
+        }
       },
     );
-    return () => subscription.remove();
+    return () => {
+      mounted = false;
+      subscription.remove();
+    };
   }, []);
   return (
     <View style={styles.container}>
@@ -48,8 +63,9 @@ const DimensionsView: FC = () => {
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>Screen Orientation</MyText>
       </View>
+      <MyText style={styles.text}>{Orientation[orientation]}</MyText>
       <MyText style={styles.text}>
-        {JSON.stringify(orientationInfo, null, 2)}
+        {JSON.stringify(orientation, null, 2)}
       </MyText>
       <MyText style={styles.text}>
         {JSON.stringify(
@@ -60,6 +76,10 @@ const DimensionsView: FC = () => {
           2,
         )}
       </MyText>
+      <View style={styles.sectionHeader}>
+        <MyText style={styles.sectionHeaderText}>useColorScheme</MyText>
+      </View>
+      <MyText style={styles.text}>{colorScheme}</MyText>
 
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>

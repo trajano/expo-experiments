@@ -2,7 +2,7 @@
   "name": "expo-experiments",
   "scripts": {
     "start": "cd packages/my-app && expo start -c",
-    "lint": "npm run lint --workspaces",
+    "lint": "turbo lint",
     "dev": "turbo dev --concurrency 20",
     "test": "jest",
     "typecheck": "npm run typecheck --workspaces",
@@ -37,7 +37,7 @@
     "prettier": "^3.3.3",
     "prettier-plugin-sh": "^0.14.0",
     "ts-node": "^10.9.2",
-    "turbo": "^2.2.1"
+    "turbo": "^2.2.3"
   },
   "packageManager": "npm@10.8.3",
   "dependencies": {
