@@ -7,11 +7,26 @@ import * as ExpoManifests from 'expo-manifests';
 import * as ExpoUpdates from 'expo-updates';
 import { FC } from 'react';
 import { Platform as RNPlatform, StyleSheet, View } from 'react-native';
+import JSONTree from 'react-native-json-tree';
 import { MyText } from 'react-native-my-text';
-const ConstantsView: FC<{ content: object }> = ({ content }) => {
+const ConstantsView: FC<{ content: Record<string, unknown> }> = ({
+  content,
+}) => {
   return (
     <View style={styles.container}>
-      <MyText style={styles.text}>{JSON.stringify(content, null, 2)}</MyText>
+      <JSONTree
+        data={JSON.parse(JSON.stringify(content))}
+        shouldExpandNode={() => true}
+        hideRoot={true}
+        labelRenderer={(keypath) => (
+          <MyText style={{ fontSize: 20 }}>{keypath[0]}</MyText>
+        )}
+        valueRenderer={(raw) => (
+          <MyText style={{ fontSize: 16 }}>
+            {typeof raw === 'string' ? raw : JSON.stringify(raw)}
+          </MyText>
+        )}
+      />
     </View>
   );
 };
@@ -21,9 +36,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
   },
-  container: {
-    padding: 20,
-  },
+  container: {},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -89,7 +102,9 @@ export const Updates: Story = {
 };
 
 export const Calendars: Story = {
-  args: { content: Localization.getCalendars() },
+  args: {
+    content: Localization.getCalendars() as unknown as Record<string, unknown>,
+  },
   parameters: {
     backgrounds: {
       default: 'plain',
@@ -98,7 +113,9 @@ export const Calendars: Story = {
 };
 
 export const Locales: Story = {
-  args: { content: Localization.getLocales() },
+  args: {
+    content: Localization.getLocales() as unknown as Record<string, unknown>,
+  },
   parameters: {
     backgrounds: {
       default: 'plain',
@@ -125,7 +142,7 @@ export const Manifests: Story = {
 };
 
 export const Platform: Story = {
-  args: { content: RNPlatform },
+  args: { content: RNPlatform as unknown as Record<string, unknown> },
   parameters: {
     backgrounds: {
       default: 'plain',
