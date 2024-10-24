@@ -39,6 +39,9 @@
     },
     "plugins": [
       "expo-router",
+      "expo-background-fetch",
+      "expo-notifications",
+      "expo-location",
       ["expo-screen-orientation", { "initialOrientation": "DEFAULT" }],
       "expo-secure-store",
       "expo-tracking-transparency",

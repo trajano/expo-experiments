@@ -6,12 +6,15 @@ import { StyleSheet, View } from 'react-native';
 import { MyText } from 'react-native-my-text';
 const TaskManagerView: FC = () => {
   const [tasks, setTasks] = useState<TaskManagerTask[]>([]);
+  const [isAvailable, setIsAvailable] = useState(false);
   useEffect(() => {
     let mounted = true;
     (async () => {
       const nextTasks = await TaskManager.getRegisteredTasksAsync();
+      const nextIsAvailable = await TaskManager.isAvailableAsync();
       if (mounted) {
         setTasks(nextTasks);
+        setIsAvailable(nextIsAvailable);
       }
     })();
     return () => {
@@ -22,6 +25,12 @@ const TaskManagerView: FC = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.sectionHeader}>
+        <MyText style={styles.sectionHeaderText}>Is Available</MyText>
+      </View>
+      <MyText style={styles.text}>
+        {isAvailable ? 'available' : 'not available'}
+      </MyText>
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>Registered Tasks</MyText>
       </View>
