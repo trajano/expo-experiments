@@ -3,18 +3,30 @@ import * as TaskManager from 'expo-task-manager';
 import { TaskManagerTask } from 'expo-task-manager';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { MyText } from 'react-native-my-text';
+import { MyText, Strong } from 'react-native-my-text';
+import * as BackgroundFetch from 'expo-background-fetch';
+
 const TaskManagerView: FC = () => {
   const [tasks, setTasks] = useState<TaskManagerTask[]>([]);
   const [isAvailable, setIsAvailable] = useState(false);
+
+  const [backgroundFetchStatus, setBackgroundFetchStatus] =
+    useState<string>('');
+
   useEffect(() => {
     let mounted = true;
     (async () => {
       const nextTasks = await TaskManager.getRegisteredTasksAsync();
       const nextIsAvailable = await TaskManager.isAvailableAsync();
+      const nextBackgroundFetchStatus = await BackgroundFetch.getStatusAsync();
       if (mounted) {
         setTasks(nextTasks);
         setIsAvailable(nextIsAvailable);
+        setBackgroundFetchStatus(
+          nextBackgroundFetchStatus
+            ? BackgroundFetch.BackgroundFetchStatus[nextBackgroundFetchStatus]
+            : 'unknown',
+        );
       }
     })();
     return () => {
@@ -26,10 +38,16 @@ const TaskManagerView: FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.sectionHeader}>
-        <MyText style={styles.sectionHeaderText}>Is Available</MyText>
+        <MyText style={styles.sectionHeaderText}>Status</MyText>
       </View>
       <MyText style={styles.text}>
-        {isAvailable ? 'available' : 'not available'}
+        {isAvailable
+          ? 'registeredTasks available'
+          : 'registeredTasks not available'}
+      </MyText>
+      <MyText style={styles.text}>
+        <Strong>BackgroundFetch:</Strong>
+        <MyText>{backgroundFetchStatus}</MyText>
       </MyText>
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>Registered Tasks</MyText>

@@ -11,3 +11,4 @@ dist/
 google-services.json
 node_modules/
 credentials.json
+eslint.report.json
