@@ -1,7 +1,6 @@
 import * as FileSystem from 'expo-file-system';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  Alert,
   Button,
   FlatList,
   ListRenderItem,
@@ -10,16 +9,6 @@ import {
   View,
 } from 'react-native';
 import { MyText } from 'react-native-my-text';
-
-let FileViewer: any;
-try {
-  FileViewer = require('react-native-file-viewer');
-} catch (e: unknown) {
-  FileViewer = {
-    open: () => Promise.resolve(),
-  };
-}
-//import FileViewer from 'react-native-file-viewer';
 
 type FileTreeItemInfoDirectory = {
   name: string;
@@ -38,6 +27,7 @@ type FileTreeItemInfo = FileTreeItemInfoDirectory | FileTreeItemInfoFile;
 // Recursive function to read the directory and its children
 const readDirectoryRecursively = async (
   uri: string,
+  hideChildren: boolean,
   depth = 0,
 ): Promise<FileTreeItemInfo[]> => {
   const items = await FileSystem.readDirectoryAsync(uri);
@@ -64,11 +54,14 @@ const readDirectoryRecursively = async (
 
     if (fileInfo.isDirectory) {
       // Recursively fetch the children of the directory
+      const children = hideChildren
+        ? []
+        : await readDirectoryRecursively(itemUri, true, depth + 1);
       result.push({
         name: fileInfo.name,
         uri: itemUri,
         type: 'directory',
-        children: await readDirectoryRecursively(itemUri, depth + 1),
+        children,
         depth,
       });
     } else {
@@ -105,41 +98,79 @@ const flattenTree = (tree: FileTreeItemInfo[]): FileTreeItemInfo[] => {
   return result;
 };
 
-const DirectoryItem: FC<{ item: FileTreeItemInfoDirectory }> = ({ item }) => (
-  <View style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}>
-    <MyText>{`📁 ${item.name}`}</MyText>
-  </View>
-);
-const FileItem: FC<{ item: FileTreeItemInfoFile }> = ({ item }) => {
-  const onPress = useCallback(async () => {
-    try {
-      await FileViewer.open(item.uri);
-    } catch (e: unknown) {
-      Alert.alert('File viewer', `Unable to open ${item.name}. Reason: ${e}`);
-    }
-  }, [item]);
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}
-    >
-      <MyText>{`📄 ${item.name} ${item.depth}`}</MyText>
-    </TouchableOpacity>
+export type OnItemPressCallback = (
+  item: FileTreeItemInfo,
+) => void | Promise<void>;
+
+const DirectoryItem: FC<{
+  item: FileTreeItemInfoDirectory;
+  onItemPress?: OnItemPressCallback;
+}> = ({ item, onItemPress }) => {
+  const onPress = useCallback(
+    () => onItemPress && onItemPress(item),
+    [item, onItemPress],
   );
+  if (onItemPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}
+      >
+        <MyText>{`📁 ${item.name}`}</MyText>
+      </TouchableOpacity>
+    );
+  } else {
+    return (
+      <View style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}>
+        <MyText>{`📁 ${item.name}`}</MyText>
+      </View>
+    );
+  }
+};
+
+const FileItem: FC<{
+  item: FileTreeItemInfoFile;
+  onItemPress?: OnItemPressCallback;
+}> = ({ item, onItemPress }) => {
+  const onPress = useCallback(
+    () => onItemPress && onItemPress(item),
+    [item, onItemPress],
+  );
+  if (onItemPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}
+      >
+        <MyText>{`📄 ${item.name} ${item.depth}`}</MyText>
+      </TouchableOpacity>
+    );
+  } else {
+    return (
+      <View style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}>
+        <MyText>{`📄 ${item.name} ${item.depth}`}</MyText>{' '}
+      </View>
+    );
+  }
 };
 // FileTree component using a single FlashList
-export const FileTree: FC<{ directoryUri: string }> = ({ directoryUri }) => {
+export const FileTree: FC<{
+  directoryUri: string;
+  hideChildren?: boolean;
+  onItemPress?: OnItemPressCallback;
+}> = ({ directoryUri, onItemPress, hideChildren = false }) => {
   const [fileTree, setFileTree] = useState<FileTreeItemInfo[]>([]);
 
   const refresh = useCallback(async () => {
-    const tree = await readDirectoryRecursively(directoryUri);
+    const tree = await readDirectoryRecursively(directoryUri, hideChildren);
     setFileTree(tree);
-  }, [directoryUri]);
+  }, [directoryUri, hideChildren]);
+
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        const tree = await readDirectoryRecursively(directoryUri);
+        const tree = await readDirectoryRecursively(directoryUri, hideChildren);
         if (mounted) {
           setFileTree(tree);
         }
@@ -150,14 +181,14 @@ export const FileTree: FC<{ directoryUri: string }> = ({ directoryUri }) => {
     return () => {
       mounted = false;
     };
-  }, [directoryUri]);
+  }, [directoryUri, hideChildren]);
 
   // Render each file or directory item
   const renderItem: ListRenderItem<FileTreeItemInfo> = ({ item }) =>
     item.type === 'directory' ? (
-      <DirectoryItem item={item} />
+      <DirectoryItem item={item} onItemPress={onItemPress} />
     ) : (
-      <FileItem item={item} />
+      <FileItem item={item} onItemPress={onItemPress} />
     );
 
   const flatFileTree = useMemo<FileTreeItemInfo[]>(
