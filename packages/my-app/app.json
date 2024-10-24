@@ -3,12 +3,12 @@
     "name": "My App Go",
     "slug": "my-app",
     "version": "1.2.3",
-    "icon": "./src/assets/images/icon.png",
+    "icon": "./brand/icon.png",
     "scheme": "myapp",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./src/assets/images/splash.png",
+      "image": "./brand/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,22 +20,17 @@
       },
       "infoPlist": {
         "UISupportsDocumentBrowser": true,
-        "UIFileSharingEnabled": false,
+        "UIFileSharingEnabled": true,
         "LSSupportsOpeningDocumentsInPlace": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundImage": "./src/assets/images/adaptive-background.png",
+        "foregroundImage": "./brand/adaptive-icon.png",
+        "backgroundImage": "./brand/adaptive-background.png",
         "backgroundColor": "#101010"
       },
       "package": "net.trajano.myapp.go"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./src/assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",

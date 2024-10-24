@@ -15,7 +15,8 @@
       },
       "env": {
         "EXPO_PUBLIC_APP_ID": "net.trajano.myapp",
-        "EXPO_PUBLIC_APP_NAME": "My App"
+        "EXPO_PUBLIC_APP_NAME": "My App",
+        "EXPO_PUBLIC_APP_BRAND": "release"
       },
       "channel": "preview"
     },
@@ -24,6 +25,11 @@
       "distribution": "store",
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_APP_ID": "net.trajano.myapp",
+        "EXPO_PUBLIC_APP_NAME": "My App",
+        "EXPO_PUBLIC_APP_BRAND": "release"
       },
       "channel": "production"
     },
