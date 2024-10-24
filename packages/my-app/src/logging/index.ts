@@ -1,21 +1,13 @@
 /**
  * Logging related.  This will install and override the default console logs.
  */
-import {
-  logger,
-  consoleTransport,
-  fileAsyncTransport,
-} from 'react-native-logs';
 import * as FileSystem from 'expo-file-system';
 import { InteractionManager } from 'react-native';
-let transport = [fileAsyncTransport];
-if (__DEV__) {
-  // create composite logger that logs both console and file
-  transport.push(consoleTransport);
-}
+import { fileAsyncTransport, logger } from 'react-native-logs';
+import { consoleArgsToLoggerArgs } from './consoleArgsToLoggerArgs';
 
-const log = logger.createLogger({
-  transport,
+const consoleLog = logger.createLogger({
+  transport: fileAsyncTransport,
   transportOptions: {
     FS: FileSystem,
     fileName: `logs_${new Date().toLocaleDateString()}.txt`,
@@ -24,7 +16,7 @@ const log = logger.createLogger({
 });
 
 export const backgroundFetchLog = logger.createLogger({
-  transport,
+  transport: fileAsyncTransport,
   transportOptions: {
     FS: FileSystem,
     fileName: `background_fetch_${new Date().toLocaleDateString()}.txt`,
@@ -33,7 +25,7 @@ export const backgroundFetchLog = logger.createLogger({
 });
 
 export const notificationLog = logger.createLogger({
-  transport,
+  transport: fileAsyncTransport,
   transportOptions: {
     FS: FileSystem,
     fileName: `notification_${new Date().toLocaleDateString()}.txt`,
@@ -42,7 +34,7 @@ export const notificationLog = logger.createLogger({
 });
 
 export const locationLog = logger.createLogger({
-  transport,
+  transport: fileAsyncTransport,
   transportOptions: {
     FS: FileSystem,
     fileName: `location_${new Date().toLocaleDateString()}.txt`,
@@ -50,5 +42,33 @@ export const locationLog = logger.createLogger({
   asyncFunc: InteractionManager.runAfterInteractions,
 });
 
-log.patchConsole();
-console.debug({ message: 'log patched' });
+// patch console logs
+const originalConsoleLog = console.log;
+console.log = (...args: any[]) => {
+  originalConsoleLog(...args);
+  consoleLog.log(...consoleArgsToLoggerArgs(...args));
+};
+
+const originalConsoleDebug = console.debug;
+console.debug = (...args: any[]) => {
+  originalConsoleDebug(...args);
+  consoleLog.debug(...consoleArgsToLoggerArgs(...args));
+};
+
+const originalConsoleWarn = console.warn;
+console.warn = (...args: any[]) => {
+  originalConsoleWarn(...args);
+  consoleLog.warn(...consoleArgsToLoggerArgs(...args));
+};
+
+const originalConsoleError = console.error;
+console.error = (...args: any[]) => {
+  originalConsoleError(...args);
+  consoleLog.error(...consoleArgsToLoggerArgs(...args));
+};
+
+const originalConsoleInfo = console.info;
+console.info = (...args: any[]) => {
+  originalConsoleInfo(...args);
+  consoleLog.info(...consoleArgsToLoggerArgs(...args));
+};
