@@ -7,8 +7,16 @@ import * as ExpoManifests from 'expo-manifests';
 import * as ExpoUpdates from 'expo-updates';
 import { FC } from 'react';
 import { Platform as RNPlatform, StyleSheet, View } from 'react-native';
-import JSONTree from 'react-native-json-tree';
+import JSONTree, { JSONTreeProps } from 'react-native-json-tree';
 import { MyText } from 'react-native-my-text';
+const labelRenderer: JSONTreeProps['labelRenderer'] = (keypath) => (
+  <MyText style={{ fontSize: 20 }}>{keypath[0]}</MyText>
+);
+const valueRenderer: JSONTreeProps['valueRenderer'] = (raw) => (
+  <MyText style={{ fontSize: 16 }}>
+    {typeof raw === 'string' ? raw : JSON.stringify(raw)}
+  </MyText>
+);
 const ConstantsView: FC<{ content: Record<string, unknown> }> = ({
   content,
 }) => {
@@ -18,14 +26,8 @@ const ConstantsView: FC<{ content: Record<string, unknown> }> = ({
         data={JSON.parse(JSON.stringify(content))}
         shouldExpandNode={() => true}
         hideRoot={true}
-        labelRenderer={(keypath) => (
-          <MyText style={{ fontSize: 20 }}>{keypath[0]}</MyText>
-        )}
-        valueRenderer={(raw) => (
-          <MyText style={{ fontSize: 16 }}>
-            {typeof raw === 'string' ? raw : JSON.stringify(raw)}
-          </MyText>
-        )}
+        labelRenderer={labelRenderer}
+        valueRenderer={valueRenderer}
       />
     </View>
   );
