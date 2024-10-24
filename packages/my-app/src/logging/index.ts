@@ -51,4 +51,4 @@ export const locationLog = logger.createLogger({
 });
 
 log.patchConsole();
-console.debug('log patched');
+console.debug({ message: 'log patched' });

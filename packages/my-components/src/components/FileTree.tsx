@@ -4,7 +4,9 @@ import {
   Button,
   FlatList,
   ListRenderItem,
+  StyleProp,
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -100,65 +102,84 @@ const flattenTree = (tree: FileTreeItemInfo[]): FileTreeItemInfo[] => {
 
 export type OnItemPressCallback = (
   item: FileTreeItemInfo,
+  refreshCallback: () => Promise<void>,
 ) => void | Promise<void>;
+
+const TreeItem: FC<{
+  item: FileTreeItemInfo;
+  onItemPress?: OnItemPressCallback;
+  onItemLongPress?: OnItemPressCallback;
+  refreshCallback: () => Promise<void>;
+  itemTextStyle?: StyleProp<TextStyle>;
+  label: string;
+}> = ({
+  item,
+  onItemPress,
+  onItemLongPress,
+  label,
+  refreshCallback,
+  itemTextStyle,
+}) => {
+  const onPress = useCallback(
+    () => onItemPress && onItemPress(item, refreshCallback),
+    [item, onItemPress, refreshCallback],
+  );
+  const onLongPress = useCallback(
+    () => onItemLongPress && onItemLongPress(item, refreshCallback),
+    [item, onItemLongPress, refreshCallback],
+  );
+  if (onItemPress || onItemLongPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        onLongPress={onLongPress}
+        style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}
+      >
+        <MyText style={itemTextStyle}>{label}</MyText>
+      </TouchableOpacity>
+    );
+  } else {
+    return (
+      <View style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}>
+        <MyText style={itemTextStyle}>{label}</MyText>
+      </View>
+    );
+  }
+};
 
 const DirectoryItem: FC<{
   item: FileTreeItemInfoDirectory;
+  itemTextStyle?: StyleProp<TextStyle>;
+  refreshCallback: () => Promise<void>;
   onItemPress?: OnItemPressCallback;
-}> = ({ item, onItemPress }) => {
-  const onPress = useCallback(
-    () => onItemPress && onItemPress(item),
-    [item, onItemPress],
-  );
-  if (onItemPress) {
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}
-      >
-        <MyText>{`📁 ${item.name}`}</MyText>
-      </TouchableOpacity>
-    );
-  } else {
-    return (
-      <View style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}>
-        <MyText>{`📁 ${item.name}`}</MyText>
-      </View>
-    );
-  }
-};
+  onItemLongPress?: OnItemPressCallback;
+}> = ({ item, ...props }) => (
+  <TreeItem item={item} {...props} label={`📁 ${item.name}`} />
+);
 
 const FileItem: FC<{
   item: FileTreeItemInfoFile;
+  itemTextStyle?: StyleProp<TextStyle>;
+  refreshCallback: () => Promise<void>;
   onItemPress?: OnItemPressCallback;
-}> = ({ item, onItemPress }) => {
-  const onPress = useCallback(
-    () => onItemPress && onItemPress(item),
-    [item, onItemPress],
-  );
-  if (onItemPress) {
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}
-      >
-        <MyText>{`📄 ${item.name} ${item.depth}`}</MyText>
-      </TouchableOpacity>
-    );
-  } else {
-    return (
-      <View style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}>
-        <MyText>{`📄 ${item.name} ${item.depth}`}</MyText>{' '}
-      </View>
-    );
-  }
-};
-// FileTree component using a single FlashList
+  onItemLongPress?: OnItemPressCallback;
+}> = ({ item, ...props }) => (
+  <TreeItem item={item} {...props} label={`📄 ${item.name} ${item.depth}`} />
+);
+
 export const FileTree: FC<{
   directoryUri: string;
   hideChildren?: boolean;
   onItemPress?: OnItemPressCallback;
-}> = ({ directoryUri, onItemPress, hideChildren = false }) => {
+  onItemLongPress?: OnItemPressCallback;
+  itemTextStyle?: StyleProp<TextStyle>;
+}> = ({
+  directoryUri,
+  onItemPress,
+  onItemLongPress,
+  itemTextStyle,
+  hideChildren = false,
+}) => {
   const [fileTree, setFileTree] = useState<FileTreeItemInfo[]>([]);
 
   const refresh = useCallback(async () => {
@@ -186,9 +207,21 @@ export const FileTree: FC<{
   // Render each file or directory item
   const renderItem: ListRenderItem<FileTreeItemInfo> = ({ item }) =>
     item.type === 'directory' ? (
-      <DirectoryItem item={item} onItemPress={onItemPress} />
+      <DirectoryItem
+        item={item}
+        onItemPress={onItemPress}
+        itemTextStyle={itemTextStyle}
+        onItemLongPress={onItemLongPress}
+        refreshCallback={refresh}
+      />
     ) : (
-      <FileItem item={item} onItemPress={onItemPress} />
+      <FileItem
+        item={item}
+        onItemPress={onItemPress}
+        itemTextStyle={itemTextStyle}
+        onItemLongPress={onItemLongPress}
+        refreshCallback={refresh}
+      />
     );
 
   const flatFileTree = useMemo<FileTreeItemInfo[]>(
