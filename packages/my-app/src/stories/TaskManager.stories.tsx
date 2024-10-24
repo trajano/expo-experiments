@@ -5,6 +5,11 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MyText, Strong } from 'react-native-my-text';
 import * as BackgroundFetch from 'expo-background-fetch';
+import {
+  BACKGROUND_FETCH_TASK,
+  BACKGROUND_LOCATION_TASK,
+  BACKGROUND_NOTIFICATION_TASK,
+} from '@/tasks';
 
 const TaskManagerView: FC = () => {
   const [tasks, setTasks] = useState<TaskManagerTask[]>([]);
@@ -53,6 +58,21 @@ const TaskManagerView: FC = () => {
         <MyText style={styles.sectionHeaderText}>Registered Tasks</MyText>
       </View>
       <MyText style={styles.text}>{tasksJson}</MyText>
+      <View style={styles.sectionHeader}>
+        <MyText style={styles.sectionHeaderText}>Known tasks</MyText>
+      </View>
+      <MyText style={styles.text}>
+        <Strong>BACKGROUND_NOTIFICATION_TASK:</Strong>
+        {TaskManager.isTaskDefined(BACKGROUND_NOTIFICATION_TASK) ? 'yes' : 'no'}
+      </MyText>
+      <MyText style={styles.text}>
+        <Strong>BACKGROUND_LOCATION_TASK:</Strong>
+        {TaskManager.isTaskDefined(BACKGROUND_LOCATION_TASK) ? 'yes' : 'no'}
+      </MyText>
+      <MyText style={styles.text}>
+        <Strong>BACKGROUND_FETCH_TASK:</Strong>
+        npm{TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK) ? 'yes' : 'no'}
+      </MyText>
     </View>
   );
 };
