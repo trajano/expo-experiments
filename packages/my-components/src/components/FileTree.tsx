@@ -9,8 +9,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FileViewer from 'react-native-file-viewer';
 import { MyText } from 'react-native-my-text';
+
+let FileViewer: any;
+try {
+  FileViewer = require('react-native-file-viewer');
+} catch (e: unknown) {
+  FileViewer = {
+    open: () => Promise.resolve(),
+  };
+}
+//import FileViewer from 'react-native-file-viewer';
 
 type FileTreeItemInfoDirectory = {
   name: string;
