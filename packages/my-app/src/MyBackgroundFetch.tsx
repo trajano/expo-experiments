@@ -40,9 +40,11 @@ export const MyBackgroundFetchContext = createContext<MyBackgroundFetch>({
 /**
  * Props type for the MyBackgroundFetchProvider component, which wraps its children in the MyBackgroundFetchContext.
  */
-export type MyBackgroundFetchProps = PropsWithChildren<{
-  backgroundFetchTaskName: string;
-}>;
+export type MyBackgroundFetchProps = PropsWithChildren<
+  {
+    backgroundFetchTaskName: string;
+  } & BackgroundFetch.BackgroundFetchOptions
+>;
 
 /**
  * A provider component for the MyBackgroundFetchContext.
@@ -53,6 +55,7 @@ export type MyBackgroundFetchProps = PropsWithChildren<{
 export const MyBackgroundFetchProvider: FC<MyBackgroundFetchProps> = ({
   backgroundFetchTaskName,
   children,
+  ...backgroundFetchOptions
 }) => {
   const [registered, setRegistered] = useState(false);
   const [status, setStatus] =
@@ -60,11 +63,10 @@ export const MyBackgroundFetchProvider: FC<MyBackgroundFetchProps> = ({
   useEffect(() => {
     let mounted = true;
     const registerBackgroundFetchAsync = async () =>
-      BackgroundFetch.registerTaskAsync(backgroundFetchTaskName, {
-        minimumInterval: 60 * 15, // 15 minutes
-        stopOnTerminate: false, // android only,
-        startOnBoot: true, // android only
-      });
+      BackgroundFetch.registerTaskAsync(
+        backgroundFetchTaskName,
+        backgroundFetchOptions,
+      );
     (async () => {
       const nextBackgroundFetchStatus = await BackgroundFetch.getStatusAsync();
       const nextRegistered = await TaskManager.isTaskRegisteredAsync(
@@ -88,7 +90,7 @@ export const MyBackgroundFetchProvider: FC<MyBackgroundFetchProps> = ({
     return () => {
       mounted = false;
     };
-  }, [backgroundFetchTaskName]);
+  }, [backgroundFetchTaskName, backgroundFetchOptions]);
   const value = useMemo<MyBackgroundFetch>(
     () => ({ registered, status }),
     [registered, status],

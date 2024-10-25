@@ -61,6 +61,8 @@ const CompositeApp = WithMyBackgroundFetch(
 const MyApp = () => (
   <CompositeApp
     backgroundFetchTaskName={BACKGROUND_FETCH_TASK}
+    stopOnTerminate={false}
+    startOnBoot={true}
     userPreferencesStorageKey="myAppStorage"
     userPreferencesInitial={
       {
