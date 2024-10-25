@@ -83,7 +83,7 @@ const LoaderScreen: FC = () => {
           }}
           testID="splash"
           progress={progress} // Casting to number to fix typing issue
-          source={require('@/assets/cat-loader-2.lottie')}
+          source={require('@/assets/cat-loader-2.json')}
         />
       </View>
     );

@@ -3,6 +3,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
+
 import '@/devMenu';
 import '@/logging';
 import { useFonts } from 'expo-font';
@@ -10,14 +11,14 @@ import { SplashScreen, Stack } from 'expo-router';
 import { FC, useEffect } from 'react';
 import 'react-native-reanimated';
 
+import { WithMyBackgroundFetch } from '@/MyBackgroundFetch';
+import { BACKGROUND_FETCH_TASK } from '@/tasks';
+import { WithUserPreferences } from '@/UserPreferences';
 import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
 import { useExpoGoogleFonts } from 'react-native-my-text';
-import { WithUserPreferences } from '@/UserPreferences';
-import { WithMyBackgroundFetch } from '@/MyBackgroundFetch';
-import { BACKGROUND_FETCH_TASK } from '@/tasks';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
