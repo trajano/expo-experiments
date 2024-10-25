@@ -49,11 +49,15 @@ export type MyBackgroundFetchProps = PropsWithChildren<
 /**
  * A provider component for the MyBackgroundFetchContext.
  *
+ * @param backgroundFetchTaskName background fetch task name
+ * @param minimumInterval minimum interval, defaults to 10 minutes
  * @param children The child components that will have access to the context.
+ * @param backgroundFetchOptions
  * @returns A provider that passes an empty value to all of its children.
  */
 export const MyBackgroundFetchProvider: FC<MyBackgroundFetchProps> = ({
   backgroundFetchTaskName,
+  minimumInterval = 600,
   children,
   ...backgroundFetchOptions
 }) => {
@@ -63,10 +67,10 @@ export const MyBackgroundFetchProvider: FC<MyBackgroundFetchProps> = ({
   useEffect(() => {
     let mounted = true;
     const registerBackgroundFetchAsync = async () =>
-      BackgroundFetch.registerTaskAsync(
-        backgroundFetchTaskName,
-        backgroundFetchOptions,
-      );
+      BackgroundFetch.registerTaskAsync(backgroundFetchTaskName, {
+        ...backgroundFetchOptions,
+        minimumInterval,
+      });
     (async () => {
       const nextBackgroundFetchStatus = await BackgroundFetch.getStatusAsync();
       const nextRegistered = await TaskManager.isTaskRegisteredAsync(
