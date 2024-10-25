@@ -1,5 +1,6 @@
 %ProgramData%/
 *.apk
+*.ipa
 *.heapsnapshot
 .DS_Store
 .idea/
