@@ -3,17 +3,22 @@ const stringValueOfAny = (o: any): string => {
   if (o === undefined) return 'undefined';
   return o.toString();
 };
+
 const padNumber = (input: any, pad: number): string => {
-  const parsed = parseInt(input);
-
-  if (isNaN(parsed)) {
-    return 'NaN';
-  }
-
-  return parsed.toString().padStart(pad, '0');
+  const parsed = parseInt(input, 10);
+  return isNaN(parsed) ? 'NaN' : parsed.toString().padStart(pad, '0');
 };
+
 /**
- *implements a subset of sprintf that is defined in https://developer.mozilla.org/en-US/docs/Web/API/console#using_string_substitutions
+ * Implements a subset of sprintf that is defined in
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/console#using_string_substitutions}.
+ *
+ * Supported formats: %s (string), %d or %i (integer), %f (float), %.xf (float with precision),
+ * %.xd (padded integer), %o or %O (object).
+ *
+ * @param format The format string containing substitution tokens.
+ * @param args The arguments to substitute in the format string.
+ * @returns The formatted string with substitutions applied.
  */
 export const sprintf = (format: string, ...args: any[]): string => {
   let index = 0;
