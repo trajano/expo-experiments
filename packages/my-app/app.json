@@ -8,9 +8,14 @@
     "orientation": "default",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./brand/splash.png",
+      "image": "./brand/splash-light.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#53bbbf",
+      "dark": {
+        "image": "./brand/splash-dark.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#190317"
+      }
     },
     "ios": {
       "supportsTablet": true,
