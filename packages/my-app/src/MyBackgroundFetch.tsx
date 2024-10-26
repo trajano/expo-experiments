@@ -94,7 +94,7 @@ export const MyBackgroundFetchProvider: FC<MyBackgroundFetchProps> = ({
     return () => {
       mounted = false;
     };
-  }, [backgroundFetchTaskName, backgroundFetchOptions]);
+  }, [backgroundFetchTaskName, backgroundFetchOptions, minimumInterval]);
   const value = useMemo<MyBackgroundFetch>(
     () => ({ registered, status }),
     [registered, status],

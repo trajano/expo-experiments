@@ -14,6 +14,18 @@ describe('logging with placeholders', () => {
     expect(consoleArgsToLoggerArgs('foo', 'bar')).toEqual(['foo', 'bar']);
     expect(consoleArgsToLoggerArgs({ foo: 'bar' })).toEqual([{ foo: 'bar' }]);
   });
+  test('all sprintf scenarios', () => {
+    expect(
+      consoleArgsToLoggerArgs(
+        'foo %s %f %i %o %.2f',
+        'bar',
+        1.523123,
+        2.42,
+        { foo: 'bar' },
+        3.2423,
+      ),
+    ).toEqual(['foo bar 1.523123 2 {"foo":"bar"} 3.24']);
+  });
   test('invalid placeholder', () => {
     expect(consoleArgsToLoggerArgs('foo %x', 'bar')).toEqual(['foo %x']);
   });
