@@ -61,7 +61,7 @@ const LoaderScreen: FC = () => {
             useNativeDriver: false,
           }).start(() => {
             // Navigate to the tabs route once the animation completes
-            router.push('/(tabs)');
+            router.replace('/(tabs)');
           });
         }, 500); // Small delay before playing the final animation
       }

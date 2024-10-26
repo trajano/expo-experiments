@@ -128,5 +128,6 @@ export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
         },
       },
     },
+    runtimeVersion: version,
   };
 };
