@@ -9,6 +9,11 @@ const padNumber = (input: any, pad: number): string => {
   return isNaN(parsed) ? 'NaN' : parsed.toString().padStart(pad, '0');
 };
 
+const formatFloat = (arg: any, precision?: number) =>
+  precision !== undefined
+    ? parseFloat(arg).toFixed(precision)
+    : parseFloat(arg).toString();
+
 /**
  * Implements a subset of sprintf that is defined in
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/console#using_string_substitutions}.
@@ -24,60 +29,65 @@ export const sprintf = (format: string, ...args: any[]): string => {
   let index = 0;
   let argIndex = 0;
   let assembled = '';
+
   while (index < format.length) {
     const nextPercentIndex = format.indexOf('%', index);
     if (nextPercentIndex === -1) {
       return assembled + format.substring(index);
-    } else {
-      assembled += format.substring(index, nextPercentIndex);
-      if (format.charAt(nextPercentIndex + 1) === 's') {
+    }
+
+    // Add non-format part
+    assembled += format.substring(index, nextPercentIndex);
+    const nextChar = format.charAt(nextPercentIndex + 1);
+
+    switch (nextChar) {
+      case 's':
         assembled += stringValueOfAny(args[argIndex++]);
         index = nextPercentIndex + 2;
-      } else if (
-        format.charAt(nextPercentIndex + 1) === 'i' ||
-        format.charAt(nextPercentIndex + 1) === 'd'
-      ) {
+        break;
+
+      case 'd':
+      case 'i':
         assembled += parseInt(args[argIndex++]);
         index = nextPercentIndex + 2;
-      } else if (format.charAt(nextPercentIndex + 1) === 'f') {
-        assembled += parseFloat(args[argIndex++]);
+        break;
+
+      case 'f':
+        assembled += formatFloat(args[argIndex++]);
         index = nextPercentIndex + 2;
-      } else if (format.charAt(nextPercentIndex + 1) === '.') {
-        const nextF = format.indexOf('f', nextPercentIndex + 1);
-        const nextD = format.indexOf('d', nextPercentIndex + 1);
-        if (nextD === -1 && nextF === -1) {
-          // at this point just plop the rest of the format string
+        break;
+
+      case '.': {
+        const precisionMatch = format
+          .slice(nextPercentIndex + 2)
+          .match(/^(\d+)[fd]/);
+        if (!precisionMatch)
           return assembled + format.substring(nextPercentIndex);
-        } else if (nextF !== -1 && (nextF < nextD || nextD === -1)) {
-          const parsedPrecision = parseInt(
-            format.substring(nextPercentIndex + 2, nextF),
-          );
-          if (isNaN(parsedPrecision)) {
-            return assembled + format.substring(nextPercentIndex);
-          }
-          assembled += parseFloat(args[argIndex++]).toFixed(parsedPrecision);
-          index = nextPercentIndex + nextF - nextPercentIndex + 1;
-        } else {
-          const parsedPrecision = parseInt(
-            format.substring(nextPercentIndex + 2, nextD),
-          );
-          if (isNaN(parsedPrecision)) {
-            return assembled + format.substring(nextPercentIndex);
-          }
-          assembled += padNumber(args[argIndex++], parsedPrecision);
-          index = nextPercentIndex + nextD - nextPercentIndex + 1;
+
+        const precision = parseInt(precisionMatch[1], 10);
+        const typeChar =
+          format[nextPercentIndex + 2 + precisionMatch[1].length];
+
+        if (typeChar === 'f') {
+          assembled += formatFloat(args[argIndex++], precision);
+        } else if (typeChar === 'd') {
+          assembled += padNumber(args[argIndex++], precision);
         }
-      } else if (
-        format.charAt(nextPercentIndex + 1) === 'o' ||
-        format.charAt(nextPercentIndex + 1) === 'O'
-      ) {
+        index = nextPercentIndex + 3 + precisionMatch[1].length;
+        break;
+      }
+
+      case 'o':
+      case 'O':
         assembled += JSON.stringify(args[argIndex++]);
         index = nextPercentIndex + 2;
-      } else {
+        break;
+
+      default:
         assembled += '%';
         index = nextPercentIndex + 1;
-      }
     }
   }
+
   return assembled;
 };
