@@ -28,30 +28,34 @@ const androidVersionCode = (
   }
   return versionCode;
 };
-/**
- * Gets the branded version of the source depending on the value
- * of the EXPO_PUBLIC_APP_BRAND variable.  If the branded version does not
- * exist it returns the original value.
- * @param src brand source folder. It is expected to be `./brand/resource.ext`
- * @returns branded path
- */
-const branded = (src?: string): string | undefined => {
-  if (src === undefined) {
-    return undefined;
-  } else if (!process.env.EXPO_PUBLIC_APP_BRAND) {
-    return src;
-  } else {
-    const brand = process.env.EXPO_PUBLIC_APP_BRAND;
-    const newPath = src.replace('./brand/', `./brand/${brand}/`);
-    if (fs.existsSync(newPath)) {
-      return newPath;
-    } else {
-      return src;
-    }
-  }
-};
 
-export default ({ config }: ConfigContext): ExpoConfig => {
+export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
+  /**
+   * Gets the branded version of the source depending on the value
+   * of the EXPO_APP_BRAND variable.  If the branded version does not
+   * exist it returns the original value.
+   * @param src brand source folder. It is expected to be `./brand/resource.ext`
+   * @returns branded path
+   */
+  const branded = (src?: string): string | undefined => {
+    if (src === undefined) {
+      return undefined;
+    } else if (!process.env.EXPO_APP_BRAND) {
+      return src;
+    } else {
+      const brand = process.env.EXPO_APP_BRAND;
+      const newPath = src.replace(
+        './brand/',
+        path.join(path.dirname(staticConfigPath!), `./brand/${brand}/`),
+      );
+      if (fs.existsSync(newPath)) {
+        return newPath;
+      } else {
+        return src;
+      }
+    }
+  };
+
   const version = (process.env.BUILD_BUILDNUMBER ?? config.version)!;
 
   // Define the paths to check for the google-services.json file
@@ -65,7 +69,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
 
   return {
     ...config,
-    name: (process.env.EXPO_PUBLIC_APP_NAME ?? config.name)!,
+    name: (process.env.EXPO_APP_NAME ?? config.name)!,
     slug: config.slug!,
     icon: branded(config.icon),
     splash: {
@@ -79,7 +83,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     version,
     ios: {
       ...config.ios,
-      bundleIdentifier: (process.env.EXPO_PUBLIC_APP_ID ??
+      bundleIdentifier: (process.env.EXPO_APP_ID ??
         config.ios!.bundleIdentifier)!,
       splash: {
         ...config.ios?.splash,
@@ -94,7 +98,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     android: {
       ...config.android,
-      package: (process.env.EXPO_PUBLIC_APP_ID ?? config.android!.package)!,
+      package: (process.env.EXPO_APP_ID ?? config.android!.package)!,
       versionCode: androidVersionCode(version),
       ...(googleServicesFilePath && {
         googleServicesFile: googleServicesFilePath,

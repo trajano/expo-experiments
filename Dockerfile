@@ -53,8 +53,9 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
 
 # Stage 6: Prebuild Preview (build platform-specific)
 FROM prebuild-env AS prebuild-preview
-ENV EXPO_PUBLIC_APP_ID="net.trajano.myapp"
-ENV EXPO_PUBLIC_APP_NAME="My App"
+ENV EXPO_APP_ID="net.trajano.myapp"
+ENV EXPO_APP_NAME="My App"
+ENV EXPO_APP_BRAND="release"
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=secret,id=google-services-json,target=/home/ubuntu/work/google-services.json,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/tmp \
