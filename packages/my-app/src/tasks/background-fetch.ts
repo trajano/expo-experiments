@@ -10,10 +10,19 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async (taskBody) => {
     const currentBackgroundFetchCount = parseInt(
       (await AsyncStorage.getItem('background-fetch-count')) ?? '0',
     );
+    const currentBackgroundFetchTracking = JSON.parse(
+      (await AsyncStorage.getItem('background-fetch-tracking')) ?? '[]',
+    ) as string[];
+    currentBackgroundFetchTracking.unshift(new Date().toISOString());
     await AsyncStorage.setItem(
       'background-fetch-count',
       (currentBackgroundFetchCount + 1).toString(),
     );
+    await AsyncStorage.setItem(
+      'background-fetch-tracking',
+      JSON.stringify(currentBackgroundFetchTracking, null, 2),
+  );
+
     backgroundFetchLog.debug(taskBody);
     const result = Math.random();
     if (result > 0.5) {

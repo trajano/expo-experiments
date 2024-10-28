@@ -9,50 +9,33 @@ import {
   useRef,
   useState,
 } from 'react';
-import * as Updates from 'expo-updates';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
-
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const LoaderScreen: FC = () => {
   const animation = useRef<LottieView>(null);
   const router = useRouter();
   const progress = useRef(new Animated.Value(0)).current; // Animated value to control progress
   const [loadedItems, incrementLoadedItems] = useReducer((i) => i + 1, 0);
-  const totalItemsToLoad = 3;
+  const totalItemsToLoad = 10;
   const [backgroundColor, setBackgroundColor] = useState('#eee');
   const [shown, setShown] = useState(true);
 
   // Simulate loading items with random intervals
   useEffect(() => {
-    (async () => {
-      incrementLoadedItems();
-      const { isAvailable } = await Updates.checkForUpdateAsync();
-      incrementLoadedItems();
-      if (isAvailable) {
-        const { isNew } = await Updates.fetchUpdateAsync();
-        incrementLoadedItems();
-        if (isNew) {
-          await Updates.reloadAsync();
-        }
-      } else {
-        incrementLoadedItems();
+    const loadItems = () => {
+      if (loadedItems < totalItemsToLoad) {
+        const randomInterval = Math.random() * 300 + 200; // Random delay between 200ms to 500ms
+        setTimeout(() => {
+          incrementLoadedItems(); // Increment the loaded item count
+        }, randomInterval);
       }
-    })();
+    };
 
-    // const loadItems = () => {
-    //   if (loadedItems < totalItemsToLoad) {
-    //     const randomInterval = Math.random() * 300 + 200; // Random delay between 200ms to 500ms
-    //     setTimeout(() => {
-    //       incrementLoadedItems(); // Increment the loaded item count
-    //     }, randomInterval);
-    //   }
-    // };
-    //
-    // // Repeat until all items are loaded
-    // if (loadedItems < totalItemsToLoad) {
-    //   loadItems();
-    // }
-  }, []);
+    // Repeat until all items are loaded
+    if (loadedItems < totalItemsToLoad) {
+      loadItems();
+    }
+  }, [loadedItems]);
 
   useFocusEffect(
     useCallback(() => {
@@ -111,7 +94,7 @@ const LoaderScreen: FC = () => {
 
 const styles = StyleSheet.create({
   animationContainer: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
