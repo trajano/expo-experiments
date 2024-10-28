@@ -23,8 +23,8 @@ const LoaderScreen: FC = () => {
   const totalItemsToLoad = 3;
   const [backgroundColor, setBackgroundColor] = useState('#eee');
   const [shown, setShown] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
-  // Simulate loading items with random intervals
   useEffect(() => {
     (async () => {
       incrementLoadedItems();
@@ -32,6 +32,7 @@ const LoaderScreen: FC = () => {
         const { isAvailable } = await Updates.checkForUpdateAsync();
         incrementLoadedItems();
         if (isAvailable) {
+          setUpdating(true);
           const { isNew } = await Updates.fetchUpdateAsync();
           incrementLoadedItems();
           if (isNew) {
@@ -97,6 +98,9 @@ const LoaderScreen: FC = () => {
           progress={progress} // Casting to number to fix typing issue
           source={require('@/assets/cat-loader-2.json')} // JSON is needed as Android does not appear to support .lottie
         />
+        <MyText>
+          {updating ? 'Update detected, app will restart after updating' : ''}
+        </MyText>
       </View>
     );
   } else {
