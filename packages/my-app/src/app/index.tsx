@@ -11,7 +11,8 @@ import {
 } from 'react';
 import * as Updates from 'expo-updates';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
-import { MyText } from 'react-native-my-text';
+// Use MyTextE to ensure the embedded versions of the font are used
+import { MyTextE as MyText } from 'react-native-my-text';
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const LoaderScreen: FC = () => {
@@ -40,25 +41,11 @@ const LoaderScreen: FC = () => {
           incrementLoadedItems();
         }
       } catch (e: unknown) {
-        console.error(`update failed due to: ${e}`)
+        console.error(`update failed due to: ${e}`);
         incrementLoadedItems();
         incrementLoadedItems();
       }
     })();
-
-    // const loadItems = () => {
-    //   if (loadedItems < totalItemsToLoad) {
-    //     const randomInterval = Math.random() * 300 + 200; // Random delay between 200ms to 500ms
-    //     setTimeout(() => {
-    //       incrementLoadedItems(); // Increment the loaded item count
-    //     }, randomInterval);
-    //   }
-    // };
-    //
-    // // Repeat until all items are loaded
-    // if (loadedItems < totalItemsToLoad) {
-    //   loadItems();
-    // }
   }, []);
 
   useFocusEffect(
@@ -85,7 +72,7 @@ const LoaderScreen: FC = () => {
             useNativeDriver: false,
           }).start(() => {
             // Navigate to the tabs route once the animation completes
-            router.push('/(tabs)');
+            router.replace('/(tabs)');
           });
         }, 500); // Small delay before playing the final animation
       }
@@ -108,7 +95,7 @@ const LoaderScreen: FC = () => {
           }}
           testID="splash"
           progress={progress} // Casting to number to fix typing issue
-          source={require('@/assets/cat-loader-2.json')}
+          source={require('@/assets/cat-loader-2.json')} // JSON is needed as Android does not appear to support .lottie
         />
       </View>
     );

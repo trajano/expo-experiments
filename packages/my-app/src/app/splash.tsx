@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
+import { MyText } from 'react-native-my-text';
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const LoaderScreen: FC = () => {
   const animation = useRef<LottieView>(null);
@@ -61,7 +62,7 @@ const LoaderScreen: FC = () => {
             useNativeDriver: false,
           }).start(() => {
             // Navigate to the tabs route once the animation completes
-            router.replace('/(tabs)');
+            router.push('/(tabs)');
           });
         }, 500); // Small delay before playing the final animation
       }
@@ -74,6 +75,7 @@ const LoaderScreen: FC = () => {
   if (shown) {
     return (
       <View style={styles.animationContainer} testID="splash-view">
+        <MyText>original splash.tsx</MyText>
         <AnimatedLottieView
           ref={animation}
           style={{
