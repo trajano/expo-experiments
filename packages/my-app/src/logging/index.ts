@@ -1,5 +1,5 @@
 /**
- * Logging related.  This will install and override the default console logs.
+ * Logging related.  This will install and override the default console logs with the exception of `console.debug`.  `console.debug` will be shown only on the development server console.
  */
 import * as FileSystem from 'expo-file-system';
 import { InteractionManager } from 'react-native';
@@ -47,12 +47,6 @@ const originalConsoleLog = console.log;
 console.log = (...args: any[]) => {
   originalConsoleLog(...args);
   consoleLog.log(...consoleArgsToLoggerArgs(...args));
-};
-
-const originalConsoleDebug = console.debug;
-console.debug = (...args: any[]) => {
-  originalConsoleDebug(...args);
-  consoleLog.debug(...consoleArgsToLoggerArgs(...args));
 };
 
 const originalConsoleWarn = console.warn;
