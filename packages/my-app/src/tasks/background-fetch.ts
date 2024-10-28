@@ -1,45 +1,34 @@
 import { backgroundFetchLog } from '@/logging';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as BackgroundFetch from 'expo-background-fetch';
+import { defineTrackingTask } from './defineTrackingTask';
 import * as TaskManager from 'expo-task-manager';
 
 export const BACKGROUND_FETCH_TASK = 'background-fetch';
 
-TaskManager.defineTask(BACKGROUND_FETCH_TASK, async (taskBody) => {
-  try {
-    const currentBackgroundFetchCount = parseInt(
-      (await AsyncStorage.getItem('background-fetch-count')) ?? '0',
-    );
-    const currentBackgroundFetchTracking = JSON.parse(
-      (await AsyncStorage.getItem('background-fetch-tracking')) ?? '[]',
-    ) as string[];
-    currentBackgroundFetchTracking.unshift(new Date().toISOString());
-    await AsyncStorage.setItem(
-      'background-fetch-count',
-      (currentBackgroundFetchCount + 1).toString(),
-    );
-    await AsyncStorage.setItem(
-      'background-fetch-tracking',
-      JSON.stringify(currentBackgroundFetchTracking, null, 2),
-  );
-
-    backgroundFetchLog.debug(taskBody);
-    const result = Math.random();
-    if (result > 0.5) {
-      backgroundFetchLog.log(
-        `Got background fetch call dice roll is ${result}, returning new data`,
-      );
-      return BackgroundFetch.BackgroundFetchResult.NewData;
-    } else {
-      backgroundFetchLog.log(
-        `Got background fetch call dice roll is ${result}, returning no data`,
-      );
-      return BackgroundFetch.BackgroundFetchResult.NoData;
-    }
-  } catch (error: unknown) {
-    backgroundFetchLog.error(
-      `An error occurred ${error} during background fetch processing`,
-    );
+// Define the async taskBody as a constant arrow function
+const handleBackgroundFetchTask = async (
+  taskBody: TaskManager.TaskManagerTaskBody<Record<string, unknown>>,
+): Promise<BackgroundFetch.BackgroundFetchResult> => {
+  if (taskBody.error) {
     return BackgroundFetch.BackgroundFetchResult.Failed;
   }
-});
+
+  const result = Math.random();
+  if (result > 0.5) {
+    backgroundFetchLog.log(
+      `Got background fetch call dice roll is ${result}, returning new data`,
+    );
+    return BackgroundFetch.BackgroundFetchResult.NewData;
+  } else {
+    backgroundFetchLog.log(
+      `Got background fetch call dice roll is ${result}, returning no data`,
+    );
+    return BackgroundFetch.BackgroundFetchResult.NoData;
+  }
+};
+
+// Use the refactored constant in the defineTrackingTask function
+defineTrackingTask<
+  Record<string, unknown>,
+  BackgroundFetch.BackgroundFetchResult
+>(BACKGROUND_FETCH_TASK, backgroundFetchLog, handleBackgroundFetchTask);
