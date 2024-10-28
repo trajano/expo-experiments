@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
       - run: npm ci
-      - run: turbo lint -- -f json -o eslint.report.json
+      - run: npx turbo lint -- -f json -o eslint.report.json
       - run: npm test -- --coverage
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
