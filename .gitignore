@@ -13,3 +13,5 @@ google-services.json
 node_modules/
 credentials.json
 eslint.report.json
+*.p12
+*,p8

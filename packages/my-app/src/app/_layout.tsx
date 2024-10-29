@@ -12,7 +12,7 @@ import { FC, useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { WithMyBackgroundFetch } from '@/MyBackgroundFetch';
-import { BACKGROUND_FETCH_TASK } from '@/tasks';
+import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
 import { WithUserPreferences } from '@/UserPreferences';
 import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
@@ -63,6 +63,7 @@ const CompositeApp = WithMyBackgroundFetch(
 const MyApp = () => (
   <CompositeApp
     backgroundFetchTaskName={BACKGROUND_FETCH_TASK}
+    notificationTaskName={BACKGROUND_NOTIFICATION_TASK}
     stopOnTerminate={false}
     startOnBoot={true}
     userPreferencesStorageKey="myAppStorage"

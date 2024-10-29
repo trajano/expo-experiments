@@ -15,13 +15,17 @@ const consoleLog = logger.createLogger({
   asyncFunc: InteractionManager.runAfterInteractions,
 });
 
+/**
+ * Background fetch logs.  This does not explicitly use the asyncFunc: InteractionManager.runAfterInteractions and
+ * sets async to false.
+ */
 export const backgroundFetchLog = logger.createLogger({
   transport: fileAsyncTransport,
   transportOptions: {
     FS: FileSystem,
     fileName: `background_fetch_${new Date().toLocaleDateString()}.txt`,
   },
-  asyncFunc: InteractionManager.runAfterInteractions,
+  async: false,
 });
 
 export const notificationLog = logger.createLogger({
@@ -30,7 +34,7 @@ export const notificationLog = logger.createLogger({
     FS: FileSystem,
     fileName: `notification_${new Date().toLocaleDateString()}.txt`,
   },
-  asyncFunc: InteractionManager.runAfterInteractions,
+  async: false,
 });
 
 export const locationLog = logger.createLogger({
@@ -39,7 +43,7 @@ export const locationLog = logger.createLogger({
     FS: FileSystem,
     fileName: `location_${new Date().toLocaleDateString()}.txt`,
   },
-  asyncFunc: InteractionManager.runAfterInteractions,
+  async: false,
 });
 
 // patch console logs
