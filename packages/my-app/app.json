@@ -26,7 +26,8 @@
       "infoPlist": {
         "UISupportsDocumentBrowser": true,
         "UIFileSharingEnabled": true,
-        "LSSupportsOpeningDocumentsInPlace": false
+        "LSSupportsOpeningDocumentsInPlace": false,
+        "UIBackgroundModes": ["remote-notification", "processing"]
       }
     },
     "android": {
@@ -41,8 +42,19 @@
       "expo-router",
       "expo-background-fetch",
       "expo-notifications",
-      "expo-location",
-      ["expo-screen-orientation", { "initialOrientation": "DEFAULT" }],
+      [
+        "expo-location",
+        {
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true
+        }
+      ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ],
       "expo-secure-store",
       "expo-tracking-transparency",
       "expo-video",
