@@ -28,21 +28,26 @@ const LoaderScreen: FC = () => {
   useEffect(() => {
     (async () => {
       incrementLoadedItems();
-      try {
-        const { isAvailable } = await Updates.checkForUpdateAsync();
-        incrementLoadedItems();
-        if (isAvailable) {
-          setUpdating(true);
-          const { isNew } = await Updates.fetchUpdateAsync();
+      if (Updates.isEnabled) {
+        try {
+          const { isAvailable } = await Updates.checkForUpdateAsync();
           incrementLoadedItems();
-          if (isNew) {
-            await Updates.reloadAsync();
+          if (isAvailable) {
+            setUpdating(true);
+            const { isNew } = await Updates.fetchUpdateAsync();
+            incrementLoadedItems();
+            if (isNew) {
+              await Updates.reloadAsync();
+            }
+          } else {
+            incrementLoadedItems();
           }
-        } else {
+        } catch (e: unknown) {
+          console.error(`update failed due to: ${e}`);
+          incrementLoadedItems();
           incrementLoadedItems();
         }
-      } catch (e: unknown) {
-        console.error(`update failed due to: ${e}`);
+      } else {
         incrementLoadedItems();
         incrementLoadedItems();
       }

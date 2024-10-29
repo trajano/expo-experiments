@@ -1,6 +1,6 @@
 import { VibrateButton } from '@/components/VibrateButton';
 import { useRouter } from 'expo-router';
-import { FC, useReducer } from 'react';
+import { FC, useCallback, useReducer } from 'react';
 import {
   Button,
   Image,
@@ -17,6 +17,8 @@ import {
 } from 'react-native-my-components';
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText, Strong } from 'react-native-my-text';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -31,6 +33,30 @@ const HomeScreen: FC = () => {
   const [pressCount, incrementPressCount] = useReducer((i) => i + 1, 0);
 
   const { expoPushToken, permissionStatus } = useNotifications();
+
+  const shareCurlCommand = useCallback(async () => {
+    const curlCommand = `
+    curl -X POST https://exp.host/--/api/v2/push/send \\
+      -H "Content-Type: application/json" \\
+      -H "Accept: application/json" \\
+      -d '{
+        "to": "${expoPushToken}",
+        "title": "Hello!",
+        "body": "This is a test notification",
+        "data": {"extraData": "Some extra data"}
+      }'
+  `;
+    await FileSystem.writeAsStringAsync(
+      FileSystem.documentDirectory + 'push.sh',
+      curlCommand,
+      { encoding: 'utf8' },
+    );
+    await Sharing.shareAsync(FileSystem.documentDirectory + 'push.sh', {
+      dialogTitle: 'Share the CURL Command',
+      mimeType: 'text/plain',
+      UTI: 'public.plain-text',
+    });
+  }, [expoPushToken]);
 
   return (
     <ParallaxScrollView
@@ -65,6 +91,14 @@ const HomeScreen: FC = () => {
           onPress={() => {
             incrementPressCount();
             router.push('/storybook');
+          }}
+        />
+
+        <Button
+          title="share curl command"
+          testID="share-curl-command-button"
+          onPress={() => {
+            shareCurlCommand();
           }}
         />
 
