@@ -40,18 +40,25 @@ const HomeScreen: FC = () => {
       -H "Content-Type: application/json" \\
       -H "Accept: application/json" \\
       -d '{
-        "to": "${expoPushToken}",
+        "to": "${expoPushToken?.data}",
         "title": "Hello!",
         "body": "This is a test notification",
         "data": {"extraData": "Some extra data"}
       }'
+
+    curl -X POST https://exp.host/--/api/v2/push/send \\
+      -H "Content-Type: application/json" \\
+      -H "Accept: application/json" \\
+      -d '{
+        "to": "${expoPushToken?.data}",
+        "_contentAvailable": true,
+        "data": {"extraData": "Some extra data"}
+      }'
+
   `;
-    await FileSystem.writeAsStringAsync(
-      FileSystem.documentDirectory + 'push.sh',
-      curlCommand,
-      { encoding: 'utf8' },
-    );
-    await Sharing.shareAsync(FileSystem.documentDirectory + 'push.sh', {
+    const uri = FileSystem.documentDirectory + `push-${Platform.OS}.txt`;
+    await FileSystem.writeAsStringAsync(uri, curlCommand, { encoding: 'utf8' });
+    await Sharing.shareAsync(uri, {
       dialogTitle: 'Share the CURL Command',
       mimeType: 'text/plain',
       UTI: 'public.plain-text',
