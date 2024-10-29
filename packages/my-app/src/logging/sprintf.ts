@@ -58,9 +58,9 @@ export const sprintf = (format: string, ...args: any[]): string => {
         break;
 
       case '.': {
-        const precisionMatch = format
-          .slice(nextPercentIndex + 2)
-          .match(/^(\d+)[fd]/);
+        const precisionMatch = /^(\d+)[fd]/.exec(
+          format.slice(nextPercentIndex + 2),
+        );
         if (!precisionMatch)
           return assembled + format.substring(nextPercentIndex);
 
