@@ -14,7 +14,7 @@ jest.mock('@/logging', () => ({
 }));
 
 describe('background-fetch', () => {
-  it('should have loaded', async () => {
+  it('should load and execute', async () => {
     expect(TaskManager.defineTask).toHaveBeenCalledWith(
       BACKGROUND_FETCH_TASK,
       expect.anything(),
@@ -32,5 +32,21 @@ describe('background-fetch', () => {
         result === BackgroundFetchResult.NoData,
     ).toBeTruthy();
     expect(result === BackgroundFetchResult.Failed).toBeFalsy();
+  });
+
+  it('should handle error', async () => {
+    expect(TaskManager.defineTask).toHaveBeenCalledWith(
+      BACKGROUND_FETCH_TASK,
+      expect.anything(),
+    );
+    const theFunction = jest.mocked(TaskManager.defineTask).mock
+      .lastCall![1] as (data: any) => Promise<BackgroundFetchResult>;
+
+    const result = await theFunction({
+      data: {},
+      error: { code: 1, message: 'foo' },
+      executionInfo: { taskName: 'myTask', eventId: 'eventId' },
+    });
+    expect(result).toEqual(BackgroundFetchResult.Failed);
   });
 });
