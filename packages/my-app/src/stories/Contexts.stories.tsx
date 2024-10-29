@@ -1,5 +1,5 @@
-import { useMyBackgroundFetch } from '@/MyBackgroundFetch';
-import { useUserPreferences } from '@/UserPreferences';
+import { useMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
+import { useUserPreferences } from '@/hooks/UserPreferences';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';

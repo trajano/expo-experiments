@@ -11,9 +11,9 @@ import { SplashScreen, Stack } from 'expo-router';
 import { FC, useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { WithMyBackgroundFetch } from '@/MyBackgroundFetch';
+import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
 import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
-import { WithUserPreferences } from '@/UserPreferences';
+import { WithUserPreferences } from '@/hooks/UserPreferences';
 import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
