@@ -19,8 +19,9 @@ test('floating string', () => {
   expect(sprintf('%s', 'bar')).toEqual('bar');
 });
 
-test('floating integer', () => {
+test('integer', () => {
   expect(sprintf('foo %d', 2.523)).toEqual('foo 2');
+  expect(sprintf('foo %.2d', 2.523)).toEqual('foo 02');
   expect(sprintf('%d', 'bar')).toEqual('NaN');
 });
 
