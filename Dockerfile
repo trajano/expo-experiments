@@ -30,7 +30,7 @@ USER ubuntu
 ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
 RUN curl https://get.volta.sh | bash \
-  && volta install node@latest npm@latest \
+  && volta install node@latest npm@latest node@20 \
   && npm i -g --ignore-scripts eas-cli@latest
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
@@ -146,9 +146,7 @@ COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outp
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable
 USER bin
-
-COPY --from=prebuild-devclient /home/ubuntu/work/packages/my-app/ios/MyAppGo/Info.plist /app-dev-client.Info.plist
-COPY --from=prebuild-preview /home/ubuntu/work/packages/my-app/ios/MyApp/Info.plist /app-release.Info.plist
-
+COPY --from=prebuild-devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-dev-client.apk
+COPY --from=prebuild-preview /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
 COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-dev-client.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk
