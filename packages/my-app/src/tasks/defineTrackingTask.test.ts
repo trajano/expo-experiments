@@ -13,9 +13,10 @@ describe('defineTrackingTask', () => {
   beforeEach(async () => {
     await AsyncStorage.clear();
   });
-
   it('should correctly define a task and update AsyncStorage', async () => {
-    const taskLogger = jest.mocked(logger.createLogger());
+    const taskLogger = jest.mocked(
+      logger.createLogger({ transport: jest.fn() }),
+    );
     defineTrackingTask('myTask', taskLogger);
     expect(TaskManager.defineTask).toHaveBeenCalled();
     const theFunction = jest.mocked(TaskManager.defineTask).mock
@@ -34,7 +35,9 @@ describe('defineTrackingTask', () => {
   });
 
   it('should correctly define a task and update AsyncStorage with executor', async () => {
-    const taskLogger = jest.mocked(logger.createLogger());
+    const taskLogger = jest.mocked(
+      logger.createLogger({ transport: jest.fn() }),
+    );
     const executor = jest.fn((_: TaskManager.TaskManagerTaskBody) =>
       Promise.resolve(true),
     );
@@ -55,9 +58,10 @@ describe('defineTrackingTask', () => {
   });
 
   it('should handle errors', async () => {
-    const taskLogger = jest.mocked(logger.createLogger());
+    const taskLogger = jest.mocked(
+      logger.createLogger({ transport: jest.fn() }),
+    );
     defineTrackingTask('myTask', taskLogger);
-    expect(TaskManager.defineTask).toHaveBeenCalled();
     const theFunction = jest.mocked(TaskManager.defineTask).mock
       .lastCall![1] as (data: any) => Promise<any>;
     expect(theFunction).toBeTruthy();
