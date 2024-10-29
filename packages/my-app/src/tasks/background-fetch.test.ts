@@ -8,7 +8,7 @@ jest.mock('expo-task-manager', () => ({
 }));
 jest.mock('@/logging', () => ({
   backgroundFetchLog: {
-    log: jest.fn(),
+    info: jest.fn(),
     debug: jest.fn(),
   },
 }));

@@ -15,12 +15,12 @@ const handleBackgroundFetchTask = async (
 
   const result = Math.random();
   if (result > 0.5) {
-    backgroundFetchLog.log(
+    backgroundFetchLog.info(
       `Got background fetch call dice roll is ${result}, returning new data`,
     );
     return BackgroundFetch.BackgroundFetchResult.NewData;
   } else {
-    backgroundFetchLog.log(
+    backgroundFetchLog.info(
       `Got background fetch call dice roll is ${result}, returning no data`,
     );
     return BackgroundFetch.BackgroundFetchResult.NoData;

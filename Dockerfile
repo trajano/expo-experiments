@@ -83,6 +83,9 @@ RUN --mount=type=cache,id=assembleDebug,target=/home/ubuntu/.gradle,uid=1000,gid
 
 # Stage 9: Build Preview APKs (build platform-specific)
 FROM gradle-build-env AS preview-apk
+ENV EXPO_APP_ID="net.trajano.myapp"
+ENV EXPO_APP_NAME="My App"
+ENV EXPO_APP_BRAND="release"
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleRelease
@@ -129,7 +132,7 @@ FROM prebuild-env AS eas-update
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
 ARG EAS_UPDATE_CHANNEL=preview
-ARG EAS_UPDATE_MESSAGE=Docker build
+ARG EAS_UPDATE_MESSAGE="Docker build"
 ENV EXPO_APP_ID="net.trajano.myapp"
 ENV EXPO_APP_NAME="My App"
 ENV EXPO_APP_BRAND="release"
