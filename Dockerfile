@@ -130,6 +130,9 @@ ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
 ARG EAS_UPDATE_CHANNEL=preview
 ARG EAS_UPDATE_MESSAGE=Docker build
+ENV EXPO_APP_ID="net.trajano.myapp"
+ENV EXPO_APP_NAME="My App"
+ENV EXPO_APP_BRAND="release"
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
   --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
