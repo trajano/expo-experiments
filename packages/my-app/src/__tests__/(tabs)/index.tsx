@@ -2,6 +2,7 @@ import Index from '@/app/(tabs)/index';
 import { Linking } from 'react-native';
 import { render, act, fireEvent } from '@testing-library/react-native';
 import { Router, useRouter } from 'expo-router';
+import * as FileSystem from 'expo-file-system';
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
@@ -34,4 +35,25 @@ test('(tabs)/index', () => {
   expect(mockRouter.push).toHaveBeenCalledWith('/storybook');
 
   expect(getByTestId('press-count').props.children).toBe(3);
+});
+
+test('(tabs)/index console log', () => {
+  const consoleErrorMock = jest
+    .spyOn(console, 'error')
+    .mockImplementation(() => {});
+
+  const { getByTestId } = render(<Index />);
+  fireEvent.press(getByTestId('log-something-button'));
+  expect(consoleErrorMock).toHaveBeenCalledWith('error log');
+  consoleErrorMock.mockReset();
+});
+
+test('(tabs)/index share curl', () => {
+  const { getByTestId } = render(<Index />);
+  fireEvent.press(getByTestId('share-curl-command-button'));
+  expect(FileSystem.writeAsStringAsync).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.anything(),
+    { encoding: 'utf8' },
+  );
 });

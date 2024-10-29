@@ -6,6 +6,7 @@ import {
   useDoNothing,
   WithDoNothing,
 } from './DoNothing';
+import { PropsWithChildren } from 'react';
 
 const TestComponent: React.FC = () => {
   const doNothingProps = useDoNothing();
@@ -25,7 +26,7 @@ describe('DoNothing', () => {
   });
 
   it('Use Hook', async () => {
-    const wrapper = ({ children }) => (
+    const wrapper = ({ children }: PropsWithChildren<{}>) => (
       <DoNothingContext.Provider value={{}}>
         {children}
       </DoNothingContext.Provider>

@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MyBackgroundFetch Use HoC 1`] = `
+<Text
+  testID="props"
+>
+  {}
+</Text>
+`;
+
+exports[`MyBackgroundFetch Use provider 1`] = `
+<Text
+  testID="props"
+>
+  {}
+</Text>
+`;

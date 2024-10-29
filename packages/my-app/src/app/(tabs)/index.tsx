@@ -113,7 +113,7 @@ const HomeScreen: FC = () => {
 
         <Button
           title="log something"
-          testID="log-somthing-button"
+          testID="log-something-button"
           onPress={() => {
             console.error('error log');
           }}
