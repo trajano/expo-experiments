@@ -179,6 +179,7 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
       } catch (e: unknown) {
         setExpoPushTokenError(e as Error);
       }
+      console.debug('effect fired' + notificationTaskName);
       if (
         notificationTaskName &&
         !(await TaskManager.isTaskRegisteredAsync(notificationTaskName))
@@ -271,6 +272,7 @@ export const WithNotifications = <P extends object>(
     notificationBehavior,
     notificationPermissions,
     androidNotificationChannels,
+    notificationTaskName,
     ...props
   }: P & NotificationsProviderProps) => (
     <NotificationsProvider
@@ -278,6 +280,7 @@ export const WithNotifications = <P extends object>(
       notificationBehavior={notificationBehavior}
       notificationPermissions={notificationPermissions}
       androidNotificationChannels={androidNotificationChannels}
+      notificationTaskName={notificationTaskName}
     >
       <Component {...(props as P)} />
     </NotificationsProvider>

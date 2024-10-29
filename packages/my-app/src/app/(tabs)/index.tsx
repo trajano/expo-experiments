@@ -34,7 +34,7 @@ const HomeScreen: FC = () => {
 
   const { expoPushToken, permissionStatus } = useNotifications();
 
-  const shareCurlCommand = useCallback(async () => {
+  const shareCurlCommand = useCallback(() => {
     const curlCommand = `
     curl -X POST https://exp.host/--/api/v2/push/send \\
       -H "Content-Type: application/json" \\
@@ -57,12 +57,16 @@ const HomeScreen: FC = () => {
 
   `;
     const uri = FileSystem.documentDirectory + `push-${Platform.OS}.txt`;
-    await FileSystem.writeAsStringAsync(uri, curlCommand, { encoding: 'utf8' });
-    await Sharing.shareAsync(uri, {
-      dialogTitle: 'Share the CURL Command',
-      mimeType: 'text/plain',
-      UTI: 'public.plain-text',
-    });
+    (async () => {
+      await FileSystem.writeAsStringAsync(uri, curlCommand, {
+        encoding: 'utf8',
+      });
+      await Sharing.shareAsync(uri, {
+        dialogTitle: 'Share the CURL Command',
+        mimeType: 'text/plain',
+        UTI: 'public.plain-text',
+      });
+    })();
   }, [expoPushToken]);
 
   return (
@@ -104,8 +108,14 @@ const HomeScreen: FC = () => {
         <Button
           title="share curl command"
           testID="share-curl-command-button"
+          onPress={shareCurlCommand}
+        />
+
+        <Button
+          title="log something"
+          testID="log-somthing-button"
           onPress={() => {
-            shareCurlCommand();
+            console.error('error log');
           }}
         />
 
