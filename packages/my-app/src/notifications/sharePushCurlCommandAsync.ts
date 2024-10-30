@@ -16,6 +16,7 @@ export const curlCommand = (expoPushToken: Notifications.ExpoPushToken) => {
         "data": {"extraData": "Some extra data"}
       }'
 
+    # background notification
     curl -X POST https://exp.host/--/api/v2/push/send \\
       -H "Content-Type: application/json" \\
       -H "Accept: application/json" \\
@@ -31,17 +32,18 @@ export const curlCommand = (expoPushToken: Notifications.ExpoPushToken) => {
       -H "Content-Type: application/json" \\
       -H "Accept: application/json" \\
       -d '{
-        "to": "${expoPushToken?.data}",
+        "to": "${expoPushToken.data}",
         "title": "Hello!",
         "body": "This is a test notification",
         "data": {"extraData": "Some extra data"}
       }'
 
+    # background notification
     curl -X POST https://exp.host/--/api/v2/push/send \\
       -H "Content-Type: application/json" \\
       -H "Accept: application/json" \\
       -d '{
-        "to": "${expoPushToken?.data}",
+        "to": "${expoPushToken.data}",
         "data": {"extraData": "Some extra data"}
       }'
   `;
