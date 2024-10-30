@@ -6,7 +6,6 @@ jest.mock('react-native', () => ({
 jest.mock('expo-sharing', () => ({
   shareAsync: jest.fn(() => Promise.resolve()),
 }));
-jest.mock('expo-file-system');
 jest.mock('expo-file-system', () => {});
 
 test('curlCommand', () => {
