@@ -41,6 +41,7 @@
   },
   "packageManager": "npm@10.8.3",
   "dependencies": {
+    "@reactvision/react-viro": "github:trajano/viro",
     "wait-on": "^8.0.1"
   }
 }
