@@ -4,11 +4,8 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 
-import '@/devMenu';
-import '@/logging';
 import { SplashScreen, Stack } from 'expo-router';
 import { FC, useEffect } from 'react';
-import 'react-native-reanimated';
 
 import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
 import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
@@ -18,6 +15,10 @@ import { WithNotifications } from 'react-native-my-hooks';
 import { DevMenu } from 'expo-dev-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearLogFilesAsync } from '@/logging';
+
+import '@/devMenu';
+import '@/logging';
+import 'react-native-reanimated';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
