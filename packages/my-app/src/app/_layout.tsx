@@ -3,18 +3,22 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
+
 import '@/devMenu';
+import '@/logging';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { FC, useEffect } from 'react';
 import 'react-native-reanimated';
 
+import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
+import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
+import { WithUserPreferences } from '@/hooks/UserPreferences';
 import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
 import { useExpoGoogleFonts } from 'react-native-my-text';
-import { WithUserPreferences } from '@/UserPreferences';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,6 +44,7 @@ const RootLayout: FC = () => {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="splash" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="storybook" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
@@ -52,9 +57,15 @@ export type MyAppUserPreferences = {
   theme: string;
   count: number;
 };
-const CompositeApp = WithUserPreferences(WithNotifications(RootLayout));
+const CompositeApp = WithMyBackgroundFetch(
+  WithUserPreferences(WithNotifications(RootLayout)),
+);
 const MyApp = () => (
   <CompositeApp
+    backgroundFetchTaskName={BACKGROUND_FETCH_TASK}
+    notificationTaskName={BACKGROUND_NOTIFICATION_TASK}
+    stopOnTerminate={false}
+    startOnBoot={true}
     userPreferencesStorageKey="myAppStorage"
     userPreferencesInitial={
       {

@@ -5,3 +5,4 @@ export { ThemedText } from './components/ThemedText';
 export { ThemedView } from './components/ThemedView';
 export { Colors } from './constants/Colors';
 export { useThemeColor } from './hooks/useThemeColor';
+export { FileTree, OnItemPressCallback } from './components/FileTree';

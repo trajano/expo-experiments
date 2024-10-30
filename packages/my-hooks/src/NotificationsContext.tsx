@@ -11,6 +11,7 @@ import {
   requestPermissionsAsync,
   setNotificationChannelAsync,
   setNotificationHandler,
+  registerTaskAsync,
 } from 'expo-notifications';
 import {
   ComponentType,
@@ -24,6 +25,7 @@ import {
   useState,
 } from 'react';
 import { Platform } from 'react-native';
+import * as TaskManager from 'expo-task-manager';
 
 /**
  * Interface representing the notifications context value.
@@ -82,6 +84,12 @@ export type NotificationsProviderProps = PropsWithChildren<{
    * Custom configuration for Android notification channels.
    */
   androidNotificationChannels?: Record<string, NotificationChannelInput>;
+
+  /**
+   * Task name for the task manager task that handles incoming notifications when
+   * the app is not in the foreground.
+   */
+  notificationTaskName?: string;
 }>;
 
 /**
@@ -97,6 +105,7 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
   notificationBehavior,
   notificationPermissions,
   androidNotificationChannels,
+  notificationTaskName,
   children,
 }) => {
   let easProjectId: string | undefined;
@@ -158,7 +167,7 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
     }
   }, [granted, canAskAgain, memoizedNotificationPermissions]);
 
-  // Effect to get the Expo push token when the component mounts.
+  // Effect to get the Expo push token when the component mounts and register the task.
   useEffect(() => {
     (async () => {
       let nextExpoPushToken: ExpoPushToken;
@@ -170,8 +179,15 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
       } catch (e: unknown) {
         setExpoPushTokenError(e as Error);
       }
+      console.debug('effect fired' + notificationTaskName);
+      if (
+        notificationTaskName &&
+        !(await TaskManager.isTaskRegisteredAsync(notificationTaskName))
+      ) {
+        await registerTaskAsync(notificationTaskName);
+      }
     })();
-  }, [easProjectId]);
+  }, [easProjectId, notificationTaskName]);
 
   // Effect to set notification handler based on the provided behavior.
   useEffect(() => {
@@ -256,6 +272,7 @@ export const WithNotifications = <P extends object>(
     notificationBehavior,
     notificationPermissions,
     androidNotificationChannels,
+    notificationTaskName,
     ...props
   }: P & NotificationsProviderProps) => (
     <NotificationsProvider
@@ -263,6 +280,7 @@ export const WithNotifications = <P extends object>(
       notificationBehavior={notificationBehavior}
       notificationPermissions={notificationPermissions}
       androidNotificationChannels={androidNotificationChannels}
+      notificationTaskName={notificationTaskName}
     >
       <Component {...(props as P)} />
     </NotificationsProvider>

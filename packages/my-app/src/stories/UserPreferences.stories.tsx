@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FC, useCallback, useMemo } from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { MyText } from 'react-native-my-text';
-import { useUserPreferences } from '../UserPreferences';
-import { MyAppUserPreferences } from '../app/_layout';
+import { useUserPreferences } from '@/hooks/UserPreferences';
+import { MyAppUserPreferences } from '@/app/_layout';
 const UserPreferencesView: FC = () => {
   const { preferences, setAsync } = useUserPreferences<MyAppUserPreferences>();
   const incrementCount = useCallback(async () => {

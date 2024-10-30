@@ -13,12 +13,12 @@
     "prepare": "tsup"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "babel-jest": "^29.7.0",
     "cross-env": "^7.0.3",
     "eslint-config-my": "*",
     "jest": "^29.7.0",
-    "tsup": "^8.3.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.6.3"
   },
   "peerDependencies": {
@@ -35,6 +35,6 @@
     "dist/"
   ],
   "dependencies": {
-    "webdriverio": "^9.2.1"
+    "webdriverio": "^9.2.4"
   }
 }

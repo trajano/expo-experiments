@@ -4,7 +4,7 @@
     "dev": {
       "persistent": true,
       "cache": false,
-      "env": ["EXPO_PUBLIC_*", "BUILD_BUILDNUMBER"]
+      "env": ["EXPO_PUBLIC_*", "EXPO_APP_*", "BUILD_BUILDNUMBER"]
     },
     "test": {
       "dependsOn": ["^test"]

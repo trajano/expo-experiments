@@ -1,8 +1,10 @@
+import _ from 'lodash';
 import type { Meta, StoryObj } from '@storybook/react';
 import * as Updates from 'expo-updates';
 import { FC, useCallback } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import { MyText, Strong } from 'react-native-my-text';
+import JSONTree, { JSONTreeProps } from 'react-native-json-tree';
 
 // List of enum objects to be excluded
 const enumKeysToRemove = [
@@ -13,14 +15,15 @@ const enumKeysToRemove = [
   'UpdatesLogEntryLevel',
 ];
 
-const customReplacer = (key: string, value: any) => {
-  if (enumKeysToRemove.includes(key)) {
-    return undefined; // Exclude these enum objects
-  }
-  return value; // Keep everything else
-};
-
-const updateConstants = JSON.stringify(Updates, customReplacer, 2);
+const labelRenderer: JSONTreeProps['labelRenderer'] = (keypath) => (
+  <MyText style={{ fontSize: 20 }}>{keypath[0]}</MyText>
+);
+const valueRenderer: JSONTreeProps['valueRenderer'] = (raw) => (
+  <MyText style={{ fontSize: 16 }}>
+    {typeof raw === 'string' ? raw : JSON.stringify(raw)}
+  </MyText>
+);
+const updateConstants = _.omit(Updates, enumKeysToRemove);
 const ExpoUpdatesView: FC = () => {
   const updatesState = Updates.useUpdates();
   const checkForUpdates = useCallback(async () => {
@@ -69,7 +72,13 @@ const ExpoUpdatesView: FC = () => {
       <MyText style={styles.text}>
         <Strong>Constants</Strong>:
       </MyText>
-      <MyText style={styles.text}>{updateConstants}</MyText>
+      <JSONTree
+        data={updateConstants}
+        shouldExpandNode={(keyName) => keyName !== 'assets'}
+        hideRoot={true}
+        labelRenderer={labelRenderer}
+        valueRenderer={valueRenderer}
+      />
     </View>
   );
 };

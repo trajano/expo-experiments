@@ -1,6 +1,6 @@
 import { VibrateButton } from '@/components/VibrateButton';
 import { useRouter } from 'expo-router';
-import { FC, useReducer } from 'react';
+import { FC, useCallback, useReducer } from 'react';
 import {
   Button,
   Image,
@@ -17,6 +17,7 @@ import {
 } from 'react-native-my-components';
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText, Strong } from 'react-native-my-text';
+import { sharePushCurlCommandAsync } from '@/notifications';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -31,6 +32,10 @@ const HomeScreen: FC = () => {
   const [pressCount, incrementPressCount] = useReducer((i) => i + 1, 0);
 
   const { expoPushToken, permissionStatus } = useNotifications();
+
+  const onShareCurlCommand = useCallback(() => {
+    (async () => sharePushCurlCommandAsync(expoPushToken!))();
+  }, [expoPushToken]);
 
   return (
     <ParallaxScrollView
@@ -69,6 +74,21 @@ const HomeScreen: FC = () => {
         />
 
         <Button
+          title="share curl command"
+          testID="share-curl-command-button"
+          disabled={!expoPushToken}
+          onPress={onShareCurlCommand}
+        />
+
+        <Button
+          title="log something"
+          testID="log-something-button"
+          onPress={() => {
+            console.error('error log');
+          }}
+        />
+
+        <Button
           title="go sitemap"
           testID="go-sitemap-button"
           onPress={() => {
@@ -84,8 +104,8 @@ const HomeScreen: FC = () => {
           <ThemedText type="subtitle">Open Settings</ThemedText>
         </TouchableOpacity>
 
-        <ThemedText type="subtitle">
-          {JSON.stringify(expoPushToken, null, 2)}
+        <ThemedText type="subtitle" testID="expo-push-token">
+          {JSON.stringify(expoPushToken?.data, null, 2)}
         </ThemedText>
         <ThemedText>
           permissionStatus = {permissionStatus}

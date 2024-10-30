@@ -30,7 +30,7 @@ USER ubuntu
 ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
 RUN curl https://get.volta.sh | bash \
-  && volta install node@latest npm@latest \
+  && volta install node@latest npm@latest node@20 \
   && npm i -g --ignore-scripts eas-cli@latest
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
@@ -53,8 +53,9 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
 
 # Stage 6: Prebuild Preview (build platform-specific)
 FROM prebuild-env AS prebuild-preview
-ENV EXPO_PUBLIC_APP_ID="net.trajano.myapp"
-ENV EXPO_PUBLIC_APP_NAME="My App"
+ENV EXPO_APP_ID="net.trajano.myapp"
+ENV EXPO_APP_NAME="My App"
+ENV EXPO_APP_BRAND="release"
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=secret,id=google-services-json,target=/home/ubuntu/work/google-services.json,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/tmp \
@@ -82,11 +83,14 @@ RUN --mount=type=cache,id=assembleDebug,target=/home/ubuntu/.gradle,uid=1000,gid
 
 # Stage 9: Build Preview APKs (build platform-specific)
 FROM gradle-build-env AS preview-apk
+ENV EXPO_APP_ID="net.trajano.myapp"
+ENV EXPO_APP_NAME="My App"
+ENV EXPO_APP_BRAND="release"
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
   ./gradlew assembleRelease
 
-# EAS iOS build
+# EAS build
 FROM prebuild-env AS eas-build-ios-devclient
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
@@ -96,7 +100,7 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
   eas build --non-interactive --platform=ios --profile=development
 
-FROM prebuild-env AS eas-build
+FROM prebuild-env AS eas-build-ios
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
@@ -105,12 +109,33 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
   eas build --non-interactive --platform=ios --profile=preview
 
-# EAS iOS build
+FROM prebuild-env AS eas-build-android-devclient
+ENV EAS_NO_VCS=1
+ENV EAS_PROJECT_ROOT=/home/ubuntu/work
+RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
+  --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
+  --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
+  --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
+  eas build --non-interactive --platform=android --profile=development
+
+FROM prebuild-env AS eas-build-android
+ENV EAS_NO_VCS=1
+ENV EAS_PROJECT_ROOT=/home/ubuntu/work
+RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
+  --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
+  --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
+  --mount=type=tmpfs,target=/home/ubuntu/work/packages/my-app/credentials \
+  eas build --non-interactive --platform=android --profile=preview
+
+# EAS update
 FROM prebuild-env AS eas-update
 ENV EAS_NO_VCS=1
 ENV EAS_PROJECT_ROOT=/home/ubuntu/work
 ARG EAS_UPDATE_CHANNEL=preview
-ARG EAS_UPDATE_MESSAGE=Docker build
+ARG EAS_UPDATE_MESSAGE="Docker build"
+ENV EXPO_APP_ID="net.trajano.myapp"
+ENV EXPO_APP_NAME="My App"
+ENV EXPO_APP_BRAND="release"
 RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   --mount=type=secret,id=EXPO_TOKEN,env=EXPO_TOKEN \
   --mount=type=secret,id=eas-credentials-json,target=/home/ubuntu/work/packages/my-app/credentials.json,uid=1000,gid=1000 \
@@ -124,5 +149,7 @@ COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outp
 # Final Stage: Multiplatform APK delivery (no specific platform)
 FROM busybox:stable
 USER bin
+COPY --from=prebuild-devclient /home/ubuntu/work/packages/my-app/ios/MyAppGo/Info.plist /MyAppGo-Info.plist
+COPY --from=prebuild-preview /home/ubuntu/work/packages/my-app/ios/MyApp/Info.plist /MyApp-Info.plist
 COPY --from=devclient /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/debug/app-debug.apk /app-dev-client.apk
 COPY --from=preview-apk /home/ubuntu/work/packages/my-app/android/app/build/outputs/apk/release/app-release.apk /app-release.apk

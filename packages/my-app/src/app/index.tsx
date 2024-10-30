@@ -1,5 +1,4 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import {
   FC,
@@ -9,33 +8,50 @@ import {
   useRef,
   useState,
 } from 'react';
+import * as Updates from 'expo-updates';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
+// Use MyTextE to ensure the embedded versions of the font are used
+import { MyTextE as MyText } from 'react-native-my-text';
+
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const LoaderScreen: FC = () => {
   const animation = useRef<LottieView>(null);
   const router = useRouter();
   const progress = useRef(new Animated.Value(0)).current; // Animated value to control progress
   const [loadedItems, incrementLoadedItems] = useReducer((i) => i + 1, 0);
-  const totalItemsToLoad = 10;
+  const totalItemsToLoad = 3;
   const [backgroundColor, setBackgroundColor] = useState('#eee');
   const [shown, setShown] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
-  // Simulate loading items with random intervals
   useEffect(() => {
-    const loadItems = () => {
-      if (loadedItems < totalItemsToLoad) {
-        const randomInterval = Math.random() * 300 + 200; // Random delay between 200ms to 500ms
-        setTimeout(() => {
-          incrementLoadedItems(); // Increment the loaded item count
-        }, randomInterval);
+    (async () => {
+      incrementLoadedItems();
+      if (Updates.isEnabled) {
+        try {
+          const { isAvailable } = await Updates.checkForUpdateAsync();
+          incrementLoadedItems();
+          if (isAvailable) {
+            setUpdating(true);
+            const { isNew } = await Updates.fetchUpdateAsync();
+            incrementLoadedItems();
+            if (isNew) {
+              await Updates.reloadAsync();
+            }
+          } else {
+            incrementLoadedItems();
+          }
+        } catch (e: unknown) {
+          console.error(`update failed due to: ${e}`);
+          incrementLoadedItems();
+          incrementLoadedItems();
+        }
+      } else {
+        incrementLoadedItems();
+        incrementLoadedItems();
       }
-    };
-
-    // Repeat until all items are loaded
-    if (loadedItems < totalItemsToLoad) {
-      loadItems();
-    }
-  }, [loadedItems]);
+    })();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -61,7 +77,7 @@ const LoaderScreen: FC = () => {
             useNativeDriver: false,
           }).start(() => {
             // Navigate to the tabs route once the animation completes
-            router.push('/(tabs)');
+            router.replace('/(tabs)');
           });
         }, 500); // Small delay before playing the final animation
       }
@@ -74,6 +90,7 @@ const LoaderScreen: FC = () => {
   if (shown) {
     return (
       <View style={styles.animationContainer} testID="splash-view">
+        <MyText>{Updates.createdAt?.toISOString()}</MyText>
         <AnimatedLottieView
           ref={animation}
           style={{
@@ -83,8 +100,11 @@ const LoaderScreen: FC = () => {
           }}
           testID="splash"
           progress={progress} // Casting to number to fix typing issue
-          source={require('../assets/cat-loader-2.json')}
+          source={require('@/assets/cat-loader-2.json')} // JSON is needed as Android does not appear to support .lottie
         />
+        <MyText>
+          {updating ? 'Update detected, app will restart after updating' : ''}
+        </MyText>
       </View>
     );
   } else {
@@ -94,7 +114,7 @@ const LoaderScreen: FC = () => {
 
 const styles = StyleSheet.create({
   animationContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ccc',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
