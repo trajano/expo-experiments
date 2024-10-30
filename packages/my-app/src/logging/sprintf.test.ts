@@ -51,4 +51,6 @@ test('JSON', () => {
   expect(sprintf('foo %o', { a: 2.523 })).toEqual(`foo {"a":2.523}`);
   expect(sprintf('foo %o', 'ABC')).toEqual(`foo "ABC"`);
   expect(sprintf('foo %o %s', null)).toEqual('foo null undefined');
+  expect(sprintf('foo %s', null)).toEqual('foo null');
+  expect(sprintf('foo %s')).toEqual('foo undefined');
 });
