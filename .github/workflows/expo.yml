@@ -1,4 +1,4 @@
-name: Expo Prebuilds
+name: Expo
 
 on:
   push:
@@ -88,6 +88,12 @@ jobs:
       - name: Install dependencies
         run: npm install
       - run: npm install -g eas-cli@latest
+      - run: |
+          set -e
+          echo "Current PATH: $PATH"
+          echo "Current VOLTA_HOME: $VOLTA_HOME"
+          voltaBinContents="$(ls $VOLTA_HOME/bin)"
+          echo "Current contents of $VOLTA_HOME\n$voltaBinContents"
       - name: Expo login
         run: eas login --token ${{ secrets.EXPO_TOKEN }}
       - run: ./eas-update-local.sh
