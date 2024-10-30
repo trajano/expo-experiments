@@ -78,10 +78,6 @@ const TaskManagerView: FC = () => {
 };
 
 const styles = StyleSheet.create({
-  outerBox: {
-    borderWidth: 1,
-    borderColor: 'red',
-  },
   container: {
     padding: 20,
   },
@@ -92,11 +88,6 @@ const styles = StyleSheet.create({
   sectionHeaderText: {
     fontWeight: 'bold',
     color: 'white',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
   },
   text: {
     fontSize: 16,
