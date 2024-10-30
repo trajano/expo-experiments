@@ -50,6 +50,7 @@
     "expo-device": "~6.0.2",
     "expo-file-system": "~17.0.1",
     "expo-font": "~12.0.10",
+    "expo-gl": "~14.0.2",
     "expo-haptics": "~13.0.1",
     "expo-image": "~1.13.0",
     "expo-image-manipulator": "~12.0.5",
@@ -81,6 +82,7 @@
     "expo-store-review": "~7.0.2",
     "expo-system-ui": "~3.0.7",
     "expo-task-manager": "~11.8.2",
+    "expo-three": "^8.0.0",
     "expo-tracking-transparency": "~4.0.2",
     "expo-updates": "~0.25.27",
     "expo-video": "^1.2.7",
@@ -111,6 +113,7 @@
     "react-native-try-catch": "*",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.8.6",
+    "three": "^0.166.1",
     "yup": "^1.4.0"
   },
   "devDependencies": {
