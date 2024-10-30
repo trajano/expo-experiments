@@ -67,7 +67,8 @@
       "expo-secure-store",
       "expo-tracking-transparency",
       "expo-video",
-      "@config-plugins/android-jsc-intl"
+      "@config-plugins/android-jsc-intl",
+      "@reactvision/react-viro"
     ],
     "experiments": {
       "typedRoutes": true
