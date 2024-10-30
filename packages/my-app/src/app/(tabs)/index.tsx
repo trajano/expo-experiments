@@ -17,8 +17,7 @@ import {
 } from 'react-native-my-components';
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText, Strong } from 'react-native-my-text';
-import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
+import { sharePushCurlCommandAsync } from '@/notifications';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -34,39 +33,8 @@ const HomeScreen: FC = () => {
 
   const { expoPushToken, permissionStatus } = useNotifications();
 
-  const shareCurlCommand = useCallback(() => {
-    const curlCommand = `
-    curl -X POST https://exp.host/--/api/v2/push/send \\
-      -H "Content-Type: application/json" \\
-      -H "Accept: application/json" \\
-      -d '{
-        "to": "${expoPushToken?.data}",
-        "title": "Hello!",
-        "body": "This is a test notification",
-        "data": {"extraData": "Some extra data"}
-      }'
-
-    curl -X POST https://exp.host/--/api/v2/push/send \\
-      -H "Content-Type: application/json" \\
-      -H "Accept: application/json" \\
-      -d '{
-        "to": "${expoPushToken?.data}",
-        "_contentAvailable": true,
-        "data": {"extraData": "Some extra data"}
-      }'
-
-  `;
-    const uri = FileSystem.documentDirectory + `push-${Platform.OS}.txt`;
-    (async () => {
-      await FileSystem.writeAsStringAsync(uri, curlCommand, {
-        encoding: 'utf8',
-      });
-      await Sharing.shareAsync(uri, {
-        dialogTitle: 'Share the CURL Command',
-        mimeType: 'text/plain',
-        UTI: 'public.plain-text',
-      });
-    })();
+  const onShareCurlCommand = useCallback(() => {
+    (async () => sharePushCurlCommandAsync(expoPushToken!))();
   }, [expoPushToken]);
 
   return (
@@ -108,7 +76,8 @@ const HomeScreen: FC = () => {
         <Button
           title="share curl command"
           testID="share-curl-command-button"
-          onPress={shareCurlCommand}
+          disabled={!expoPushToken}
+          onPress={onShareCurlCommand}
         />
 
         <Button
@@ -135,8 +104,8 @@ const HomeScreen: FC = () => {
           <ThemedText type="subtitle">Open Settings</ThemedText>
         </TouchableOpacity>
 
-        <ThemedText type="subtitle">
-          {JSON.stringify(expoPushToken, null, 2)}
+        <ThemedText type="subtitle" testID="expo-push-token">
+          {JSON.stringify(expoPushToken?.data, null, 2)}
         </ThemedText>
         <ThemedText>
           permissionStatus = {permissionStatus}

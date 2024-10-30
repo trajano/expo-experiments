@@ -1,11 +1,21 @@
-import Index from '@/app/(tabs)/index';
+import HomeScreen from '@/app/(tabs)/index';
 import { Linking } from 'react-native';
-import { render, act, fireEvent } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import { Router, useRouter } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
+}));
+jest.mock('react-native-my-hooks', () => ({
+  ...jest.requireActual('react-native-my-hooks'),
+  useNotifications: () => ({
+    expoPushToken: {
+      type: 'expo',
+      data: 'abc',
+    },
+    permissionStatus: 'granted',
+  }),
 }));
 test('(tabs)/index', () => {
   const mockRouter: Partial<jest.Mocked<Router>> = {
@@ -14,7 +24,7 @@ test('(tabs)/index', () => {
   };
   jest.mocked(useRouter).mockReturnValue(mockRouter as Router);
 
-  const { getByTestId } = render(<Index />);
+  const { getByTestId } = render(<HomeScreen />);
   expect(getByTestId('open-settings-button')).toBeTruthy();
   fireEvent.press(getByTestId('open-settings-button'));
   expect(Linking.openSettings).toHaveBeenCalled();
@@ -42,15 +52,20 @@ test('(tabs)/index console log', () => {
     .spyOn(console, 'error')
     .mockImplementation(() => {});
 
-  const { getByTestId } = render(<Index />);
+  const { getByTestId } = render(<HomeScreen />);
   fireEvent.press(getByTestId('log-something-button'));
   expect(consoleErrorMock).toHaveBeenCalledWith('error log');
   consoleErrorMock.mockReset();
 });
 
-test('(tabs)/index share curl', () => {
-  const { getByTestId } = render(<Index />);
-  fireEvent.press(getByTestId('share-curl-command-button'));
+test('(tabs)/index share curl', async () => {
+  const { getByTestId } = render(<HomeScreen />);
+  expect(getByTestId('expo-push-token').props.children).toContain('abc');
+
+  expect(getByTestId('share-curl-command-button').props.disabled).toBeFalsy();
+  await act(async () =>
+    fireEvent.press(getByTestId('share-curl-command-button')),
+  );
   expect(FileSystem.writeAsStringAsync).toHaveBeenCalledWith(
     expect.anything(),
     expect.anything(),

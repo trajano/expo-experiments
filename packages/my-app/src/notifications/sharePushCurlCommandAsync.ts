@@ -47,19 +47,17 @@ export const curlCommand = (expoPushToken: Notifications.ExpoPushToken) => {
   `;
   }
 };
-export const sharePushCurlCommand = (
+export const sharePushCurlCommandAsync = async (
   expoPushToken: Notifications.ExpoPushToken,
-) => {
+): Promise<void> => {
   const platformSpecificCurlCommand = curlCommand(expoPushToken);
   const uri = FileSystem.documentDirectory + `push-${Platform.OS}.txt`;
-  (async () => {
-    await FileSystem.writeAsStringAsync(uri, platformSpecificCurlCommand, {
-      encoding: 'utf8',
-    });
-    await Sharing.shareAsync(uri, {
-      dialogTitle: 'Share the CURL Command',
-      mimeType: 'text/plain',
-      UTI: 'public.plain-text',
-    });
-  })();
+  await FileSystem.writeAsStringAsync(uri, platformSpecificCurlCommand, {
+    encoding: 'utf8',
+  });
+  await Sharing.shareAsync(uri, {
+    dialogTitle: 'Share the CURL Command',
+    mimeType: 'text/plain',
+    UTI: 'public.plain-text',
+  });
 };

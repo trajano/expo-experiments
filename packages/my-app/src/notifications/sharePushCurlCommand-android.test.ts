@@ -1,4 +1,4 @@
-import { curlCommand } from './sharePushCurlCommand';
+import { curlCommand } from './sharePushCurlCommandAsync';
 
 jest.mock('react-native', () => ({
   Platform: { OS: 'android' },

@@ -1,1 +1,2 @@
-export { sharePushCurlCommand } from './sharePushCurlCommand';
+export { sharePushCurlCommandAsync } from './sharePushCurlCommandAsync';
+export { extractDataFromBackgroundNotification } from './extractDataFromBackgroundNotification';
