@@ -17,6 +17,9 @@ jest.mock('react-native-my-hooks', () => ({
     permissionStatus: 'granted',
   }),
 }));
+jest.mock('expo-file-system', () => ({
+  writeAsStringAsync: jest.fn(() => {}),
+}));
 test('(tabs)/index', () => {
   const mockRouter: Partial<jest.Mocked<Router>> = {
     back: jest.fn(),

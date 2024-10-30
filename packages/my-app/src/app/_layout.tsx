@@ -6,7 +6,6 @@ import {
 
 import '@/devMenu';
 import '@/logging';
-import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { FC, useEffect } from 'react';
 import 'react-native-reanimated';
@@ -14,31 +13,39 @@ import 'react-native-reanimated';
 import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
 import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
 import { WithUserPreferences } from '@/hooks/UserPreferences';
-import * as ComicNeue from '@expo-google-fonts/comic-neue';
-import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
-import { useExpoGoogleFonts } from 'react-native-my-text';
+import { DevMenu } from 'expo-dev-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearLogFilesAsync } from '@/logging';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout: FC = () => {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
-  });
-  const [expoFontsLoaded] = useExpoGoogleFonts(Nunito, ComicNeue);
 
   useEffect(() => {
-    if (loaded && expoFontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, expoFontsLoaded]);
-
-  if (!loaded || !expoFontsLoaded) {
-    return null;
-  }
+    (async () => {
+      await DevMenu.registerDevMenuItems([
+        {
+          name: 'Clear AsyncStorage',
+          callback: async () => {
+            await AsyncStorage.clear();
+          },
+          shouldCollapse: true,
+        },
+        {
+          name: 'Clear Log files',
+          callback: async () => {
+            await clearLogFilesAsync();
+          },
+          shouldCollapse: true,
+        },
+      ]);
+      await SplashScreen.hideAsync();
+    })();
+  }, []);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

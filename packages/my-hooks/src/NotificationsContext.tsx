@@ -8,10 +8,10 @@ import {
   NotificationBehavior,
   NotificationChannelInput,
   NotificationPermissionsRequest,
+  registerTaskAsync,
   requestPermissionsAsync,
   setNotificationChannelAsync,
   setNotificationHandler,
-  registerTaskAsync,
 } from 'expo-notifications';
 import {
   ComponentType,
@@ -25,7 +25,6 @@ import {
   useState,
 } from 'react';
 import { Platform } from 'react-native';
-import * as TaskManager from 'expo-task-manager';
 
 /**
  * Interface representing the notifications context value.
@@ -179,11 +178,7 @@ export const NotificationsProvider: FC<NotificationsProviderProps> = ({
       } catch (e: unknown) {
         setExpoPushTokenError(e as Error);
       }
-      console.debug('effect fired' + notificationTaskName);
-      if (
-        notificationTaskName &&
-        !(await TaskManager.isTaskRegisteredAsync(notificationTaskName))
-      ) {
+      if (notificationTaskName) {
         await registerTaskAsync(notificationTaskName);
       }
     })();
