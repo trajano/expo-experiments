@@ -25,9 +25,11 @@ SplashScreen.preventAutoHideAsync();
 
 const RootLayout: FC = () => {
   const colorScheme = useColorScheme();
-
+  // useLoadGuard
   useEffect(() => {
     (async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await SplashScreen.hideAsync();
       await DevMenu.registerDevMenuItems([
         {
           name: 'Clear AsyncStorage',
@@ -44,10 +46,11 @@ const RootLayout: FC = () => {
           shouldCollapse: true,
         },
       ]);
-      await SplashScreen.hideAsync();
+      // this may be moved to load guard.
     })();
   }, []);
 
+  // if (!loaded), but I want it already on the stack right?
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
@@ -65,6 +68,7 @@ export type MyAppUserPreferences = {
   theme: string;
   count: number;
 };
+// with load guard?
 const CompositeApp = WithMyBackgroundFetch(
   WithUserPreferences(WithNotifications(RootLayout)),
 );
