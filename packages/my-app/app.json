@@ -41,15 +41,6 @@
     "plugins": [
       "expo-router",
       "expo-background-fetch",
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "../../node_modules/@expo-google-fonts/nunito/Nunito_400Regular.ttf",
-            "../../node_modules/@expo-google-fonts/nunito/Nunito_700Bold.ttf"
-          ]
-        }
-      ],
       "expo-notifications",
       [
         "expo-location",
@@ -83,11 +74,7 @@
     },
     "owner": "trajano",
     "updates": {
-      "url": "https://u.expo.dev/82884520-3f2f-4a6f-a85f-e6257469b267",
-      "checkAutomatically": "NEVER",
-      "requestHeaders": {
-        "expo-channel-name": "preview"
-      }
+      "url": "https://u.expo.dev/82884520-3f2f-4a6f-a85f-e6257469b267"
     },
     "runtimeVersion": {
       "policy": "appVersion"
