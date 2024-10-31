@@ -29,7 +29,7 @@ const androidVersionCode = (
   return versionCode;
 };
 
-export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
+export default ({ config }: ConfigContext): ExpoConfig => {
   /**
    * Gets the branded version of the source depending on the value
    * of the EXPO_APP_BRAND variable.  If the branded version does not
@@ -44,10 +44,7 @@ export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
       return src;
     } else {
       const brand = process.env.EXPO_APP_BRAND;
-      const newPath = src.replace(
-        './brand/',
-        path.join(path.dirname(staticConfigPath!), `./brand/${brand}/`),
-      );
+      const newPath = src.replace('./brand/', `./brand/${brand}/`);
       if (fs.existsSync(newPath)) {
         return newPath;
       } else {
