@@ -85,8 +85,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   // Find the first existing google-services.json file
   const googleServicesFilePath = googleServicesFilePaths.find(fs.existsSync);
 
-  return stripUndefinedAndEmpty({
-    ...config,
+  const toMerge = stripUndefinedAndEmpty({
     name: (process.env.EXPO_APP_NAME ?? config.name)!,
     slug: config.slug!,
     icon: branded(config.icon),
@@ -157,4 +156,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     runtimeVersion: version,
   });
+  return {
+    ...config,
+    ...toMerge,
+  };
 };
