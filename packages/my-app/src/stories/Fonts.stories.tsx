@@ -64,9 +64,8 @@ const FontView: FC<{
     ),
     [fontSize, fontWeight, testString],
   );
-  const keyExtractor = useCallback(
-    (fontFamilyName: string) =>
-      `${fontFamilyName}-${fontSize}-${fontWeight}-${testString}`,
+  const extraData = useMemo(
+    () => `${fontSize}-${fontWeight}-${testString}`,
     [fontSize, fontWeight, testString],
   );
   const fontsToRender = useMemo<string[]>(() => {
@@ -83,7 +82,8 @@ const FontView: FC<{
     <FlashList
       testID="flashlist"
       contentContainerStyle={styles.container}
-      keyExtractor={keyExtractor}
+      keyExtractor={(fontFamilyName) => fontFamilyName}
+      extraData={extraData}
       data={fontsToRender}
       estimatedItemSize={100}
       ItemSeparatorComponent={Separator}
