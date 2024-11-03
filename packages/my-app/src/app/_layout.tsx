@@ -17,7 +17,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearLogFilesAsync } from '@/logging';
 
 import '@/devMenu';
-import '@/logging';
 import 'react-native-reanimated';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -33,15 +32,15 @@ const RootLayout: FC = () => {
       await DevMenu.registerDevMenuItems([
         {
           name: 'Clear AsyncStorage',
-          callback: async () => {
-            await AsyncStorage.clear();
+          callback: () => {
+            AsyncStorage.clear();
           },
           shouldCollapse: true,
         },
         {
           name: 'Clear Log files',
-          callback: async () => {
-            await clearLogFilesAsync();
+          callback: () => {
+            clearLogFilesAsync();
           },
           shouldCollapse: true,
         },

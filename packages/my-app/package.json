@@ -116,7 +116,7 @@
     "react-native-try-catch": "*",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.8.6",
-    "three": "^0.169.0",
+    "three": "^0.170.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
