@@ -16,9 +16,7 @@ const FontRowView: FC<{
   return (
     <>
       <View style={styles.sectionHeader} testID="rowheader">
-        <MyText style={styles.sectionHeaderText}>
-          {fontFamilyName} {fontWeight}
-        </MyText>
+        <MyText style={styles.sectionHeaderText}>{fontFamilyName}</MyText>
       </View>
       <Text
         testID="row"
