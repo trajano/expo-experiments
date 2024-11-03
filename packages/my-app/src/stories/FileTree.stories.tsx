@@ -5,17 +5,8 @@ import * as Haptics from 'expo-haptics';
 import { Alert, Platform } from 'react-native';
 import { FileTree, OnItemPressCallback } from 'react-native-my-components';
 import { MyText } from 'react-native-my-text';
+import FileViewer from 'react-native-file-viewer'
 
-// This is an example of a conditional missing react-native dependency.
-let FileViewer: any;
-try {
-  FileViewer = require('react-native-file-viewer');
-} catch (e: unknown) {
-  FileViewer = {
-    open: () =>
-      Promise.reject(new Error('react-native-file-viewer not installed ')),
-  };
-}
 const openFileInViewer: OnItemPressCallback = async (item) => {
   if (item.type === 'file') {
     try {
