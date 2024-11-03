@@ -5,7 +5,6 @@ import ExpoConstants from 'expo-constants';
 import { PreviewViewMode } from '@sb/preview';
 import { FC, useCallback, useMemo } from 'react';
 import { StyleSheet, Text, TextStyle, View } from 'react-native';
-import { MyText } from 'react-native-my-text';
 
 const FontRowView: FC<{
   fontFamilyName: string;
@@ -16,9 +15,9 @@ const FontRowView: FC<{
   return (
     <>
       <View style={styles.sectionHeader} testID="rowheader">
-        <MyText style={styles.sectionHeaderText}>
+        <Text style={styles.sectionHeaderText}>
           {fontFamilyName} {fontWeight}
-        </MyText>
+        </Text>
       </View>
       <Text
         testID="row"

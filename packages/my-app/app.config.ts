@@ -153,6 +153,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         | 'ON_LOAD'
         | 'WIFI_ONLY'
         | 'NEVER',
+      // the following is an undocumented function to set the expo-channel-name to handle eas updates.
+      requestHeaders: {
+        'expo-channel-name': 'preview',
+      },
     },
     runtimeVersion: version,
   });
