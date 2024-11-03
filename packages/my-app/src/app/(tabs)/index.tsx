@@ -75,11 +75,14 @@ const HomeScreen: FC = () => {
         />
 
         <Button
-          title="open dev menu"
+          title="Open dev menu"
           testID="open-dev-menu"
           onPress={() => {
-            DevMenu.openMenu();
+            if (__DEV__) {
+              DevMenu.openMenu();
+            }
           }}
+          disabled={!__DEV__}
         />
         <Button
           title="share curl command"

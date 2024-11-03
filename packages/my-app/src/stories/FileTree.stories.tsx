@@ -2,8 +2,9 @@ import { PreviewViewMode } from '@sb/preview';
 import type { Meta, StoryObj } from '@storybook/react';
 import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { FileTree, OnItemPressCallback } from 'react-native-my-components';
+import { MyText } from 'react-native-my-text';
 
 // This is an example of a conditional missing react-native dependency.
 let FileViewer: any;
@@ -42,7 +43,11 @@ const deleteItem: OnItemPressCallback = async (item, refreshCallback) => {
         },
         style: 'destructive',
       },
-      { text: 'No', onPress: () => {}, style: 'cancel' },
+      {
+        text: 'No',
+        onPress: () => {},
+        style: 'cancel',
+      },
     ]);
   }
 };
@@ -87,17 +92,27 @@ export const CacheDirectory: Story = {
   },
 };
 
-export const BundleDirectory: Story = {
-  args: {
-    directoryUri: FileSystem.bundleDirectory!,
-    hideChildren: false,
-    itemTextStyle: { fontSize: 20 },
-    onItemPress: openFileInViewer,
-  },
-  parameters: {
-    backgrounds: {
-      default: 'plain',
-    },
-    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
-  },
-};
+export const BundleDirectory: Story =
+  Platform.OS === 'ios'
+    ? {
+        args: {
+          directoryUri: FileSystem.bundleDirectory!,
+          hideChildren: false,
+          itemTextStyle: { fontSize: 20 },
+          onItemPress: openFileInViewer,
+        },
+        parameters: {
+          backgrounds: {
+            default: 'plain',
+          },
+          previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
+        },
+      }
+    : {
+        render: () => <MyText>Unsupported</MyText>,
+        parameters: {
+          backgrounds: {
+            default: 'plain',
+          },
+        },
+      };
