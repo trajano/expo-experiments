@@ -5,6 +5,7 @@ import ExpoConstants from 'expo-constants';
 import { PreviewViewMode } from '@sb/preview';
 import { FC, useCallback, useMemo } from 'react';
 import { StyleSheet, Text, TextStyle, View } from 'react-native';
+import { MyText } from 'react-native-my-text';
 
 const FontRowView: FC<{
   fontFamilyName: string;
@@ -15,9 +16,9 @@ const FontRowView: FC<{
   return (
     <>
       <View style={styles.sectionHeader} testID="rowheader">
-        <Text style={styles.sectionHeaderText}>
+        <MyText style={styles.sectionHeaderText}>
           {fontFamilyName} {fontWeight}
-        </Text>
+        </MyText>
       </View>
       <Text
         testID="row"
@@ -63,6 +64,11 @@ const FontView: FC<{
     ),
     [fontSize, fontWeight, testString],
   );
+  const keyExtractor = useCallback(
+    (fontFamilyName: string) =>
+      `${fontFamilyName}-${fontSize}-${fontWeight}-${testString}`,
+    [fontSize, fontWeight, testString],
+  );
   const fontsToRender = useMemo<string[]>(() => {
     const fontsToPrepend = importantFonts.filter((font) =>
       ExpoConstants.systemFonts.includes(font),
@@ -77,6 +83,7 @@ const FontView: FC<{
     <FlashList
       testID="flashlist"
       contentContainerStyle={styles.container}
+      keyExtractor={keyExtractor}
       data={fontsToRender}
       estimatedItemSize={100}
       ItemSeparatorComponent={Separator}
