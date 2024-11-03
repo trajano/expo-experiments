@@ -4,7 +4,7 @@
     "start": "cd packages/my-app && expo start -c",
     "lint": "turbo lint",
     "dev": "turbo dev --concurrency 20",
-    "test": "jest",
+    "test": "turbo test -- --coverage",
     "typecheck": "npm run typecheck --workspaces",
     "prepare": "husky || turbo telemetry disable || true",
     "build": "turbo build",

@@ -15,12 +15,13 @@ const FontRowView: FC<{
 }> = ({ fontFamilyName, fontSize, fontWeight, testString }) => {
   return (
     <>
-      <View style={styles.sectionHeader}>
+      <View style={styles.sectionHeader} testID="rowheader">
         <MyText style={styles.sectionHeaderText}>
           {fontFamilyName} {fontWeight}
         </MyText>
       </View>
       <Text
+        testID="row"
         style={{
           fontFamily: fontFamilyName,
           fontSize: fontSize,
@@ -75,6 +76,7 @@ const FontView: FC<{
 
   return (
     <FlashList
+      testID="flashlist"
       contentContainerStyle={styles.container}
       data={fontsToRender}
       estimatedItemSize={100}

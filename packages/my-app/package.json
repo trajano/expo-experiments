@@ -14,7 +14,10 @@
     "lint": "eslint ."
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "setupFiles": [
+      "./jest-setup.js"
+    ]
   },
   "dependencies": {
     "@config-plugins/android-jsc-intl": "^8.0.0",
