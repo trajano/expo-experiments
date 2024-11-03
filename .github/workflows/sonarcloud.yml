@@ -33,6 +33,9 @@ jobs:
       - run: npm ci
       - run: npx turbo lint -- -f json -o eslint.report.json
       - run: npm test -- --coverage
+      - run: |
+          echo "sonar.eslint.reportPaths=$(find . -name 'eslint.report.json' -print | paste -sd ',')" >> sonar-project.properties
+        name: Patch sonar-project.properties
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
