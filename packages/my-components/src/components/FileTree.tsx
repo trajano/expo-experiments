@@ -134,6 +134,7 @@ const TreeItem: FC<{
         onPress={onPress}
         onLongPress={onLongPress}
         style={[styles.fileItem, { paddingLeft: item.depth * 10 }]}
+        testID="touchable-tree-item"
       >
         <MyText style={itemTextStyle}>{label}</MyText>
       </TouchableOpacity>

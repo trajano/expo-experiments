@@ -3,8 +3,10 @@ import * as FileSystem from 'expo-file-system';
 import { FileTree } from './FileTree';
 import * as stories from './FileTree.stories';
 import { composeStories } from '@storybook/react';
+import FileViewer from 'react-native-file-viewer';
 
 jest.mock('expo-file-system');
+jest.mock('react-native-file-viewer', () => ({ open: jest.fn() }));
 
 const { DocumentDirectory } = composeStories(stories);
 
@@ -161,10 +163,31 @@ describe('FileTree Component', () => {
 });
 
 describe('storybook of FileTree', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
   it('renders DocumentDirectory', async () => {
     const mockFileSystem = FileSystem as jest.Mocked<typeof FileSystem>;
     mockFileSystem.readDirectoryAsync.mockResolvedValueOnce([]);
     render(<DocumentDirectory />);
     await act(() => Promise.resolve());
+  });
+
+  it('renders DocumentDirectory with one file', async () => {
+    const mockFileSystem = FileSystem as jest.Mocked<typeof FileSystem>;
+    mockFileSystem.readDirectoryAsync.mockResolvedValueOnce(['file.txt']);
+    mockFileSystem.getInfoAsync.mockResolvedValueOnce({
+      isDirectory: false,
+      uri: 'foo://file.txt',
+      exists: true,
+      size: 42,
+      modificationTime: 1,
+    });
+    const { getByTestId } = render(<DocumentDirectory />);
+    await act(() => Promise.resolve());
+    const treeItem = getByTestId('touchable-tree-item');
+    expect(treeItem).toBeTruthy();
+    fireEvent.press(treeItem);
+    expect(FileViewer.open).toHaveBeenCalledWith('mock//file.txt');
   });
 });
