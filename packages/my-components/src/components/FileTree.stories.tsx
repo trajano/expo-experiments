@@ -1,11 +1,10 @@
-import { PreviewViewMode } from '@sb/preview';
 import type { Meta, StoryObj } from '@storybook/react';
 import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
 import { Alert, Platform } from 'react-native';
-import { FileTree, OnItemPressCallback } from 'react-native-my-components';
+import { FileTree, OnItemPressCallback } from './FileTree';
 import { MyText } from 'react-native-my-text';
-import FileViewer from 'react-native-file-viewer'
+import FileViewer from 'react-native-file-viewer';
 
 const openFileInViewer: OnItemPressCallback = async (item) => {
   if (item.type === 'file') {
@@ -53,7 +52,7 @@ type Story = StoryObj<typeof FileTree>;
 
 export const DocumentDirectory: Story = {
   args: {
-    directoryUri: FileSystem.documentDirectory!,
+    directoryUri: FileSystem.documentDirectory,
     hideChildren: false,
     itemTextStyle: { fontSize: 20 },
     onItemPress: openFileInViewer,
@@ -63,13 +62,13 @@ export const DocumentDirectory: Story = {
     backgrounds: {
       default: 'plain',
     },
-    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
+    previewViewMode: 1,
   },
 };
 
 export const CacheDirectory: Story = {
   args: {
-    directoryUri: FileSystem.cacheDirectory!,
+    directoryUri: FileSystem.cacheDirectory,
     hideChildren: false,
     itemTextStyle: { fontSize: 20 },
     onItemPress: openFileInViewer,
@@ -79,7 +78,7 @@ export const CacheDirectory: Story = {
     backgrounds: {
       default: 'plain',
     },
-    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
+    previewViewMode: 1,
   },
 };
 
@@ -87,7 +86,7 @@ export const BundleDirectory: Story =
   Platform.OS === 'ios'
     ? {
         args: {
-          directoryUri: FileSystem.bundleDirectory!,
+          directoryUri: FileSystem.bundleDirectory,
           hideChildren: false,
           itemTextStyle: { fontSize: 20 },
           onItemPress: openFileInViewer,
@@ -96,7 +95,7 @@ export const BundleDirectory: Story =
           backgrounds: {
             default: 'plain',
           },
-          previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
+          previewViewMode: 1,
         },
       }
     : {

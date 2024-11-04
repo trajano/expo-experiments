@@ -1,8 +1,12 @@
 import { act, render, fireEvent } from '@testing-library/react-native';
 import * as FileSystem from 'expo-file-system';
 import { FileTree } from './FileTree';
+import * as stories from './FileTree.stories';
+import { composeStories } from '@storybook/react';
 
 jest.mock('expo-file-system');
+
+const { DocumentDirectory } = composeStories(stories);
 
 describe('FileTree Component', () => {
   it('renders the file tree correctly', async () => {
@@ -154,4 +158,13 @@ describe('FileTree Component', () => {
     expect(queryByText('📄 file2.txt 1')).not.toBeTruthy();
     expect(getByText('📄 file1.txt 0')).toBeTruthy();
   }, 20_000);
+});
+
+describe('storybook of FileTree', () => {
+  it('renders DocumentDirectory', async () => {
+    const mockFileSystem = FileSystem as jest.Mocked<typeof FileSystem>;
+    mockFileSystem.readDirectoryAsync.mockResolvedValueOnce([]);
+    render(<DocumentDirectory />);
+    await act(() => Promise.resolve());
+  });
 });
