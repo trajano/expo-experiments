@@ -18,6 +18,7 @@ import {
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText, Strong } from 'react-native-my-text';
 import { sharePushCurlCommandAsync } from '@/notifications';
+import { DevMenu } from 'expo-dev-client';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -73,6 +74,16 @@ const HomeScreen: FC = () => {
           }}
         />
 
+        <Button
+          title="Open dev menu"
+          testID="open-dev-menu"
+          onPress={() => {
+            if (__DEV__) {
+              DevMenu.openMenu();
+            }
+          }}
+          disabled={!__DEV__}
+        />
         <Button
           title="share curl command"
           testID="share-curl-command-button"

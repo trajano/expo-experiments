@@ -10,11 +10,14 @@
     "web": "expo start --web",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "prepare": "sb-rn-get-stories && tsc --noEmit",
+    "prepare": "expo customize tsconfig.json && sb-rn-get-stories && tsc --noEmit",
     "lint": "eslint ."
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "setupFiles": [
+      "./jest-setup.js"
+    ]
   },
   "dependencies": {
     "@config-plugins/android-jsc-intl": "^8.0.0",
@@ -50,6 +53,7 @@
     "expo-device": "~6.0.2",
     "expo-file-system": "~17.0.1",
     "expo-font": "~12.0.10",
+    "expo-gl": "~14.0.2",
     "expo-haptics": "~13.0.1",
     "expo-image": "~1.13.0",
     "expo-image-manipulator": "~12.0.5",
@@ -107,10 +111,12 @@
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "3.31.1",
+    "react-native-sticky-parallax-header": "^1.1.1",
     "react-native-svg": "15.2.0",
     "react-native-try-catch": "*",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.8.6",
+    "three": "^0.170.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
@@ -120,9 +126,9 @@
     "@storybook/addon-ondevice-backgrounds": "^8.3.10",
     "@storybook/addon-ondevice-controls": "^8.3.10",
     "@storybook/addon-ondevice-notes": "^8.3.10",
-    "@storybook/react": "^8.3.6",
+    "@storybook/react": "^8.4.1",
     "@storybook/react-native": "^8.3.10",
-    "@testing-library/react-native": "^12.8.0",
+    "@testing-library/react-native": "^12.8.1",
     "@types/jest": "^29.5.14",
     "@types/react": "~18.2.45",
     "eslint-config-my": "*",

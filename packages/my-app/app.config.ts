@@ -1,6 +1,7 @@
-import { ExpoConfig, ConfigContext } from '@expo/config';
+import { ConfigContext, ExpoConfig } from '@expo/config';
 import * as fs from 'fs';
 import * as path from 'node:path';
+import _ from 'lodash';
 
 /**
  * Generates an Android version code based on the given version string, major version number, and run padding.
@@ -29,7 +30,27 @@ const androidVersionCode = (
   return versionCode;
 };
 
-export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
+const stripUndefinedAndEmpty = <T extends Record<string, any>>(obj: T): T => {
+  return _.transform(
+    obj,
+    (result: Partial<T>, value, key: keyof T) => {
+      if (_.isObject(value) && !Array.isArray(value)) {
+        // Recursively clean nested objects
+        const cleanedValue = stripUndefinedAndEmpty(
+          value as Record<string, any>,
+        );
+        if (!_.isEmpty(cleanedValue)) {
+          result[key] = cleanedValue as T[keyof T];
+        }
+      } else if (value !== undefined) {
+        result[key] = value;
+      }
+    },
+    {} as Partial<T>,
+  ) as T;
+};
+
+export default ({ config }: ConfigContext): ExpoConfig => {
   /**
    * Gets the branded version of the source depending on the value
    * of the EXPO_APP_BRAND variable.  If the branded version does not
@@ -44,10 +65,7 @@ export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
       return src;
     } else {
       const brand = process.env.EXPO_APP_BRAND;
-      const newPath = src.replace(
-        './brand/',
-        path.join(path.dirname(staticConfigPath!), `./brand/${brand}/`),
-      );
+      const newPath = src.replace('./brand/', `./brand/${brand}/`);
       if (fs.existsSync(newPath)) {
         return newPath;
       } else {
@@ -67,8 +85,7 @@ export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
   // Find the first existing google-services.json file
   const googleServicesFilePath = googleServicesFilePaths.find(fs.existsSync);
 
-  return {
-    ...config,
+  const toMerge = stripUndefinedAndEmpty({
     name: (process.env.EXPO_APP_NAME ?? config.name)!,
     slug: config.slug!,
     icon: branded(config.icon),
@@ -128,6 +145,23 @@ export default ({ config, staticConfigPath }: ConfigContext): ExpoConfig => {
         },
       },
     },
+    updates: {
+      ...config.updates,
+      checkAutomatically: (process.env.EXPO_APP_UPDATES_CHECK_AUTOMATICALLY ??
+        config.updates?.checkAutomatically) as
+        | 'ON_ERROR_RECOVERY'
+        | 'ON_LOAD'
+        | 'WIFI_ONLY'
+        | 'NEVER',
+      // the following is an undocumented function to set the expo-channel-name to handle eas updates.
+      requestHeaders: {
+        'expo-channel-name': 'preview',
+      },
+    },
     runtimeVersion: version,
+  });
+  return {
+    ...config,
+    ...toMerge,
   };
 };

@@ -1,20 +1,11 @@
-import { PreviewViewMode } from '@sb/preview';
 import type { Meta, StoryObj } from '@storybook/react';
 import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
-import { Alert } from 'react-native';
-import { FileTree, OnItemPressCallback } from 'react-native-my-components';
+import { Alert, Platform } from 'react-native';
+import { FileTree, OnItemPressCallback } from './FileTree';
+import { MyText } from 'react-native-my-text';
+import FileViewer from 'react-native-file-viewer';
 
-// This is an example of a conditional missing react-native dependency.
-let FileViewer: any;
-try {
-  FileViewer = require('react-native-file-viewer');
-} catch (e: unknown) {
-  FileViewer = {
-    open: () =>
-      Promise.reject(new Error('react-native-file-viewer not installed ')),
-  };
-}
 const openFileInViewer: OnItemPressCallback = async (item) => {
   if (item.type === 'file') {
     try {
@@ -42,7 +33,11 @@ const deleteItem: OnItemPressCallback = async (item, refreshCallback) => {
         },
         style: 'destructive',
       },
-      { text: 'No', onPress: () => {}, style: 'cancel' },
+      {
+        text: 'No',
+        onPress: () => {},
+        style: 'cancel',
+      },
     ]);
   }
 };
@@ -57,7 +52,7 @@ type Story = StoryObj<typeof FileTree>;
 
 export const DocumentDirectory: Story = {
   args: {
-    directoryUri: FileSystem.documentDirectory!,
+    directoryUri: FileSystem.documentDirectory,
     hideChildren: false,
     itemTextStyle: { fontSize: 20 },
     onItemPress: openFileInViewer,
@@ -67,13 +62,13 @@ export const DocumentDirectory: Story = {
     backgrounds: {
       default: 'plain',
     },
-    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
+    previewViewMode: 1,
   },
 };
 
 export const CacheDirectory: Story = {
   args: {
-    directoryUri: FileSystem.cacheDirectory!,
+    directoryUri: FileSystem.cacheDirectory,
     hideChildren: false,
     itemTextStyle: { fontSize: 20 },
     onItemPress: openFileInViewer,
@@ -83,21 +78,31 @@ export const CacheDirectory: Story = {
     backgrounds: {
       default: 'plain',
     },
-    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
+    previewViewMode: 1,
   },
 };
 
-export const BundleDirectory: Story = {
-  args: {
-    directoryUri: FileSystem.bundleDirectory!,
-    hideChildren: false,
-    itemTextStyle: { fontSize: 20 },
-    onItemPress: openFileInViewer,
-  },
-  parameters: {
-    backgrounds: {
-      default: 'plain',
-    },
-    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
-  },
-};
+export const BundleDirectory: Story =
+  Platform.OS === 'ios'
+    ? {
+        args: {
+          directoryUri: FileSystem.bundleDirectory,
+          hideChildren: false,
+          itemTextStyle: { fontSize: 20 },
+          onItemPress: openFileInViewer,
+        },
+        parameters: {
+          backgrounds: {
+            default: 'plain',
+          },
+          previewViewMode: 1,
+        },
+      }
+    : {
+        render: () => <MyText>Unsupported</MyText>,
+        parameters: {
+          backgrounds: {
+            default: 'plain',
+          },
+        },
+      };

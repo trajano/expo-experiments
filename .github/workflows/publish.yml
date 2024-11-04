@@ -23,6 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm install
       - run: volta install eas-cli@latest
-      - run: ./eas-update-local.sh
+      - run: ./eas-local-update.sh
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

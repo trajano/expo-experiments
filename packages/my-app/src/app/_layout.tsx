@@ -4,42 +4,53 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 
-import '@/devMenu';
-import '@/logging';
-import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { FC, useEffect } from 'react';
-import 'react-native-reanimated';
 
 import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
 import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
 import { WithUserPreferences } from '@/hooks/UserPreferences';
-import * as ComicNeue from '@expo-google-fonts/comic-neue';
-import * as Nunito from '@expo-google-fonts/nunito';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
-import { useExpoGoogleFonts } from 'react-native-my-text';
+import { DevMenu } from 'expo-dev-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearLogFilesAsync } from '@/logging';
+
+import '@/devMenu';
+import 'react-native-reanimated';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout: FC = () => {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
-  });
-  const [expoFontsLoaded] = useExpoGoogleFonts(Nunito, ComicNeue);
-
+  // useLoadGuard
   useEffect(() => {
-    if (loaded && expoFontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, expoFontsLoaded]);
+    (async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // before hiding the splashscreen the fonts and assets for the loader screen should be loaded
+      await SplashScreen.hideAsync();
+      await DevMenu.registerDevMenuItems([
+        {
+          name: 'Clear AsyncStorage',
+          callback: () => {
+            AsyncStorage.clear();
+          },
+          shouldCollapse: true,
+        },
+        {
+          name: 'Clear Log files',
+          callback: () => {
+            clearLogFilesAsync();
+          },
+          shouldCollapse: true,
+        },
+      ]);
+      // this may be moved to load guard.
+    })();
+  }, []);
 
-  if (!loaded || !expoFontsLoaded) {
-    return null;
-  }
-
+  // if (!loaded), but I want it already on the stack right?
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
@@ -57,6 +68,7 @@ export type MyAppUserPreferences = {
   theme: string;
   count: number;
 };
+// with load guard?
 const CompositeApp = WithMyBackgroundFetch(
   WithUserPreferences(WithNotifications(RootLayout)),
 );

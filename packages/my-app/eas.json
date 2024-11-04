@@ -20,6 +20,19 @@
       },
       "channel": "preview"
     },
+    "preview-auto-update": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_APP_ID": "net.trajano.myapp",
+        "EXPO_APP_NAME": "My App",
+        "EXPO_APP_BRAND": "release",
+        "EXPO_APP_UPDATES_CHECK_AUTOMATICALLY": "ON_LOAD"
+      },
+      "channel": "preview"
+    },
     "production": {
       "extends": "preview",
       "distribution": "store",
