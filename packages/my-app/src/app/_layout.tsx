@@ -22,7 +22,7 @@ import 'react-native-reanimated';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const RootLayout: FC = () => {
+export const RootLayout: FC = () => {
   const colorScheme = useColorScheme();
   // useLoadGuard
   useEffect(() => {
@@ -88,5 +88,4 @@ const MyApp = () => (
     }
   />
 );
-
 export default MyApp;
