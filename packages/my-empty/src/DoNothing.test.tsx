@@ -1,4 +1,4 @@
-import { render, renderHook } from '@testing-library/react-native';
+import { render, renderHook, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import {
   DoNothingContext,
@@ -6,9 +6,9 @@ import {
   useDoNothing,
   WithDoNothing,
 } from './DoNothing';
-import { PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
-const TestComponent: React.FC = () => {
+const TestComponent: FC = () => {
   const doNothingProps = useDoNothing();
 
   return <Text testID="props">{JSON.stringify(doNothingProps)}</Text>;
@@ -16,13 +16,13 @@ const TestComponent: React.FC = () => {
 
 describe('DoNothing', () => {
   it('Use provider', async () => {
-    const { getByTestId, toJSON } = render(
+    render(
       <DoNothingProvider>
         <TestComponent />
       </DoNothingProvider>,
     );
-    expect(getByTestId('props').props.children).toBe('{}');
-    expect(toJSON()).toMatchSnapshot();
+    expect(screen.getByTestId('props').props.children).toBe('{}');
+    expect(screen.toJSON()).toMatchSnapshot();
   });
 
   it('Use Hook', async () => {
@@ -37,8 +37,8 @@ describe('DoNothing', () => {
 
   it('Use HoC', async () => {
     const TestedComponent = WithDoNothing(TestComponent);
-    const { getByTestId, toJSON } = render(<TestedComponent />);
-    expect(getByTestId('props').props.children).toBe('{}');
-    expect(toJSON()).toMatchSnapshot();
+    render(<TestedComponent />);
+    expect(screen.getByTestId('props').props.children).toBe('{}');
+    expect(screen.toJSON()).toMatchSnapshot();
   });
 });
