@@ -2,16 +2,16 @@ import { WebView } from 'react-native-webview';
 import { FC } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 
-export type ThreeJsWebViewProps = {
+export type PhaseWebViewProps = {
   style: StyleProp<ViewStyle>;
 };
 /**
  * This is a component that renders PhaserWebView.
  */
-export const ThreeJsWebView: FC<ThreeJsWebViewProps> = ({ style }) => (
+export const PhaserWebView: FC<PhaseWebViewProps> = ({ style }) => (
   <WebView
     source={{
-      uri: 'https://threejs.org/examples/webgl_animation_skinning_ik.html',
+      uri: 'https://labs.phaser.io/boot.html?src=src\\games\\bank%20panic\\boot.json',
     }}
     style={style}
   />

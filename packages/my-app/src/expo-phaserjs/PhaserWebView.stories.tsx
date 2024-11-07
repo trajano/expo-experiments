@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ThreeJsWebView } from './ThreeJsWebView';
+import { PhaserWebView } from './PhaserWebView';
 
-const meta: Meta<typeof ThreeJsWebView> = {
-  title: 'ThreeJsWebView',
-  component: ThreeJsWebView,
+const meta: Meta<typeof PhaserWebView> = {
+  title: 'PhaserWebView',
+  component: PhaserWebView,
   parameters: {
     notes: 'PhaserWebView.',
   },
@@ -11,7 +11,7 @@ const meta: Meta<typeof ThreeJsWebView> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ThreeJsWebView>;
+type Story = StoryObj<typeof PhaserWebView>;
 
 export const Default: Story = {
   args: {},
