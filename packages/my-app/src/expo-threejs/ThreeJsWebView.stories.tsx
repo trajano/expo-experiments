@@ -13,7 +13,9 @@ export default meta;
 
 type Story = StoryObj<typeof ThreeJsWebView>;
 
-export const Default: Story = {
-  args: {},
+export const Kira: Story = {
+  args: {
+    modelUri: 'models/gltf/kira.glb',
+  },
   parameters: {},
 };
