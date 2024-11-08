@@ -1,22 +1,63 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useAssets } from 'expo-asset';
 import * as Notifications from 'expo-notifications';
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 
-const ExpoUpdatesView: FC<Notifications.NotificationContentInput> = ({
-  ...notificationPayload
-}) => {
+Notifications.setNotificationHandler({
+  handleNotification: async (notification) => {
+    console.debug(notification.request);
+    return {
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowAlert: true,
+    };
+  },
+});
+
+const ExpoUpdatesView: FC<
+  Notifications.NotificationContentInput & {
+    localAttachments: number | number[];
+  }
+> = ({ localAttachments, ...notificationPayload }) => {
+  const [assets] = useAssets(localAttachments ?? []);
+  const attachments = useMemo<
+    Notifications.NotificationContentAttachmentIos[]
+  >(() => {
+    if (!assets) {
+      return [];
+    }
+    console.debug(assets);
+    return assets
+      .filter((it) => it)
+      .map((it) => ({
+        identifier: it.hash,
+        type: `public.${it.type}`,
+        typeHint: it.type,
+        url: it.localUri,
+        hideThumbnail: false,
+      }));
+  }, [assets]);
+  const content = useMemo<Notifications.NotificationContentInput>(
+    () => ({
+      ...notificationPayload,
+      attachments: attachments,
+    }),
+    [notificationPayload, attachments],
+  );
+  console.log('attachments', content);
+
   const onSendNotification = useCallback(() => {
     (async () => {
       const request: Notifications.NotificationRequestInput = {
-        content: notificationPayload,
+        content: content,
         trigger: {
           date: Date.now() + 2_000,
         },
       };
       await Notifications.scheduleNotificationAsync(request);
     })();
-  }, [notificationPayload]);
+  }, [content]);
   return (
     <View style={styles.container}>
       <Button title="send notification" onPress={onSendNotification} />
@@ -55,18 +96,50 @@ export default meta;
 
 type Story = StoryObj<typeof ExpoUpdatesView>;
 
-const sample: Notifications.NotificationContentInput = {
-  body: 'Foo body',
-  title: 'delivery has arrived',
-  subtitle: 'foo sub',
-  data: {},
-  badge: 44,
-  interruptionLevel: 'critical',
-  sound: 'default',
+export const Default: Story = {
+  args: {
+    body: 'Foo body',
+    title: 'delivery has arrived',
+    subtitle: 'foo sub',
+    data: {},
+    interruptionLevel: 'critical',
+    sound: 'default',
+  },
+  parameters: {
+    backgrounds: {
+      default: 'plain',
+    },
+  },
 };
 
-export const Default: Story = {
-  args: sample,
+export const Badge: Story = {
+  args: {
+    body: 'Foo body',
+    title: 'delivery has arrived',
+    subtitle: 'foo sub',
+    data: {},
+    badge: 44,
+    interruptionLevel: 'critical',
+    sound: 'default',
+  },
+  parameters: {
+    backgrounds: {
+      default: 'plain',
+    },
+  },
+};
+
+export const WithContentAttachment: Story = {
+  args: {
+    body: 'Foo body',
+    title: 'delivery has arrived',
+    subtitle: 'foo sub',
+    data: {},
+    badge: 44,
+    interruptionLevel: 'critical',
+    sound: 'default',
+    localAttachments: [require('@/assets/images/react-logo.png')],
+  },
   parameters: {
     backgrounds: {
       default: 'plain',

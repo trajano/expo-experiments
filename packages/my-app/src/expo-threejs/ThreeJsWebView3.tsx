@@ -23,7 +23,7 @@ export const ThreeJsWebView3: FC<ThreeJsWebView3Props> = ({
 }) => {
   const [assets] = useAssets(assetAnimationModule ?? []);
   const animationUri = useMemo(
-    () => (assets ? assets[0].localUri : fbxAnimationUri),
+    () => (assets && assets.length >= 1 ? assets[0].localUri : fbxAnimationUri),
     [assets, fbxAnimationUri],
   );
   return (
