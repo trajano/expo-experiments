@@ -1,0 +1,22 @@
+diff --git a/node_modules/@storybook/react-native/scripts/common.js b/node_modules/@storybook/react-native/scripts/common.js
+index 4637ddc..6241518 100644
+--- a/node_modules/@storybook/react-native/scripts/common.js
++++ b/node_modules/@storybook/react-native/scripts/common.js
+@@ -60,7 +60,7 @@ function getPreviewExists({ configPath }) {
+ 
+ function resolveAddonFile(addon, file, extensions = ['js', 'mjs', 'ts']) {
+   try {
+-    const basePath = path.join(addon, file);
++    const basePath = path.posix.join(addon, file);
+ 
+     require.resolve(basePath);
+ 
+@@ -69,7 +69,7 @@ function resolveAddonFile(addon, file, extensions = ['js', 'mjs', 'ts']) {
+ 
+   for (const ext of extensions) {
+     try {
+-      const filePath = path.join(addon, `${file}.${ext}`);
++      const filePath = path.posix.join(addon, `${file}.${ext}`);
+ 
+       require.resolve(filePath);
+ 
