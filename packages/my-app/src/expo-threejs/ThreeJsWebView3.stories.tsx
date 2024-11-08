@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ThreeJsWebView } from './ThreeJsWebView';
 import { PreviewViewMode } from '@sb/preview';
+import { ThreeJsWebView3 } from './ThreeJsWebView3';
 
-const meta: Meta<typeof ThreeJsWebView> = {
-  title: 'ThreeJsWebView',
-  component: ThreeJsWebView,
+const meta: Meta<typeof ThreeJsWebView3> = {
+  title: 'ThreeJsWebView3',
+  component: ThreeJsWebView3,
   parameters: {
     notes: 'PhaserWebView.',
   },
@@ -12,15 +12,12 @@ const meta: Meta<typeof ThreeJsWebView> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ThreeJsWebView>;
+type Story = StoryObj<typeof ThreeJsWebView3>;
 
-export const Kira: Story = {
+export const ThreeJsReadyPlayerMe: Story = {
   args: {
-    modelUri: 'models/gltf/kira.glb',
-    headNodeName: 'head',
-    bodyNodeName: 'Kira_Shirt_left',
-    leftHandNodeName: 'hand_l',
-    ballNodeName: 'boule',
+    modelUri: 'models/gltf/readyplayer.me.glb',
+    fbxAnimationUri: 'models/fbx/mixamo.fbx',
   },
   parameters: {
     previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
@@ -32,19 +29,16 @@ export const ReadyPlayerMe: Story = {
     // modelUri: 'models/gltf/Soldier.glb',
 
     modelUri: 'https://models.readyplayer.me/65a8dba831b23abb4f401bae.glb',
-    headNodeName: 'Head',
-    bodyNodeName: 'Wolf3D_Body',
-    leftHandNodeName: 'LeftHand',
-    ballNodeName: 'RightEye',
+    fbxAnimationUri: 'models/fbx/mixamo.fbx',
   },
   parameters: {
     previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
   },
 };
 
-export const Soldier: Story = {
+export const Xbot: Story = {
   args: {
-    modelUri: 'models/gltf/Soldier.glb',
+    modelUri: 'models/gltf/Xbot.glb',
   },
   parameters: {
     previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
