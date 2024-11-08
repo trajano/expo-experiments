@@ -9,7 +9,7 @@ Thumb.db
 coverage/
 desktop.ini
 dist/
-google-services.json
+google-services*.json
 node_modules/
 credentials.json
 eslint.report.json
