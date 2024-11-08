@@ -1,3 +1,13 @@
+diff --git a/node_modules/@storybook/react-native/dist/metro/withStorybook.d.ts b/node_modules/@storybook/react-native/dist/metro/withStorybook.d.ts
+index 0a95433..12450d2 100644
+--- a/node_modules/@storybook/react-native/dist/metro/withStorybook.d.ts
++++ b/node_modules/@storybook/react-native/dist/metro/withStorybook.d.ts
+@@ -64,4 +64,4 @@ interface WithStorybookOptions {
+  */
+ declare function withStorybook(config: MetroConfig, options?: WithStorybookOptions): MetroConfig;
+ 
+-export { withStorybook as default };
++export = withStorybook;
 diff --git a/node_modules/@storybook/react-native/scripts/common.js b/node_modules/@storybook/react-native/scripts/common.js
 index 4637ddc..6241518 100644
 --- a/node_modules/@storybook/react-native/scripts/common.js
