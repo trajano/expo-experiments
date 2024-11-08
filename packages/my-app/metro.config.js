@@ -15,10 +15,14 @@ config.resolver.nodeModulesPaths = [
   path.resolve(__dirname, 'node_modules'),
   path.resolve(monorepoRoot, 'node_modules'),
 ];
+const additionalAssetExts = ['lottie', 'fbx'];
 if (Array.isArray(config.resolver.assetExts)) {
-  config.resolver.assetExts = [...config.resolver.assetExts, 'lottie'];
+  config.resolver.assetExts = [
+    ...config.resolver.assetExts,
+    ...additionalAssetExts,
+  ];
 } else {
-  config.resolver.assetExts = ['lottie'];
+  config.resolver.assetExts = additionalAssetExts;
 }
 const testRegex = /^.*\/[^/]+\.test\.[^/]+$/;
 if (Array.isArray(config.resolver.blockList)) {
