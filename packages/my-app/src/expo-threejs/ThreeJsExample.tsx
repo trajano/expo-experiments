@@ -3,7 +3,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 export type ThreeJsExampleProps = {
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   /**
    * name of the example
    */
@@ -17,6 +17,7 @@ export const ThreeJsExample: FC<ThreeJsExampleProps> = ({
   exampleName,
 }) => (
   <WebView
+    testID="webview"
     source={{
       uri: `https://threejs.org/examples/${exampleName}.html`,
     }}
