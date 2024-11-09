@@ -7,7 +7,7 @@ import { MyText, MyTextInput, Strong } from 'react-native-my-text';
 const NotificationBadgesView: FC = () => {
   const [currentBadgeCount, setCurrentBadgeCount] = useState(0);
   const [nextBadgeCountData, setNextBadgeCountData] = useState(0);
-  const [badgeCountUpdated, setBadgeCountUpdated] = useState(false);
+  const [badgeCountUpdated, setBadgeCountUpdated] = useState(true);
   const onRefreshBadgeCount = useCallback(() => {
     (async () => {
       const nextBadgeCount = await Notifications.getBadgeCountAsync();
