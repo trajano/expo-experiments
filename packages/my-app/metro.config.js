@@ -1,9 +1,7 @@
 // @ts-check
 /* eslint-env node */
 const { getDefaultConfig } = require('expo/metro-config');
-const {
-  withStorybook,
-} = require('@storybook/react-native/metro/withStorybook');
+const withStorybook = require('@storybook/react-native/metro/withStorybook');
 const path = require('path');
 
 const monorepoRoot = path.resolve(__dirname, '../..');
