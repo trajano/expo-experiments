@@ -31,6 +31,7 @@ if (Array.isArray(config.resolver.blockList)) {
   config.resolver.blockList = [config.resolver.blockList, testRegex];
 }
 
+// @ts-ignore
 module.exports = withStorybook(config, {
   enabled: true,
   configPath: path.resolve(__dirname, './.storybook'),
