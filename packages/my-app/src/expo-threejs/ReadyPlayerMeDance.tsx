@@ -93,10 +93,7 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
 
   if (modelLocalUri === null) {
     return <MyText style={{ color: 'red' }}>Loading {remoteUri}...</MyText>;
-    // } else {
-    //   return <MyText style={{ color: "red" }}>Loaded {remoteUri}...{modelLocalUri}</MyText>
   }
-  console.debug(modelLocalUri);
   return (
     <WebView
       originWhitelist={['*']}
@@ -130,8 +127,6 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
 			import * as THREE from 'three';
 			import { screenUV, color, vec2, vec4, reflector, positionWorld } from 'three/tsl';
 
-			import Stats from 'three/addons/libs/stats.module.js';
-
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 			import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
@@ -155,9 +150,6 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
 			//
 
 			const clock = new THREE.Clock();
-
-			const stats = new Stats();
-			document.body.appendChild( stats.dom );
 
 			// scene
 
@@ -299,8 +291,6 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
 				mixer.update( delta );
 
 				controls.update();
-
-				stats.update();
 
 				renderer.render( scene, camera );
 
