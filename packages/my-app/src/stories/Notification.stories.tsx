@@ -3,6 +3,7 @@ import { useAssets } from 'expo-asset';
 import * as Notifications from 'expo-notifications';
 import { FC, useCallback, useMemo } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
+import notifee from '@notifee/react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -57,9 +58,22 @@ const ExpoNotificationsView: FC<
       await Notifications.scheduleNotificationAsync(request);
     })();
   }, [content]);
+
+  const onSendNotificationNotifee = useCallback(() => {
+    (async () => {
+      await notifee.displayNotification({
+        title: content.title!,
+        body: content.body!,
+        ios: {
+          attachments: [{ url: require('@/assets/images/react-native.png') }],
+        },
+      });
+    })();
+  }, [content]);
   return (
     <View style={styles.container}>
       <Button title="send notification" onPress={onSendNotification} />
+      <Button title="send via notifee" onPress={onSendNotificationNotifee} />
     </View>
   );
 };
