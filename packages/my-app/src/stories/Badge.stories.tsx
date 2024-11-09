@@ -14,6 +14,23 @@ const NotificationBadgesView: FC = () => {
       setCurrentBadgeCount(nextBadgeCount);
     })();
   }, []);
+  const onIncrementBadgeCount = useCallback(() => {
+    (async () => {
+      const nextBadgeCount = (await Notifications.getBadgeCountAsync()) + 1;
+      const updated = await Notifications.setBadgeCountAsync(nextBadgeCount);
+      setCurrentBadgeCount(nextBadgeCount);
+      setNextBadgeCountData(nextBadgeCount);
+      setBadgeCountUpdated(updated);
+    })();
+  }, []);
+  const onClearBadgeCount = useCallback(() => {
+    (async () => {
+      const updated = await Notifications.setBadgeCountAsync(0);
+      setCurrentBadgeCount(0);
+      setNextBadgeCountData(0);
+      setBadgeCountUpdated(updated);
+    })();
+  }, []);
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -66,6 +83,8 @@ const NotificationBadgesView: FC = () => {
       />
       <Button title="set badge count" onPress={onSetBadgeCount} />
       <Button title="refresh badge count" onPress={onRefreshBadgeCount} />
+      <Button title="increment badge count" onPress={onIncrementBadgeCount} />
+      <Button title="clear badge count" onPress={onClearBadgeCount} />
     </View>
   );
 };
