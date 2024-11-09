@@ -1,36 +1,109 @@
 import { WebView } from 'react-native-webview';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 import { useAssets } from 'expo-asset';
+import * as Crypto from 'expo-crypto';
+import { MyText } from 'react-native-my-text';
 
-export type ThreeJsWebView3Props = {
-  style: StyleProp<ViewStyle>;
+type BaseReadyPlayerMeDanceProps = {
   /**
-   * URI to the model, defaults to 'models/gltf/kira.glb' theoretically should allow any rigged GLB file.
+   * Styling for the model view.
    */
-  modelUri: string;
+  style: StyleProp<ViewStyle>;
   fbxAnimationUri?: string;
   assetAnimationModule?: number;
+  /**
+   * If true, then the local URI will be used rather than the remote one, defaults to false.
+   * Local URIs do not appear to work in WebView
+   */
+  useLocalUri?: boolean;
 };
+
+type ReadyPlayerMeDanceUriProps = BaseReadyPlayerMeDanceProps & {
+  /**
+   * URI to the Ready Player Me model.
+   */
+  modelUri: string;
+  avatarId: never;
+};
+
+type ReadyPlayerMeDanceAvatarIdProps = BaseReadyPlayerMeDanceProps & {
+  /**
+   * Avatar ID for the Ready Player Me model.
+   */
+  avatarId: string;
+  modelUri: never;
+};
+
+export type ReadyPlayerMeDanceProps =
+  | ReadyPlayerMeDanceUriProps
+  | ReadyPlayerMeDanceAvatarIdProps;
+
 /**
- * This is a component that renders PhaserWebView.
+ * This component is for
  */
-export const ThreeJsWebView3: FC<ThreeJsWebView3Props> = ({
+export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
   style,
-  modelUri,
   fbxAnimationUri,
   assetAnimationModule,
+  useLocalUri,
+  ...avatarInfoProps
 }) => {
   const [assets] = useAssets(assetAnimationModule ?? []);
   const animationUri = useMemo(
     () => (assets && assets.length >= 1 ? assets[0].localUri : fbxAnimationUri),
     [assets, fbxAnimationUri],
   );
+  const [modelLocalUri, setModelLocalUri] = useState<string | null>(() =>
+    useLocalUri ? null : animationUri!,
+  );
+
+  const remoteUri = useMemo(() => {
+    if (avatarInfoProps.modelUri) {
+      return avatarInfoProps.modelUri;
+    } else {
+      return `https://models.readyplayer.me/${avatarInfoProps.avatarId}.glb`;
+    }
+  }, [avatarInfoProps]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      if (!useLocalUri) {
+        return;
+      }
+      const sha = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        JSON.stringify(avatarInfoProps),
+      );
+      const downloaded = await FileSystem.downloadAsync(
+        remoteUri,
+        FileSystem.cacheDirectory + `${sha}.glb`,
+        { cache: true },
+      );
+      if (downloaded.status === 200 && useLocalUri && mounted) {
+        setModelLocalUri(downloaded.uri);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [remoteUri, avatarInfoProps, useLocalUri]);
+
+  if (modelLocalUri === null) {
+    return <MyText style={{ color: 'red' }}>Loading {remoteUri}...</MyText>;
+    // } else {
+    //   return <MyText style={{ color: "red" }}>Loaded {remoteUri}...{modelLocalUri}</MyText>
+  }
+  console.debug(modelLocalUri);
   return (
     <WebView
       originWhitelist={['*']}
       allowFileAccess={true}
       allowFileAccessFromFileURLs={true}
+      allowingReadAccessToURL={FileSystem.cacheDirectory!}
+      allowUniversalAccessFromFileURLs={true}
       source={{
         html: `
 <html lang="en">
@@ -74,9 +147,7 @@ export const ThreeJsWebView3: FC<ThreeJsWebView3Props> = ({
 				} ),
 
 				new Promise( ( resolve, reject ) => {
-
-					new GLTFLoader().load( ${JSON.stringify(modelUri)}, resolve, undefined, reject );
-
+					new GLTFLoader().load( ${JSON.stringify(remoteUri)}, resolve, undefined, reject );
 				} )
 
 			] );
