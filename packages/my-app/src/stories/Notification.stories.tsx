@@ -1,9 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { useAssets } from 'expo-asset';
+import { Asset, useAssets } from 'expo-asset';
 import * as Notifications from 'expo-notifications';
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import notifee from '@notifee/react-native';
+import { IOSNotificationAttachment } from '@notifee/react-native/src/types/NotificationIOS';
+import * as FileSystem from 'expo-file-system';
+import * as RNFS from 'react-native-fs';
+import _ from 'lodash';
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
@@ -21,7 +25,32 @@ const ExpoNotificationsView: FC<
     localAttachments: number | number[];
   }
 > = ({ localAttachments, ...notificationPayload }) => {
-  const [assets] = useAssets(localAttachments ?? []);
+  const [localAssets] = useAssets(localAttachments ?? []);
+  const [assets, setAssets] = useState<Asset[]>([]);
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      if (!localAssets) {
+        return;
+      }
+      const nextAssets = _.cloneDeep(localAssets.filter((it) => it.downloaded));
+      for (const asset of nextAssets) {
+        const tempLocalUri = `${RNFS.TemporaryDirectoryPath + asset.hash}.${asset.type}`;
+        await FileSystem.copyAsync({
+          from: asset.localUri!,
+          to: tempLocalUri,
+        });
+        asset.localUri = tempLocalUri;
+      }
+      if (mounted) {
+        setAssets(nextAssets);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [localAssets]);
+
   const attachments = useMemo<
     Notifications.NotificationContentAttachmentIos[]
   >(() => {
@@ -33,9 +62,23 @@ const ExpoNotificationsView: FC<
       .map((it) => ({
         identifier: it.hash,
         type: `public.${it.type}`,
-        typeHint: it.type,
+        typeHint: `public.${it.type}`,
         url: it.localUri,
         hideThumbnail: false,
+      }));
+  }, [assets]);
+  const notifeeAttachments = useMemo<IOSNotificationAttachment[]>(() => {
+    if (!assets) {
+      return [];
+    }
+    return assets
+      .filter((it) => it)
+      .map((it) => ({
+        id: it.hash!,
+        thumbnailTime: 0,
+        thumbnailHidden: false,
+        typeHint: `public.${it.type}`,
+        url: it.localUri!,
       }));
   }, [assets]);
   const content = useMemo<Notifications.NotificationContentInput>(
@@ -45,7 +88,6 @@ const ExpoNotificationsView: FC<
     }),
     [notificationPayload, attachments],
   );
-  console.log('attachments', content);
 
   const onSendNotification = useCallback(() => {
     (async () => {
@@ -55,7 +97,12 @@ const ExpoNotificationsView: FC<
           date: Date.now() + 2_000,
         },
       };
-      await Notifications.scheduleNotificationAsync(request);
+      try {
+        await Notifications.scheduleNotificationAsync(request);
+      } catch (error) {
+        console.error(error);
+        console.log(content);
+      }
     })();
   }, [content]);
 
@@ -65,11 +112,24 @@ const ExpoNotificationsView: FC<
         title: content.title!,
         body: content.body!,
         ios: {
-          attachments: [{ url: require('@/assets/images/react-native.png') }],
+          attachments: [
+            ...notifeeAttachments,
+            // { url: require('@/assets/images/react-logo.png') },
+          ],
+          badgeCount: content.badge,
+          communicationInfo: {
+            conversationId: 'convo',
+            body: 'convo body',
+            sender: {
+              id: 'gg',
+              displayName: 'nyah',
+            },
+          },
+          // attachments: [{ url: require('@/assets/images/react-logo.png') }],
         },
       });
     })();
-  }, [content]);
+  }, [content, notifeeAttachments]);
   return (
     <View style={styles.container}>
       <Button title="send notification" onPress={onSendNotification} />

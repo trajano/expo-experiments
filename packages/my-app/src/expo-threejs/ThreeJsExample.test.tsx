@@ -5,10 +5,7 @@ import * as stories from './ThreeJsExample.stories';
 
 jest.mock('react-native-webview', () => {
   return {
-    WebView: jest.fn(({ source, ...props }) => (
-      // eslint-disable-next-line react/no-unknown-property
-      <div {...props} data-testid="webview" source={source} />
-    )),
+    WebView: jest.fn((props) => <div {...props} />),
   };
 });
 const { WebglAnimationMultiple } = composeStories(stories);
@@ -16,7 +13,6 @@ describe('ThreeJsExample', () => {
   it('renders ThreeJsExample with correct source', async () => {
     render(<ThreeJsExample exampleName="webgl_animation_skinning_ik" />);
     await act(() => Promise.resolve());
-
     const webView = screen.getByTestId('webview');
     expect(webView).toBeTruthy();
     expect(webView.props.source).toEqual({
