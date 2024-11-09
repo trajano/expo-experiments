@@ -6,7 +6,8 @@
       "@/*": ["./src/*"],
       "@sb/*": ["./.storybook/*"]
     },
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "checkJs": true
   },
   "include": [
     ".storybook/*.ts",

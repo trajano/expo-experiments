@@ -15,7 +15,7 @@ Notifications.setNotificationHandler({
   },
 });
 
-const ExpoUpdatesView: FC<
+const ExpoNotificationsView: FC<
   Notifications.NotificationContentInput & {
     localAttachments: number | number[];
   }
@@ -27,7 +27,6 @@ const ExpoUpdatesView: FC<
     if (!assets) {
       return [];
     }
-    console.debug(assets);
     return assets
       .filter((it) => it)
       .map((it) => ({
@@ -84,9 +83,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const meta: Meta<typeof ExpoUpdatesView> = {
+const meta: Meta<typeof ExpoNotificationsView> = {
   title: 'Notifications',
-  component: ExpoUpdatesView,
+  component: ExpoNotificationsView,
   parameters: {
     notes: 'This checks expo-updates information.',
   },
@@ -94,7 +93,7 @@ const meta: Meta<typeof ExpoUpdatesView> = {
 
 export default meta;
 
-type Story = StoryObj<typeof ExpoUpdatesView>;
+type Story = StoryObj<typeof ExpoNotificationsView>;
 
 export const Default: Story = {
   args: {

@@ -14,7 +14,7 @@
   "devDependencies": {
     "@shopify/flash-list": "^1.7.2",
     "@storybook/react": "^8.4.2",
-    "@storybook/react-native": "^8.4.1",
+    "@storybook/react-native": "^8.4.2-alpha.2",
     "@testing-library/react-native": "^12.8.1",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.2.44",

@@ -65,8 +65,14 @@ const NotificationBadgesView: FC = () => {
         <Strong>Next badge count:</Strong>
       </MyText>
       <MyTextInput
-        style={{ fontSize: 48 }}
+        style={{
+          fontSize: 48,
+          borderColor: 'black',
+          borderWidth: 1,
+          paddingHorizontal: 16,
+        }}
         keyboardType="numeric"
+        textAlign="right"
         onChangeText={(nextText) => {
           try {
             const nextBadgeCount = parseInt(nextText);
@@ -77,11 +83,17 @@ const NotificationBadgesView: FC = () => {
             }
           } catch (e: unknown) {
             setNextBadgeCountData(0);
+          } finally {
+            setBadgeCountUpdated(false);
           }
         }}
         defaultValue={nextBadgeCountData.toString(10)}
       />
-      <Button title="set badge count" onPress={onSetBadgeCount} />
+      <Button
+        disabled={badgeCountUpdated}
+        title="set badge count"
+        onPress={onSetBadgeCount}
+      />
       <Button title="refresh badge count" onPress={onRefreshBadgeCount} />
       <Button title="increment badge count" onPress={onIncrementBadgeCount} />
       <Button title="clear badge count" onPress={onClearBadgeCount} />
