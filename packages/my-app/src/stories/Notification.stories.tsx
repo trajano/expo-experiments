@@ -89,7 +89,6 @@ const ExpoNotificationsView: FC<
       .filter((it) => it)
       .map((it) => ({
         id: it.hash!,
-        thumbnailTime: 0,
         thumbnailHidden: false,
         typeHint: `public.${it.type}`,
         url: it.localUri!,
@@ -112,7 +111,6 @@ const ExpoNotificationsView: FC<
         },
       };
       try {
-        console.debug(attachments);
         await Notifications.scheduleNotificationAsync(request);
       } catch (error) {
         console.error(error);
@@ -131,14 +129,6 @@ const ExpoNotificationsView: FC<
             // This works { url: require('@/assets/images/react-logo.png') },
           ],
           badgeCount: content.badge,
-          communicationInfo: {
-            conversationId: 'convo',
-            body: 'convo body',
-            sender: {
-              id: 'gg',
-              displayName: 'nyah',
-            },
-          },
         },
       });
     })();
@@ -146,8 +136,16 @@ const ExpoNotificationsView: FC<
   const ListHeaderComponent = useCallback(() => {
     return (
       <>
-        <Button title="send notification" onPress={onSendNotification} />
-        <Button title="send via notifee" onPress={onSendNotificationNotifee} />
+        <Button
+          title="send notification"
+          testID="send-notification-button"
+          onPress={onSendNotification}
+        />
+        <Button
+          title="send via notifee"
+          testID="send-notifee-button"
+          onPress={onSendNotificationNotifee}
+        />
         <MyText>Assets {assets.length}</MyText>
       </>
     );
