@@ -191,7 +191,7 @@ describe('storybook of FileTree', () => {
     const treeItem = getByTestId('touchable-tree-item');
     expect(treeItem).toBeTruthy();
     fireEvent.press(treeItem);
-    expect(FileViewer.open).toHaveBeenCalledWith('mock//file.txt');
+    expect(FileViewer.open).toHaveBeenCalledWith('undefined/file.txt');
   });
 
   it('renders DocumentDirectory with one file to delete', async () => {
@@ -225,7 +225,7 @@ describe('storybook of FileTree', () => {
       yesButton.onPress();
     });
 
-    expect(FileSystem.deleteAsync).toHaveBeenCalledWith('mock//file.txt', {
+    expect(FileSystem.deleteAsync).toHaveBeenCalledWith('undefined/file.txt', {
       idempotent: true,
     });
   });

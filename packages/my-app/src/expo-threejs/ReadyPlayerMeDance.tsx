@@ -1,42 +1,22 @@
-import { WebView } from 'react-native-webview';
+import { WebView, WebViewProps } from 'react-native-webview';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Crypto from 'expo-crypto';
 import { MyText } from 'react-native-my-text';
 
-type BaseReadyPlayerMeDanceProps = {
-  /**
-   * Styling for the model view.
-   */
-  style: StyleProp<ViewStyle>;
+export type ReadyPlayerMeDanceProps = Omit<
+  WebViewProps,
+  'source' | 'originWhiteList'
+> & {
   fbxAnimationUri: string;
   /**
    * If true, then the local URI will be used rather than the remote one, defaults to false.
    * Local URIs do not appear to work in WebView
    */
   useLocalUri?: boolean;
+  modelUri?: string;
+  avatarId?: string;
 };
-
-type ReadyPlayerMeDanceUriProps = BaseReadyPlayerMeDanceProps & {
-  /**
-   * URI to the Ready Player Me model.
-   */
-  modelUri: string;
-  avatarId: never;
-};
-
-type ReadyPlayerMeDanceAvatarIdProps = BaseReadyPlayerMeDanceProps & {
-  /**
-   * Avatar ID for the Ready Player Me model.
-   */
-  avatarId: string;
-  modelUri: never;
-};
-
-export type ReadyPlayerMeDanceProps =
-  | ReadyPlayerMeDanceUriProps
-  | ReadyPlayerMeDanceAvatarIdProps;
 
 const buildDataUri = async (
   sourceUri: string,
@@ -64,9 +44,10 @@ const buildDataUri = async (
  * This component is for
  */
 export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
-  style,
   fbxAnimationUri,
   useLocalUri,
+  modelUri,
+  avatarId,
   ...avatarInfoProps
 }) => {
   const [modelLocalUri, setModelLocalUri] = useState<string | null>(null);
@@ -75,12 +56,12 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
   );
 
   const remoteModelUri = useMemo(() => {
-    if (avatarInfoProps.modelUri) {
-      return avatarInfoProps.modelUri;
+    if (modelUri) {
+      return modelUri;
     } else {
-      return `https://models.readyplayer.me/${avatarInfoProps.avatarId}.glb`;
+      return `https://models.readyplayer.me/${avatarId}.glb`;
     }
-  }, [avatarInfoProps]);
+  }, [modelUri, avatarId]);
 
   useEffect(() => {
     let mounted = true;
@@ -100,9 +81,9 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
     return () => {
       mounted = false;
     };
-  }, [remoteModelUri, avatarInfoProps, useLocalUri]);
+  }, [remoteModelUri, fbxAnimationUri, useLocalUri]);
 
-  const modelUri = useMemo(
+  const finalModelUri = useMemo(
     () => (useLocalUri ? modelLocalUri : remoteModelUri),
     [useLocalUri, modelLocalUri, remoteModelUri],
   );
@@ -110,7 +91,7 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
     () => (useLocalUri ? animationLocalUri : fbxAnimationUri),
     [useLocalUri, animationLocalUri, fbxAnimationUri],
   );
-  if (modelUri === null || animationUri === null) {
+  if (finalModelUri === null || animationUri === null) {
     return (
       <MyText style={{ color: 'red' }}>
         Loading {remoteModelUri} and {fbxAnimationUri}...
@@ -119,11 +100,8 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
   }
   return (
     <WebView
+      {...avatarInfoProps}
       originWhitelist={['*']}
-      allowFileAccess={true}
-      allowFileAccessFromFileURLs={true}
-      allowingReadAccessToURL={FileSystem.cacheDirectory!}
-      allowUniversalAccessFromFileURLs={true}
       source={{
         html: `
 <html lang="en">
@@ -165,7 +143,7 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
 				} ),
 
 				new Promise( ( resolve, reject ) => {
-					new GLTFLoader().load( ${JSON.stringify(modelUri)}, resolve, undefined, reject );
+					new GLTFLoader().load( ${JSON.stringify(finalModelUri)}, resolve, undefined, reject );
 				} )
 
 			] );
@@ -325,7 +303,6 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
 `,
         baseUrl: 'https://threejs.org/examples/',
       }}
-      style={style}
     />
   );
 };

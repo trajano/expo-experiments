@@ -19,6 +19,7 @@ export const ThreeJsReadyPlayerMeSample: Story = {
     modelUri: 'https://threejs.org/examples/models/gltf/readyplayer.me.glb',
     fbxAnimationUri: 'https://threejs.org/examples/models/fbx/mixamo.fbx',
     useLocalUri: false,
+    testID: 'webview',
   },
   parameters: {
     previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
