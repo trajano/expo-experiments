@@ -26,7 +26,7 @@ Welcome to the **Expo Experiments** monorepo, a dedicated space for experimentin
 
 ## Development Concepts
 
-- **IDE-Driven**: Development relies on Visual Studio Code for type checking and linting.
+- **IDE-Driven**: Development relies on Visual Studio Code and WebStorm for type checking and linting.
 - **Mobile Focus**: The monorepo is focused on React Native development for iOS and Android, with no support for React Web.
 - **Automated Scripts**: npm scripts are used to streamline command-line tools for development tasks.
 - **Test Integration**: Unit and integration tests are embedded within the code for closer proximity to the codebase, but `__tests__` folders are also utilized for larger integration tests across components.
