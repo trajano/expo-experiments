@@ -2,16 +2,25 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Asset, useAssets } from 'expo-asset';
 import * as Notifications from 'expo-notifications';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import {
+  Button,
+  FlatList,
+  ListRenderItem,
+  StyleSheet,
+  View,
+} from 'react-native';
 import notifee from '@notifee/react-native';
 import { IOSNotificationAttachment } from '@notifee/react-native/src/types/NotificationIOS';
 import * as FileSystem from 'expo-file-system';
-import * as RNFS from 'react-native-fs';
+import * as Crypto from 'expo-crypto';
+import { Image } from 'expo-image';
 import _ from 'lodash';
+import { PreviewViewMode } from '@sb/preview';
+import { MyText } from 'react-native-my-text';
 
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
-    console.debug(notification.request);
+    console.debug('received notification', notification.request);
     return {
       shouldPlaySound: true,
       shouldSetBadge: true,
@@ -27,19 +36,23 @@ const ExpoNotificationsView: FC<
 > = ({ localAttachments, ...notificationPayload }) => {
   const [localAssets] = useAssets(localAttachments ?? []);
   const [assets, setAssets] = useState<Asset[]>([]);
+
   useEffect(() => {
     let mounted = true;
     (async () => {
       if (!localAssets) {
         return;
       }
+      const uuid = Crypto.randomUUID();
       const nextAssets = _.cloneDeep(localAssets.filter((it) => it.downloaded));
       for (const asset of nextAssets) {
-        const tempLocalUri = `${RNFS.TemporaryDirectoryPath + asset.hash}.${asset.type}`;
+        const tempLocalUri = `${FileSystem.cacheDirectory}${asset.hash}_${uuid}.${asset.type}`;
+
         await FileSystem.copyAsync({
           from: asset.localUri!,
           to: tempLocalUri,
         });
+
         asset.localUri = tempLocalUri;
       }
       if (mounted) {
@@ -61,12 +74,13 @@ const ExpoNotificationsView: FC<
       .filter((it) => it)
       .map((it) => ({
         identifier: it.hash,
-        type: `public.${it.type}`,
+        type: it.type,
         typeHint: `public.${it.type}`,
-        url: it.localUri,
-        hideThumbnail: false,
+        url: it.localUri!,
+        // hideThumbnail: false,
       }));
   }, [assets]);
+
   const notifeeAttachments = useMemo<IOSNotificationAttachment[]>(() => {
     if (!assets) {
       return [];
@@ -98,10 +112,10 @@ const ExpoNotificationsView: FC<
         },
       };
       try {
+        console.debug(attachments);
         await Notifications.scheduleNotificationAsync(request);
       } catch (error) {
         console.error(error);
-        console.log(content);
       }
     })();
   }, [content]);
@@ -114,7 +128,7 @@ const ExpoNotificationsView: FC<
         ios: {
           attachments: [
             ...notifeeAttachments,
-            // { url: require('@/assets/images/react-logo.png') },
+            // This works { url: require('@/assets/images/react-logo.png') },
           ],
           badgeCount: content.badge,
           communicationInfo: {
@@ -125,16 +139,39 @@ const ExpoNotificationsView: FC<
               displayName: 'nyah',
             },
           },
-          // attachments: [{ url: require('@/assets/images/react-logo.png') }],
         },
       });
     })();
   }, [content, notifeeAttachments]);
+  const ListHeaderComponent = useCallback(() => {
+    return (
+      <>
+        <Button title="send notification" onPress={onSendNotification} />
+        <Button title="send via notifee" onPress={onSendNotificationNotifee} />
+        <MyText>Assets {assets.length}</MyText>
+      </>
+    );
+  }, [onSendNotification, onSendNotificationNotifee, assets]);
+  const renderAsset: ListRenderItem<Asset> = useCallback(({ item }) => {
+    return (
+      <View>
+        <Image
+          source={item.localUri}
+          style={{ height: 100 }}
+          contentFit="contain"
+        />
+        <MyText>{item.localUri}</MyText>
+      </View>
+    );
+  }, []);
   return (
-    <View style={styles.container}>
-      <Button title="send notification" onPress={onSendNotification} />
-      <Button title="send via notifee" onPress={onSendNotificationNotifee} />
-    </View>
+    <FlatList
+      contentContainerStyle={styles.container}
+      ListHeaderComponent={ListHeaderComponent}
+      data={assets}
+      renderItem={renderAsset}
+      keyExtractor={(it) => it.hash!}
+    />
   );
 };
 
@@ -182,6 +219,7 @@ export const Default: Story = {
     backgrounds: {
       default: 'plain',
     },
+    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
   },
 };
 
@@ -199,6 +237,7 @@ export const Badge: Story = {
     backgrounds: {
       default: 'plain',
     },
+    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
   },
 };
 
@@ -217,5 +256,6 @@ export const WithContentAttachment: Story = {
     backgrounds: {
       default: 'plain',
     },
+    previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
   },
 };
