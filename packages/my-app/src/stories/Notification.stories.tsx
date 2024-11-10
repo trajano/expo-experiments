@@ -77,7 +77,7 @@ const ExpoNotificationsView: FC<
         type: it.type,
         typeHint: `public.${it.type}`,
         url: it.localUri!,
-        // hideThumbnail: false,
+        hideThumbnail: false,
       }));
   }, [assets]);
 
