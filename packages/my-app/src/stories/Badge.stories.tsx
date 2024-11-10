@@ -100,8 +100,16 @@ const NotificationBadgesView: FC = () => {
         testID="refresh-badge-count-button"
         onPress={onRefreshBadgeCount}
       />
-      <Button title="increment badge count" onPress={onIncrementBadgeCount} />
-      <Button title="clear badge count" onPress={onClearBadgeCount} />
+      <Button
+        title="increment badge count"
+        testID="increment-badge-count-button"
+        onPress={onIncrementBadgeCount}
+      />
+      <Button
+        title="clear badge count"
+        testID="clear-badge-count-button"
+        onPress={onClearBadgeCount}
+      />
     </View>
   );
 };
