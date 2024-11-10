@@ -56,7 +56,8 @@ const NotificationBadgesView: FC = () => {
   return (
     <View style={styles.container}>
       <MyText>
-        <Strong>Current badge count:</Strong> {currentBadgeCount}
+        <Strong>Current badge count:</Strong>
+        <MyText testID="current-badge-count">{currentBadgeCount}</MyText>
       </MyText>
       <MyText>
         <Strong>Badge count updated:</Strong> {badgeCountUpdated ? 'yes' : 'no'}
@@ -94,7 +95,11 @@ const NotificationBadgesView: FC = () => {
         title="set badge count"
         onPress={onSetBadgeCount}
       />
-      <Button title="refresh badge count" onPress={onRefreshBadgeCount} />
+      <Button
+        title="refresh badge count"
+        testID="refresh-badge-count-button"
+        onPress={onRefreshBadgeCount}
+      />
       <Button title="increment badge count" onPress={onIncrementBadgeCount} />
       <Button title="clear badge count" onPress={onClearBadgeCount} />
     </View>

@@ -71,7 +71,7 @@ const TaskManagerView: FC = () => {
       </MyText>
       <MyText style={styles.text}>
         <Strong>BACKGROUND_FETCH_TASK:</Strong>
-        npm{TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK) ? 'yes' : 'no'}
+        {TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK) ? 'yes' : 'no'}
       </MyText>
     </View>
   );
