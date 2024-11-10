@@ -2,7 +2,6 @@ import { WebView } from 'react-native-webview';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import { useAssets } from 'expo-asset';
 import * as Crypto from 'expo-crypto';
 import { MyText } from 'react-native-my-text';
 
@@ -11,8 +10,7 @@ type BaseReadyPlayerMeDanceProps = {
    * Styling for the model view.
    */
   style: StyleProp<ViewStyle>;
-  fbxAnimationUri?: string;
-  assetAnimationModule?: number;
+  fbxAnimationUri: string;
   /**
    * If true, then the local URI will be used rather than the remote one, defaults to false.
    * Local URIs do not appear to work in WebView
@@ -40,26 +38,43 @@ export type ReadyPlayerMeDanceProps =
   | ReadyPlayerMeDanceUriProps
   | ReadyPlayerMeDanceAvatarIdProps;
 
+const buildDataUri = async (
+  sourceUri: string,
+  mimeType: string,
+): Promise<string> => {
+  const filename = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    JSON.stringify(sourceUri),
+  );
+  const cachedFileUri = `${FileSystem.cacheDirectory}${filename}`;
+  const download = await FileSystem.downloadAsync(sourceUri, cachedFileUri, {
+    cache: true,
+  });
+  if (download.status === 200) {
+    const base64Data = await FileSystem.readAsStringAsync(download.uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    return `data:${mimeType};base64,${base64Data}`;
+  } else {
+    throw new Error(`unexpected HTTP status: ${download.status}`);
+  }
+};
+
 /**
  * This component is for
  */
 export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
   style,
   fbxAnimationUri,
-  assetAnimationModule,
   useLocalUri,
   ...avatarInfoProps
 }) => {
-  const [assets] = useAssets(assetAnimationModule ?? []);
-  const animationUri = useMemo(
-    () => (assets && assets.length >= 1 ? assets[0].localUri : fbxAnimationUri),
-    [assets, fbxAnimationUri],
-  );
-  const [modelLocalUri, setModelLocalUri] = useState<string | null>(() =>
-    useLocalUri ? null : animationUri!,
+  const [modelLocalUri, setModelLocalUri] = useState<string | null>(null);
+  const [animationLocalUri, setAnimationLocalUri] = useState<string | null>(
+    null,
   );
 
-  const remoteUri = useMemo(() => {
+  const remoteModelUri = useMemo(() => {
     if (avatarInfoProps.modelUri) {
       return avatarInfoProps.modelUri;
     } else {
@@ -73,26 +88,34 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
       if (!useLocalUri) {
         return;
       }
-      const sha = await Crypto.digestStringAsync(
-        Crypto.CryptoDigestAlgorithm.SHA256,
-        JSON.stringify(avatarInfoProps),
-      );
-      const downloaded = await FileSystem.downloadAsync(
-        remoteUri,
-        FileSystem.cacheDirectory + `${sha}.glb`,
-        { cache: true },
-      );
-      if (downloaded.status === 200 && useLocalUri && mounted) {
-        setModelLocalUri(downloaded.uri);
+      const [modelDataUri, animationDataUri] = await Promise.all([
+        buildDataUri(remoteModelUri, 'model/gtlf-binary'),
+        buildDataUri(fbxAnimationUri, 'model/vnd.fbx'),
+      ]);
+      if (mounted) {
+        setModelLocalUri(modelDataUri);
+        setAnimationLocalUri(animationDataUri);
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [remoteUri, avatarInfoProps, useLocalUri]);
+  }, [remoteModelUri, avatarInfoProps, useLocalUri]);
 
-  if (modelLocalUri === null) {
-    return <MyText style={{ color: 'red' }}>Loading {remoteUri}...</MyText>;
+  const modelUri = useMemo(
+    () => (useLocalUri ? modelLocalUri : remoteModelUri),
+    [useLocalUri, modelLocalUri, remoteModelUri],
+  );
+  const animationUri = useMemo(
+    () => (useLocalUri ? animationLocalUri : fbxAnimationUri),
+    [useLocalUri, animationLocalUri, fbxAnimationUri],
+  );
+  if (modelUri === null || animationUri === null) {
+    return (
+      <MyText style={{ color: 'red' }}>
+        Loading {remoteModelUri} and {fbxAnimationUri}...
+      </MyText>
+    );
   }
   return (
     <WebView
@@ -142,7 +165,7 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
 				} ),
 
 				new Promise( ( resolve, reject ) => {
-					new GLTFLoader().load( ${JSON.stringify(remoteUri)}, resolve, undefined, reject );
+					new GLTFLoader().load( ${JSON.stringify(modelUri)}, resolve, undefined, reject );
 				} )
 
 			] );
