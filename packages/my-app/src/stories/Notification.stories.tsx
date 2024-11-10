@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Asset, useAssets } from 'expo-asset';
 import * as Notifications from 'expo-notifications';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import {
   Button,
   FlatList,
@@ -29,69 +29,69 @@ Notifications.setNotificationHandler({
   },
 });
 
+/**
+ * Clone the attachment URIs to the cache folder.
+ *
+ * On iOS in the [UINotificationAttachment](https://developer.apple.com/documentation/usernotifications/unnotificationattachment#overview) it
+ * specifies the following:
+ *
+ * > Once validated, the system moves the attached files into the attachment data store so that the appropriate processes can access the files.
+ *
+ * This will mean that the original attachment URLs won't exist once it is processed.  So a copy of the file should be made by the app prior to sending the notification.
+ *
+ * The `url` of the attachment is expected to be a full path at this time (no `file://` prefix) or a remote URI (starting with http or https).
+ */
+const cloneAttachmentsForNotifee = async (
+  attachments: IOSNotificationAttachment[],
+): Promise<IOSNotificationAttachment[]> => {
+  const uuid = Crypto.randomUUID();
+  const clonedAttachments = _.cloneDeep(attachments);
+  for (const attachment of attachments) {
+    if (!attachment.url.startsWith('/')) {
+      continue;
+    }
+    const tempLocalUri = `${FileSystem.cacheDirectory}${attachment.id ?? ''}_${uuid}`;
+
+    await FileSystem.copyAsync({
+      from: `file://${attachment.url}`,
+      to: tempLocalUri,
+    });
+
+    attachment.url = tempLocalUri.substring('file://'.length);
+  }
+  return clonedAttachments;
+};
+
 const ExpoNotificationsView: FC<
   Notifications.NotificationContentInput & {
     localAttachments: number | number[];
   }
 > = ({ localAttachments, ...notificationPayload }) => {
-  const [localAssets] = useAssets(localAttachments ?? []);
-  const [assets, setAssets] = useState<Asset[]>([]);
-
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      if (!localAssets) {
-        return;
-      }
-      const uuid = Crypto.randomUUID();
-      const nextAssets = _.cloneDeep(localAssets.filter((it) => it.downloaded));
-      for (const asset of nextAssets) {
-        const tempLocalUri = `${FileSystem.cacheDirectory}${asset.hash}_${uuid}.${asset.type}`;
-
-        await FileSystem.copyAsync({
-          from: asset.localUri!,
-          to: tempLocalUri,
-        });
-
-        asset.localUri = tempLocalUri;
-      }
-      if (mounted) {
-        setAssets(nextAssets);
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, [localAssets]);
+  const [loadedAssets] = useAssets(localAttachments ?? []);
+  const assets = useMemo<Asset[]>(() => loadedAssets ?? [], [loadedAssets]);
 
   const attachments = useMemo<
     Notifications.NotificationContentAttachmentIos[]
   >(() => {
-    if (!assets) {
-      return [];
-    }
     return assets
       .filter((it) => it)
       .map((it) => ({
         identifier: it.hash,
         type: it.type,
         typeHint: `public.${it.type}`,
-        url: it.localUri!,
+        url: it.localUri!.substring('file://'.length),
         hideThumbnail: false,
       }));
   }, [assets]);
 
   const notifeeAttachments = useMemo<IOSNotificationAttachment[]>(() => {
-    if (!assets) {
-      return [];
-    }
     return assets
       .filter((it) => it)
       .map((it) => ({
         id: it.hash!,
         thumbnailHidden: false,
         typeHint: `public.${it.type}`,
-        url: it.localUri!,
+        url: it.localUri!.substring('file://'.length),
       }));
   }, [assets]);
   const content = useMemo<Notifications.NotificationContentInput>(
@@ -124,10 +124,7 @@ const ExpoNotificationsView: FC<
         title: content.title!,
         body: content.body!,
         ios: {
-          attachments: [
-            ...notifeeAttachments,
-            // This works { url: require('@/assets/images/react-logo.png') },
-          ],
+          attachments: await cloneAttachmentsForNotifee(notifeeAttachments),
           badgeCount: content.badge,
         },
       });
