@@ -1,5 +1,5 @@
 import { WebView, WebViewProps } from 'react-native-webview';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
 import * as Crypto from 'expo-crypto';
 import { MyText } from 'react-native-my-text';
@@ -91,6 +91,7 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
     () => (useLocalUri ? animationLocalUri : fbxAnimationUri),
     [useLocalUri, animationLocalUri, fbxAnimationUri],
   );
+  const webviewRef = useRef<WebView>(null);
   if (finalModelUri === null || animationUri === null) {
     return (
       <MyText style={{ color: 'red' }}>
@@ -102,6 +103,8 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
     <WebView
       {...avatarInfoProps}
       originWhitelist={['*']}
+      onContentProcessDidTerminate={() => webviewRef.current?.reload()}
+      ref={webviewRef}
       source={{
         html: `
 <html lang="en">

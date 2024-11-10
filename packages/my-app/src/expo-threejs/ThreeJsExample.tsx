@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import { WebView } from 'react-native-webview';
 
@@ -15,12 +15,17 @@ export type ThreeJsExampleProps = {
 export const ThreeJsExample: FC<ThreeJsExampleProps> = ({
   style,
   exampleName,
-}) => (
-  <WebView
-    testID="webview"
-    source={{
-      uri: `https://threejs.org/examples/${exampleName}.html`,
-    }}
-    style={style}
-  />
-);
+}) => {
+  const webviewRef = useRef<WebView>(null);
+  return (
+    <WebView
+      testID="webview"
+      source={{
+        uri: `https://threejs.org/examples/${exampleName}.html`,
+      }}
+      ref={webviewRef}
+      style={style}
+      onContentProcessDidTerminate={() => webviewRef.current?.reload()}
+    />
+  );
+};
