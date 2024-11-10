@@ -3,11 +3,6 @@ import { ThreeJsExample } from './ThreeJsExample';
 import { composeStories } from '@storybook/react';
 import * as stories from './ThreeJsExample.stories';
 
-jest.mock('react-native-webview', () => {
-  return {
-    WebView: jest.fn((props) => <div {...props} />),
-  };
-});
 const { WebglAnimationMultiple } = composeStories(stories);
 describe('ThreeJsExample', () => {
   it('renders ThreeJsExample with correct source', async () => {

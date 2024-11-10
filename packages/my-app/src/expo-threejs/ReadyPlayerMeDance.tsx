@@ -3,12 +3,14 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import * as FileSystem from 'expo-file-system';
 import * as Crypto from 'expo-crypto';
 import { MyText } from 'react-native-my-text';
+import { Asset } from 'expo-asset';
 
 export type ReadyPlayerMeDanceProps = Omit<
   WebViewProps,
   'source' | 'originWhiteList'
 > & {
-  fbxAnimationUri: string;
+  fbxAnimationUri?: string;
+  animationResource?: number;
   /**
    * If true, then the local URI will be used rather than the remote one, defaults to false.
    * Local URIs do not appear to work in WebView
@@ -18,10 +20,10 @@ export type ReadyPlayerMeDanceProps = Omit<
   avatarId?: string;
 };
 
-const buildDataUri = async (
-  sourceUri: string,
-  mimeType: string,
-): Promise<string> => {
+const fetchCachedFile = async (sourceUri: string): Promise<string> => {
+  if (sourceUri.startsWith('file:///')) {
+    return sourceUri;
+  }
   const filename = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     JSON.stringify(sourceUri),
@@ -31,13 +33,20 @@ const buildDataUri = async (
     cache: true,
   });
   if (download.status === 200) {
-    const base64Data = await FileSystem.readAsStringAsync(download.uri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-    return `data:${mimeType};base64,${base64Data}`;
+    return download.uri;
   } else {
     throw new Error(`unexpected HTTP status: ${download.status}`);
   }
+};
+const buildDataUri = async (
+  sourceUri: string,
+  mimeType: string,
+): Promise<string> => {
+  const cachedFileUri = await fetchCachedFile(sourceUri);
+  const base64Data = await FileSystem.readAsStringAsync(cachedFileUri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  return `data:${mimeType};base64,${base64Data}`;
 };
 
 /**
@@ -45,6 +54,7 @@ const buildDataUri = async (
  */
 export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
   fbxAnimationUri,
+  animationResource,
   useLocalUri,
   modelUri,
   avatarId,
@@ -54,7 +64,25 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
   const [animationLocalUri, setAnimationLocalUri] = useState<string | null>(
     null,
   );
+  const [animationLocalFileUri, setAnimationLocalFileUri] = useState<
+    string | null
+  >(null);
 
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      if (!animationResource) {
+        return;
+      }
+      const [download] = await Asset.loadAsync(animationResource);
+      if (mounted) {
+        setAnimationLocalFileUri(download.localUri);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [animationResource]);
   const remoteModelUri = useMemo(() => {
     if (modelUri) {
       return modelUri;
@@ -63,15 +91,23 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
     }
   }, [modelUri, avatarId]);
 
+  const remoteAnimationUri = useMemo<string | null>(() => {
+    if (fbxAnimationUri) {
+      return fbxAnimationUri;
+    } else {
+      return animationLocalFileUri;
+    }
+  }, [fbxAnimationUri, animationLocalFileUri]);
+
   useEffect(() => {
     let mounted = true;
     (async () => {
-      if (!useLocalUri) {
+      if (!useLocalUri || !remoteAnimationUri) {
         return;
       }
       const [modelDataUri, animationDataUri] = await Promise.all([
         buildDataUri(remoteModelUri, 'model/gtlf-binary'),
-        buildDataUri(fbxAnimationUri, 'model/vnd.fbx'),
+        buildDataUri(remoteAnimationUri, 'model/vnd.fbx'),
       ]);
       if (mounted) {
         setModelLocalUri(modelDataUri);
@@ -81,7 +117,7 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
     return () => {
       mounted = false;
     };
-  }, [remoteModelUri, fbxAnimationUri, useLocalUri]);
+  }, [remoteModelUri, fbxAnimationUri, useLocalUri, remoteAnimationUri]);
 
   const finalModelUri = useMemo(
     () => (useLocalUri ? modelLocalUri : remoteModelUri),
@@ -94,7 +130,7 @@ export const ReadyPlayerMeDance: FC<ReadyPlayerMeDanceProps> = ({
   const webviewRef = useRef<WebView>(null);
   if (finalModelUri === null || animationUri === null) {
     return (
-      <MyText style={{ color: 'red' }}>
+      <MyText style={{ color: 'red', fontSize: 20 }}>
         Loading {remoteModelUri} and {fbxAnimationUri}...
       </MyText>
     );
