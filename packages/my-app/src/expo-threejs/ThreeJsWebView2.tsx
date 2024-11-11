@@ -20,6 +20,7 @@ export const ThreeJsWebView2: FC<ThreeJsWebView2Props> = ({
 }) => (
   <WebView
     originWhitelist={['*']}
+    bounces={false}
     source={{
       html: `
 <!DOCTYPE html>
