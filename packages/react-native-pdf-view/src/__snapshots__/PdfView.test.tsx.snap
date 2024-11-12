@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PdfView renders MyResume story 1`] = `
+<View
+  injectedJavaScriptObject={
+    {
+      "data": "AAAAA",
+      "pageNumber": 1,
+    }
+  }
+  onContentProcessDidTerminate={[Function]}
+  onMessage={[Function]}
+  originWhitelist={
+    [
+      "*",
+    ]
+  }
+  source={
+    {
+      "html": "
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<style>body,html{margin:0;padding:0}</style>
+<script type=module>AAAAA</script>
+<script>const{pdfjsLib:pdfjsLib}=globalThis;pdfjsLib.GlobalWorkerOptions.workerSrc="data:application/javascript;base64,AAAAA";const renderPdfAsync=async()=>{const e=JSON.parse(window.ReactNativeWebView.injectedObjectJson()),t=await pdfjsLib.getDocument({data:atob(e.data)}).promise,a=await t.getPage(e.pageNumber),i=document.getElementById("canvas"),n=a.getViewport({scale:1.5});return i.height=n.height,i.width=n.width,await a.render({canvasContext:i.getContext("2d"),viewport:n}).promise,{type:"ok"}};window.onload=()=>{window.ReactNativeWebView.injectedObjectJson()&&renderPdfAsync().then((e=>{window.ReactNativeWebView.postMessage(JSON.stringify(e))})).catch((e=>{window.ReactNativeWebView.postMessage(JSON.stringify({type:"error",error:e.message??e}))}))}</script>
+</head>
+<body>
+<canvas id=canvas></canvas>
+</body>
+</html>
+",
+    }
+  }
+/>
+`;
+
+exports[`PdfView renders a file URI 1`] = `
+<View
+  injectedJavaScriptObject={
+    {
+      "data": "AAAAA",
+      "pageNumber": 1,
+    }
+  }
+  onContentProcessDidTerminate={[Function]}
+  onMessage={[Function]}
+  originWhitelist={
+    [
+      "*",
+    ]
+  }
+  source={
+    {
+      "html": "
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<style>body,html{margin:0;padding:0}</style>
+<script type=module>AAAAA</script>
+<script>const{pdfjsLib:pdfjsLib}=globalThis;pdfjsLib.GlobalWorkerOptions.workerSrc="data:application/javascript;base64,AAAAA";const renderPdfAsync=async()=>{const e=JSON.parse(window.ReactNativeWebView.injectedObjectJson()),t=await pdfjsLib.getDocument({data:atob(e.data)}).promise,a=await t.getPage(e.pageNumber),i=document.getElementById("canvas"),n=a.getViewport({scale:1.5});return i.height=n.height,i.width=n.width,await a.render({canvasContext:i.getContext("2d"),viewport:n}).promise,{type:"ok"}};window.onload=()=>{window.ReactNativeWebView.injectedObjectJson()&&renderPdfAsync().then((e=>{window.ReactNativeWebView.postMessage(JSON.stringify(e))})).catch((e=>{window.ReactNativeWebView.postMessage(JSON.stringify({type:"error",error:e.message??e}))}))}</script>
+</head>
+<body>
+<canvas id=canvas></canvas>
+</body>
+</html>
+",
+    }
+  }
+/>
+`;

@@ -42,6 +42,7 @@
     },
     "plugins": [
       "expo-router",
+      ["expo-asset", {}],
       "expo-background-fetch",
       [
         "expo-font",
