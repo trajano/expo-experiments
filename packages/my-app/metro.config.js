@@ -21,7 +21,7 @@ config.resolver.assetExts = [
 ];
 const testRegexs = [/^.*\/[^/]+\.test\.[^/]+$/, /(\\__mocks__\\.*)$/];
 if (Array.isArray(config.resolver.blockList)) {
-  config.resolver.blockList = [...config.resolver.blockList, ...testRegexs];
+config.resolver.blockList = [...config.resolver.blockList, ...testRegexs];
 } else if (typeof config.resolver.blockList === 'object') {
   config.resolver.blockList = [config.resolver.blockList, ...testRegexs];
 }

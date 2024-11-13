@@ -1,4 +1,8 @@
-export const renderPdfHtml = (pdfJsCode: string, pdfJsWorkerDataUri: string, locale:string="en") =>`
+export const renderPdfHtml = (
+  pdfJsCode: string,
+  pdfJsWorkerDataUri: string,
+  locale: string = 'en',
+) => `
 <!DOCTYPE html>
 <html lang="${locale}">
 <head>
@@ -36,19 +40,17 @@ const renderPdfAsync = async () => {
     canvasContext: canvasElement.getContext('2d'),
     viewport: viewport,
   }).promise;
+
   return { 'type': 'ok', 'data': canvasElement.toDataURL('image/png') };
 };
 window.onload = () => {
   window.ReactNativeWebView.postMessage(
-    JSON.stringify({'type': 'stage', 'stage':'loaded'}),
+    JSON.stringify({'type': 'stage', 'stage':'loaded', 'json': !!window.ReactNativeWebView.injectedObjectJson}),
   );
-
-
   if (window.ReactNativeWebView.injectedObjectJson && window.ReactNativeWebView.injectedObjectJson()) {
     window.ReactNativeWebView.postMessage(
       JSON.stringify({'type': 'stage', 'stage': 'data injected: ' + window.ReactNativeWebView.injectedObjectJson().substring(0,40)}),
     );
-
     renderPdfAsync()
       .then(
         (message) => {
@@ -83,4 +85,4 @@ window.onload = () => {
 <canvas id="canvas"></canvas>
 </body>
 </html>
-`
+`;

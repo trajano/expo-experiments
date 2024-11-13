@@ -2,70 +2,151 @@
 
 exports[`PdfView renders MyResume story 1`] = `
 <View
-  injectedJavaScriptObject={
+  cacheEnabled={false}
+  containerStyle={
     {
-      "data": "AAAAA",
-      "pageNumber": 1,
+      "aspectRatio": 0.5622188905547226,
     }
   }
-  onContentProcessDidTerminate={[Function]}
+  domStorageEnabled={false}
+  injectedJavaScriptObject={
+    {
+      "data": "DATA AAAAA",
+      "pageNumber": 1,
+      "scale": 1,
+    }
+  }
+  javaScriptEnabled={true}
   onMessage={[Function]}
   originWhitelist={
     [
       "*",
     ]
   }
+  scrollEnabled={false}
   source={
     {
-      "html": "
-<!DOCTYPE html>
-<html lang=en>
-<head>
-<style>body,html{margin:0;padding:0}</style>
-<script type=module>AAAAA</script>
-<script>const{pdfjsLib:pdfjsLib}=globalThis;pdfjsLib.GlobalWorkerOptions.workerSrc="data:application/javascript;base64,AAAAA";const renderPdfAsync=async()=>{const e=JSON.parse(window.ReactNativeWebView.injectedObjectJson()),t=await pdfjsLib.getDocument({data:atob(e.data)}).promise,a=await t.getPage(e.pageNumber),i=document.getElementById("canvas"),n=a.getViewport({scale:1.5});return i.height=n.height,i.width=n.width,await a.render({canvasContext:i.getContext("2d"),viewport:n}).promise,{type:"ok"}};window.onload=()=>{window.ReactNativeWebView.injectedObjectJson()&&renderPdfAsync().then((e=>{window.ReactNativeWebView.postMessage(JSON.stringify(e))})).catch((e=>{window.ReactNativeWebView.postMessage(JSON.stringify({type:"error",error:e.message??e}))}))}</script>
-</head>
-<body>
-<canvas id=canvas></canvas>
-</body>
-</html>
-",
+      "baseUrl": "about:blank",
+      "html": "AAAAA",
     }
   }
+  webviewDebuggingEnabled={true}
 />
 `;
 
 exports[`PdfView renders a file URI 1`] = `
 <View
+  cacheEnabled={false}
+  containerStyle={
+    {
+      "aspectRatio": 0.5622188905547226,
+    }
+  }
+  domStorageEnabled={false}
   injectedJavaScriptObject={
     {
       "data": "AAAAA",
       "pageNumber": 1,
+      "scale": 1,
     }
   }
-  onContentProcessDidTerminate={[Function]}
+  javaScriptEnabled={true}
   onMessage={[Function]}
   originWhitelist={
     [
       "*",
     ]
   }
+  scrollEnabled={false}
   source={
     {
+      "baseUrl": "about:blank",
       "html": "
 <!DOCTYPE html>
-<html lang=en>
+<html lang="en">
 <head>
-<style>body,html{margin:0;padding:0}</style>
-<script type=module>AAAAA</script>
-<script>const{pdfjsLib:pdfjsLib}=globalThis;pdfjsLib.GlobalWorkerOptions.workerSrc="data:application/javascript;base64,AAAAA";const renderPdfAsync=async()=>{const e=JSON.parse(window.ReactNativeWebView.injectedObjectJson()),t=await pdfjsLib.getDocument({data:atob(e.data)}).promise,a=await t.getPage(e.pageNumber),i=document.getElementById("canvas"),n=a.getViewport({scale:1.5});return i.height=n.height,i.width=n.width,await a.render({canvasContext:i.getContext("2d"),viewport:n}).promise,{type:"ok"}};window.onload=()=>{window.ReactNativeWebView.injectedObjectJson()&&renderPdfAsync().then((e=>{window.ReactNativeWebView.postMessage(JSON.stringify(e))})).catch((e=>{window.ReactNativeWebView.postMessage(JSON.stringify({type:"error",error:e.message??e}))}))}</script>
+<style>
+body, html { margin: 0; padding: 0; background-color: red;}
+body {
+ display: flex;
+ flex-direction: column;
+}
+canvas {
+  flex: 1;
+ }
+</style>
+<script type="module">
+AAAAA;
+</script>
+<script type="module">
+const { pdfjsLib } = /** @type {{ pdfjsLib: typeof import('pdfjs-dist') }} */ (globalThis);
+pdfjsLib.GlobalWorkerOptions.workerSrc = "data:application/javascript;base64,AAAAA";
+const renderPdfAsync = async () => {
+  const stored = JSON.parse(window.ReactNativeWebView.injectedObjectJson());
+  const pdfDocument = await pdfjsLib.getDocument({ data: atob(stored.data) }).promise;
+  const pdfPage = await pdfDocument.getPage(stored.pageNumber);
+
+  /** @type {HTMLCanvasElement} */
+  const canvasElement = document.getElementById('canvas');
+  const viewport = pdfPage.getViewport({ scale: stored.scale });
+  canvasElement.height= viewport.height;
+  canvasElement.width = viewport.width;
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({'type': 'viewport', 'width': viewport.width, 'height': viewport.height, 'scale': viewport.scale}),
+    );
+
+  await pdfPage.render({
+    canvasContext: canvasElement.getContext('2d'),
+    viewport: viewport,
+  }).promise;
+
+  return { 'type': 'ok', 'data': canvasElement.toDataURL('image/png') };
+};
+window.onload = () => {
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({'type': 'stage', 'stage':'loaded', 'json': !!window.ReactNativeWebView.injectedObjectJson}),
+  );
+  if (window.ReactNativeWebView.injectedObjectJson && window.ReactNativeWebView.injectedObjectJson()) {
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({'type': 'stage', 'stage': 'data injected: ' + window.ReactNativeWebView.injectedObjectJson().substring(0,40)}),
+    );
+    renderPdfAsync()
+      .then(
+        (message) => {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify(message),
+          );
+        },
+      )
+      .catch(
+        (error) => {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify(
+              {
+                'type': 'error',
+                'error': error.message ?? error,
+              },
+            ),
+          );
+        },
+      );
+    return true;
+  } else {
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({'type': 'error', 'error':'no data'}),
+  );
+    return true;
+  }
+};
+</script>
 </head>
 <body>
-<canvas id=canvas></canvas>
+<canvas id="canvas"></canvas>
 </body>
 </html>
 ",
     }
   }
+  webviewDebuggingEnabled={true}
 />
 `;
