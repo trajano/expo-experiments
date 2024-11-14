@@ -26,8 +26,8 @@ export const ThreeJsReadyPlayerMeSample: Story = {
   },
 };
 
-export const ReadyPlayerMe4: Story = {
-  storyName: 'Selectable samples',
+export const SelectableSamples: Story = {
+  name: 'Selectable samples',
   args: {
     avatarId: '673053f10e05f44f8d84fe69',
     animationResource: require('@/assets/animations/Talking-On-Phone.fbx'),

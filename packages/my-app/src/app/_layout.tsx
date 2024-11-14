@@ -27,7 +27,7 @@ export const RootLayout: FC = () => {
   // useLoadGuard
   useEffect(() => {
     (async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 250));
       // before hiding the splashscreen the fonts and assets for the loader screen should be loaded
       await SplashScreen.hideAsync();
       await DevMenu.registerDevMenuItems([

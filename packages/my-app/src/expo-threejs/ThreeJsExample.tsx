@@ -20,6 +20,7 @@ export const ThreeJsExample: FC<ThreeJsExampleProps> = ({
   return (
     <WebView
       testID="webview"
+      bounces={false}
       source={{
         uri: `https://threejs.org/examples/${exampleName}.html`,
       }}
