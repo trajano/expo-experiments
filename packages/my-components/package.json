@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@shopify/flash-list": "^1.7.2",
-    "@storybook/react": "^8.4.2",
+    "@storybook/react": "^8.4.3",
     "@storybook/react-native": "^8.4.2",
     "@testing-library/react-native": "^12.8.1",
     "@types/jest": "^29.5.14",
@@ -59,7 +59,7 @@
   "dependencies": {
     "react-native-my-hooks": "*",
     "react-native-my-text": "*",
-    "react-native-unistyles": "^2.11.0",
+    "react-native-unistyles": "^2.12.0",
     "react-native-unstyled-components": "*"
   }
 }
