@@ -9,7 +9,12 @@ import { DevMenuItemModule, RegisterDevMenuItemProps } from '@/devmenu/types';
 export const registerDevMenuItemsAsync = async (
   props: RegisterDevMenuItemProps,
 ) => {
-  const devMenuModules = require.context('.', true, /.+\.devmenu\..+/, 'sync');
+  const devMenuModules = require.context(
+    '.',
+    true,
+    /^.+\.devmenu\.ts$/,
+    'sync',
+  );
   const expoDevMenuItems = devMenuModules
     .keys()
     .map((key) => devMenuModules<{ default: DevMenuItemModule }>(key))
