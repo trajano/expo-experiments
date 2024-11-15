@@ -12,7 +12,7 @@ import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
 import { WithUserPreferences } from '@/hooks/UserPreferences';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
-import { DevMenu } from 'expo-dev-client';
+import * as DevClient from 'expo-dev-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearLogFilesAsync } from '@/logging';
 
@@ -30,7 +30,7 @@ export const RootLayout: FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 250));
       // before hiding the splashscreen the fonts and assets for the loader screen should be loaded
       await SplashScreen.hideAsync();
-      await DevMenu.registerDevMenuItems([
+      await DevClient.registerDevMenuItems([
         {
           name: 'Clear AsyncStorage',
           callback: () => {

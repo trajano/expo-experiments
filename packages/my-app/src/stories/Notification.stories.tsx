@@ -106,9 +106,7 @@ const ExpoNotificationsView: FC<
     (async () => {
       const request: Notifications.NotificationRequestInput = {
         content: content,
-        trigger: {
-          date: Date.now() + 2_000,
-        },
+        trigger: null,
       };
       try {
         await Notifications.scheduleNotificationAsync(request);

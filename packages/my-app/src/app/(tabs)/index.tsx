@@ -18,7 +18,7 @@ import {
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText, Strong } from 'react-native-my-text';
 import { sharePushCurlCommandAsync } from '@/notifications';
-import { DevMenu } from 'expo-dev-client';
+import * as DevClient from 'expo-dev-client';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -79,7 +79,7 @@ const HomeScreen: FC = () => {
           testID="open-dev-menu"
           onPress={() => {
             if (__DEV__) {
-              DevMenu.openMenu();
+              DevClient.openMenu();
             }
           }}
           disabled={!__DEV__}

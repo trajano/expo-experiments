@@ -30,6 +30,9 @@
     "react-native-file-viewer": "*",
     "react-native-my-text": "*",
     "react-native": "*",
+    "react-native-my-hooks": "*",
+    "react-native-unistyles": "*",
+    "react-native-unstyled-components": "*",
     "react": "*"
   },
   "jest": {
@@ -49,11 +52,5 @@
   "eslintIgnore": [
     "node_modules/",
     "dist/"
-  ],
-  "dependencies": {
-    "react-native-my-hooks": "*",
-    "react-native-my-text": "*",
-    "react-native-unistyles": "^2.12.0",
-    "react-native-unstyled-components": "*"
-  }
+  ]
 }
