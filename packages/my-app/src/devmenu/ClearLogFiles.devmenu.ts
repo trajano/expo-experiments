@@ -12,18 +12,15 @@ const clearLogFilesByPrefixAndSuffixAsync = async (
       .map((it) => FileSystem.deleteAsync(it, { idempotent: true })),
   );
 };
-const clearLogFilesAsync = async (): Promise<void> => {
-  await Promise.all([
-    clearLogFilesByPrefixAndSuffixAsync('logs_', '.txt'),
-    clearLogFilesByPrefixAndSuffixAsync('background_fetch_', '.txt'),
-    clearLogFilesByPrefixAndSuffixAsync('notification_', '.txt'),
-    clearLogFilesByPrefixAndSuffixAsync('location_', '.txt'),
-  ]);
-};
 
 export default {
   name: 'Clear Log Files',
   callback: async () => {
-    await clearLogFilesAsync();
+    await Promise.all([
+      clearLogFilesByPrefixAndSuffixAsync('logs_', '.txt'),
+      clearLogFilesByPrefixAndSuffixAsync('background_fetch_', '.txt'),
+      clearLogFilesByPrefixAndSuffixAsync('notification_', '.txt'),
+      clearLogFilesByPrefixAndSuffixAsync('location_', '.txt'),
+    ]);
   },
 } satisfies DevMenuItemModule;

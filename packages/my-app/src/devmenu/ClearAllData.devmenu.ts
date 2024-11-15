@@ -16,8 +16,13 @@ const deleteFilesRecursivelyAsync = async (directoryUri: string) => {
       await deleteFilesRecursivelyAsync(itemUri);
     }
 
-    // Delete the file or empty directory
-    await FileSystem.deleteAsync(itemUri, { idempotent: true });
+    // Delete the file or empty directory as long as it isn't the root
+    if (
+      itemUri !== FileSystem.documentDirectory &&
+      itemUri !== FileSystem.cacheDirectory
+    ) {
+      await FileSystem.deleteAsync(itemUri, { idempotent: true });
+    }
   }
 };
 
