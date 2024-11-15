@@ -12,31 +12,25 @@
     "prepare": "tsup"
   },
   "devDependencies": {
-    "@shopify/flash-list": "~1.6.4",
-    "@storybook/react": "^8.4.3",
-    "@storybook/react-native": "^8.4.2",
-    "@testing-library/react-native": "^12.8.1",
-    "@types/jest": "^29.5.14",
-    "@types/react": "^18.2.44",
-    "babel-jest": "^29.7.0",
+    "@testing-library/react-native": "*",
+    "@types/jest": "*",
+    "@types/react": "*",
+    "react-test-renderer": "*",
+    "babel-jest": "*",
     "eslint-config-my": "*",
-    "expo-file-system": "^17.0.1",
-    "react": "18.2.0",
-    "react-dom": "18.2",
-    "react-native": "0.74.5",
-    "react-native-file-viewer": "^2.1.5",
-    "react-native-my-text": "*",
-    "react-test-renderer": "18.2.0",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3"
   },
   "peerDependencies": {
-    "@storybook/react": "*",
     "@shopify/flash-list": "*",
+    "@storybook/react-native": "*",
+    "@storybook/react": "*",
     "expo-file-system": "*",
-    "react": "*",
+    "react-dom": "*",
+    "react-native-file-viewer": "*",
+    "react-native-my-text": "*",
     "react-native": "*",
-    "react-native-file-viewer": "*"
+    "react": "*"
   },
   "jest": {
     "preset": "jest-expo",
