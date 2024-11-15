@@ -26,6 +26,7 @@ describe('DoNothing', () => {
   });
 
   it('Use Hook', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     const wrapper = ({ children }: PropsWithChildren<{}>) => (
       <DoNothingContext.Provider value={{}}>
         {children}

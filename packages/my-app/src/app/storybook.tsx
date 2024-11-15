@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import StorybookView from '@sb/index';
-const StorybookScreen: FC<{}> = () => {
+const StorybookScreen: FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StorybookView />

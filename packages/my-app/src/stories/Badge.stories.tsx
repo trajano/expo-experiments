@@ -82,7 +82,7 @@ const NotificationBadgesView: FC = () => {
             } else {
               setNextBadgeCountData(nextBadgeCount);
             }
-          } catch (e: unknown) {
+          } catch (_e: unknown) {
             setNextBadgeCountData(0);
           } finally {
             setBadgeCountUpdated(false);

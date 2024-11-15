@@ -15,6 +15,7 @@ import {
  * Interface representing an empty context value for the DoNothing context.
  * This interface can be expanded to include any values needed by the context.
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface DoNothing {}
 
 /**
@@ -27,7 +28,7 @@ export const DoNothingContext = createContext<DoNothing>({});
 /**
  * Props type for the DoNothingProvider component, which wraps its children in the DoNothingContext.
  */
-export type DoNothingProps = PropsWithChildren<{}>;
+export type DoNothingProps = PropsWithChildren<object>;
 
 /**
  * A provider component for the DoNothingContext.
