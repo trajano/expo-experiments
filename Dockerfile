@@ -7,7 +7,7 @@ WORKDIR /w
 RUN unzip commandlinetools.zip
 
 # Stage 2: Setup Android SDK (build platform-specific)
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS android-sdk
+FROM --platform=$BUILDPLATFORM eclipse-temurin:17-jdk AS android-sdk
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 COPY --from=download-tools --chmod=644 /w/cmdline-tools /opt/android-sdk/cmdline-tools/latest
 COPY --from=download-tools --chmod=755 /w/cmdline-tools/bin/* /opt/android-sdk/cmdline-tools/latest/bin/
@@ -15,7 +15,9 @@ RUN --mount=type=cache,target=/root/.android/cache \
   yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
   "platform-tools" \
   "build-tools;34.0.0" \
+  "build-tools;35.0.0" \
   "platforms;android-34" \
+  "platforms;android-35" \
   "ndk;25.1.8937393" \
   "ndk;26.1.10909125" \
   "ndk;26.3.11579264" \
@@ -25,7 +27,7 @@ RUN --mount=type=cache,target=/root/.android/cache \
 # "emulator" \
 
 # Stage 3: Install Volta, Node.js and EAS-CLI (build platform-specific)
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS volta
+FROM --platform=$BUILDPLATFORM eclipse-temurin:17-jdk AS volta
 USER ubuntu
 ENV VOLTA_HOME=/home/ubuntu/.volta
 ENV PATH=$VOLTA_HOME/bin:$PATH
@@ -34,7 +36,7 @@ RUN curl https://get.volta.sh | bash \
   && npm i -g --ignore-scripts eas-cli@latest
 
 # Stage 4: Prepare Environment for Prebuild (build platform-specific)
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS prebuild-env
+FROM --platform=$BUILDPLATFORM eclipse-temurin:17-jdk AS prebuild-env
 COPY --from=volta --chown=ubuntu:ubuntu /home/ubuntu/.volta /home/ubuntu/.volta
 USER ubuntu
 ENV VOLTA_HOME=/home/ubuntu/.volta
@@ -62,7 +64,7 @@ RUN --mount=type=cache,target=/home/ubuntu/.npm,uid=1000,gid=1000 \
   npx expo prebuild --platform all --no-install
 
 # Stage 7: Prepare Environment for Gradle APK Build (build platform-specific)
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS gradle-build-env
+FROM --platform=$BUILDPLATFORM eclipse-temurin:17-jdk AS gradle-build-env
 RUN --mount=type=cache,target=/var/lib/apt/lists apt-get update \
   && apt-get install -y --no-install-recommends ninja-build
 COPY --from=volta --chown=ubuntu:ubuntu /home/ubuntu/.volta /home/ubuntu/.volta
