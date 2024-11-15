@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "@types/eslint": "^8.56.12 <9",
-    "@types/jest": "29.5",
-    "babel-jest": "^29.7.0",
+    "@types/jest": "*",
+    "babel-jest": "*",
     "eslint": "^8.57.1 <9",
-    "jest": "^29.7.0",
+    "jest": "*",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3"
   },
@@ -32,8 +32,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "expo",
-      "prettier"
+      "."
     ]
   },
   "eslintIgnore": [
