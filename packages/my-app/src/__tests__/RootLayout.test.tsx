@@ -5,13 +5,9 @@ import { View } from 'react-native';
 import { registerDevMenuItemsAsync } from '@/devmenu';
 
 jest.mock('expo-dev-client');
-<<<<<<< HEAD
 jest.mock('@/devmenu', () => ({
   registerDevMenuItemsAsync: jest.fn(() => Promise.resolve()),
 }));
-=======
-jest.mock('@/devMenu', () => {});
->>>>>>> 19802b6 (feat: render the PDF to an image)
 
 // Mock out contexts
 jest.mock('@/hooks/UserPreferences', () => ({
