@@ -8,13 +8,13 @@ const monorepoRoot = path.resolve(__dirname, '../..');
 const config = getDefaultConfig(__dirname);
 
 config.watchFolders = [monorepoRoot];
-if (!config.resolver) {
-  throw new Error('config.resolver is undefined');
-}
-config.resolver.nodeModulesPaths = [
-  path.resolve(__dirname, 'node_modules'),
-  path.resolve(monorepoRoot, 'node_modules'),
-];
+config.resolver = {
+  ...config.resolver,
+  nodeModulesPaths: [
+    path.resolve(__dirname, 'node_modules'),
+    path.resolve(monorepoRoot, 'node_modules'),
+  ],
+};
 const additionalAssetExts = ['lottie', 'fbx'];
 if (Array.isArray(config.resolver.assetExts)) {
   config.resolver.assetExts = [
@@ -30,6 +30,11 @@ if (Array.isArray(config.resolver.blockList)) {
 } else if (typeof config.resolver.blockList === 'object') {
   config.resolver.blockList = [config.resolver.blockList, testRegex];
 }
+
+config.transformer = {
+  ...config.transformer,
+  unstable_allowRequireContext: true,
+};
 
 // @ts-ignore
 module.exports = withStorybook(config, {

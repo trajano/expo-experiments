@@ -21,7 +21,7 @@ index fe7d8dc..b78ce83 100644
 -
  export default JSONArrow;
 diff --git a/node_modules/react-native-json-tree/src/Nodes.js b/node_modules/react-native-json-tree/src/Nodes.js
-index 5f01f12..dd687c6 100644
+index 5f01f12..13ee200 100644
 --- a/node_modules/react-native-json-tree/src/Nodes.js
 +++ b/node_modules/react-native-json-tree/src/Nodes.js
 @@ -39,7 +39,7 @@ const JSONValueNode = ({
@@ -33,12 +33,99 @@ index 5f01f12..dd687c6 100644
  }) => (
    <View {...styling('value', nodeType, keyPath)}>
      <Text {...styling(['label', 'valueLabel'], nodeType, keyPath)}>
-@@ -63,8 +63,6 @@ JSONValueNode.propTypes = {
+@@ -63,8 +63,14 @@ JSONValueNode.propTypes = {
    valueRenderer: PropTypes.func.isRequired,
  }
  
 -JSONValueNode.defaultProps = { valueGetter: (value) => value }
 -
++const omit = (obj, keyToOmit) => {
++  return Object.keys(obj).reduce((result, key) => {
++    if (key !== keyToOmit) {
++      result[key] = obj[key];
++    }
++    return result;
++  }, {});
++}
  
  export const JSONNode = ({
    getItemString,
+@@ -80,7 +86,6 @@ export const JSONNode = ({
+ 
+   const simpleNodeProps = {
+     getItemString,
+-    key: keyPath[0],
+     keyPath,
+     labelRenderer,
+     nodeType,
+@@ -90,29 +95,32 @@ export const JSONNode = ({
+   }
+ 
+   const nestedNodeProps = {
+-    ...rest,
++    ...omit(rest, "key"),
+     ...simpleNodeProps,
+     data: value,
+     isCustomNode,
+   }
+ 
++  const key = keyPath[0];
++
+   switch (nodeType) {
+     case 'Object':
+     case 'Error':
+-      return <JSONObjectNode {...nestedNodeProps} />
++      return <JSONObjectNode key={key} {...nestedNodeProps} />
+     case 'Array':
+-      return <JSONArrayNode {...nestedNodeProps} />
++      return <JSONArrayNode {...nestedNodeProps} key={key}/>
+     case 'Iterable':
+-      return <JSONIterableNode {...nestedNodeProps} />
++      return <JSONIterableNode key={key} {...nestedNodeProps} />
+     case 'String':
+       return (
+-        <JSONValueNode {...simpleNodeProps} valueGetter={(raw) => `"${raw}"`} />
++        <JSONValueNode key={key} {...simpleNodeProps} valueGetter={(raw) => `"${raw}"`} />
+       )
+     case 'Number':
+-      return <JSONValueNode {...simpleNodeProps} />
++      return <JSONValueNode key={key} {...simpleNodeProps} />
+     case 'Boolean':
+       return (
+         <JSONValueNode
++          key={key}
+           {...simpleNodeProps}
+           valueGetter={(raw) => (raw ? 'true' : 'false')}
+         />
+@@ -120,26 +128,28 @@ export const JSONNode = ({
+     case 'Date':
+       return (
+         <JSONValueNode
++          key={key}
+           {...simpleNodeProps}
+           valueGetter={(raw) => raw.toISOString()}
+         />
+       )
+     case 'Null':
+-      return <JSONValueNode {...simpleNodeProps} valueGetter={() => 'null'} />
++      return <JSONValueNode key={key} {...simpleNodeProps} valueGetter={() => 'null'} />
+     case 'Undefined':
+       return (
+-        <JSONValueNode {...simpleNodeProps} valueGetter={() => 'undefined'} />
++        <JSONValueNode key={key} {...simpleNodeProps} valueGetter={() => 'undefined'} />
+       )
+     case 'Function':
+     case 'Symbol':
+       return (
+         <JSONValueNode
++          key={key}
+           {...simpleNodeProps}
+           valueGetter={(raw) => raw.toString()}
+         />
+       )
+     case 'Custom':
+-      return <JSONValueNode {...simpleNodeProps} />
++      return <JSONValueNode key={key} {...simpleNodeProps} />
+     default:
+       return null
+   }

@@ -2,19 +2,23 @@ import { renderRouter, screen } from 'expo-router/testing-library';
 import { act } from '@testing-library/react-native';
 import RootLayout from '@/app/_layout';
 import { View } from 'react-native';
+import { registerDevMenuItemsAsync } from '@/devmenu';
 
-jest.mock('@/devMenu', () => {});
+jest.mock('expo-dev-client');
+jest.mock('@/devmenu', () => ({
+  registerDevMenuItemsAsync: jest.fn(() => Promise.resolve()),
+}));
 
 // Mock out contexts
 jest.mock('@/hooks/UserPreferences', () => ({
-  WithUserPreferences: (i: any) => i,
+  WithUserPreferences: jest.fn((i: any) => i),
 }));
 jest.mock('@/hooks/MyBackgroundFetch', () => ({
-  WithMyBackgroundFetch: (i: any) => i,
+  WithMyBackgroundFetch: jest.fn((i: any) => i),
 }));
 jest.mock('react-native-my-hooks', () => ({
   ...jest.requireActual('react-native-my-hooks'),
-  WithNotifications: (i: any) => i,
+  WithNotifications: jest.fn((i: any) => i),
 }));
 
 test('RootLayout', async () => {
@@ -29,4 +33,10 @@ test('RootLayout', async () => {
   await act(() => Promise.resolve());
   expect(screen.getByTestId('faux')).toBeTruthy();
   expect(getPathname()).toStrictEqual('/');
+});
+
+test('ensure devmenu mock', () => {
+  expect(
+    registerDevMenuItemsAsync({ router: jest.fn() as any }),
+  ).resolves.toBeUndefined();
 });

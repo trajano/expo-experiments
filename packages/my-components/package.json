@@ -37,6 +37,7 @@
   },
   "jest": {
     "preset": "jest-expo",
+    "passWithNoTests": true,
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/"
     ],

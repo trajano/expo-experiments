@@ -1,9 +1,13 @@
 import { Tabs } from 'expo-router';
 import { FC } from 'react';
 
-import { Colors } from 'react-native-my-components';
+import {
+  Colors,
+  TabBarBackground,
+  HapticTab,
+} from 'react-native-my-components';
 import { TabBarIcon } from '@/components/TabBarIcon';
-import { useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 
 const TabLayout: FC = () => {
   const colorScheme = useColorScheme();
@@ -12,6 +16,15 @@ const TabLayout: FC = () => {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
+        tabBarButton: HapticTab,
+        tabBarBackground: TabBarBackground,
+        tabBarStyle: Platform.select({
+          ios: {
+            // Use a transparent background on iOS to show the blur effect
+            position: 'absolute',
+          },
+          default: {},
+        }),
       }}
     >
       <Tabs.Screen

@@ -4,7 +4,7 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 
-import { SplashScreen, Stack } from 'expo-router';
+import { SplashScreen, Stack, useRouter } from 'expo-router';
 import { FC, useEffect } from 'react';
 
 import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
@@ -12,43 +12,26 @@ import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
 import { WithUserPreferences } from '@/hooks/UserPreferences';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
-import * as DevClient from 'expo-dev-client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { clearLogFilesAsync } from '@/logging';
 
-import '@/devMenu';
 import 'react-native-reanimated';
+import { registerDevMenuItemsAsync } from '@/devmenu';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export const RootLayout: FC = () => {
   const colorScheme = useColorScheme();
+  const router = useRouter();
   // useLoadGuard
   useEffect(() => {
     (async () => {
       await new Promise((resolve) => setTimeout(resolve, 250));
       // before hiding the splashscreen the fonts and assets for the loader screen should be loaded
+      await registerDevMenuItemsAsync({ router });
       await SplashScreen.hideAsync();
-      await DevClient.registerDevMenuItems([
-        {
-          name: 'Clear AsyncStorage',
-          callback: () => {
-            AsyncStorage.clear();
-          },
-          shouldCollapse: true,
-        },
-        {
-          name: 'Clear Log files',
-          callback: () => {
-            clearLogFilesAsync();
-          },
-          shouldCollapse: true,
-        },
-      ]);
       // this may be moved to load guard.
     })();
-  }, []);
+  }, [router]);
 
   // if (!loaded), but I want it already on the stack right?
   return (
