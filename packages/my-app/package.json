@@ -73,7 +73,7 @@
     "expo-localization": "~16.0.0",
     "expo-location": "~18.0.1",
     "expo-mail-composer": "~14.0.1",
-    "expo-manifests": "^0.14.3",
+    "expo-manifests": "^0.15.3",
     "expo-media-library": "~17.0.2",
     "expo-navigation-bar": "~4.0.3",
     "expo-network": "~7.0.0",
