@@ -4,7 +4,7 @@ import StorybookView from '@sb/index';
 const StorybookScreen: FC = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <StorybookView />
+      <StorybookView testID="storybook-ui" />
     </SafeAreaView>
   );
 };

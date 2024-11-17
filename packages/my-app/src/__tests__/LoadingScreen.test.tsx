@@ -1,5 +1,5 @@
 import LoadingScreen from '@/app/index';
-import { act, render } from '@testing-library/react-native';
+import { act, render, screen } from '@testing-library/react-native';
 
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
@@ -10,7 +10,7 @@ jest.mock('expo-router', () => ({
  * This is an example of a basic test that ensures the view loads with minimal assertions.
  */
 test('LoadingScreen', async () => {
-  const { getByTestId } = render(<LoadingScreen />);
+  render(<LoadingScreen />);
   await act(() => Promise.resolve());
-  expect(getByTestId('splash-view')).toBeTruthy();
+  expect(screen.getByTestId('splash-view')).toBeTruthy();
 });
