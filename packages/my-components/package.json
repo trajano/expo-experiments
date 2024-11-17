@@ -15,22 +15,22 @@
     "@testing-library/react-native": "*",
     "@types/jest": "*",
     "@types/react": "*",
-    "react-test-renderer": "*",
     "babel-jest": "*",
     "eslint-config-my": "*",
+    "react-test-renderer": "*",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3"
   },
   "peerDependencies": {
     "@shopify/flash-list": "*",
-    "@storybook/react-native": "*",
     "@storybook/react": "*",
+    "@storybook/react-native": "*",
     "expo-file-system": "*",
+    "react": "*",
     "react-dom": "*",
-    "react-native-file-viewer": "*",
-    "react-native-my-text": "*",
     "react-native": "*",
-    "react": "*"
+    "react-native-file-viewer": "*",
+    "react-native-my-text": "*"
   },
   "jest": {
     "preset": "jest-expo",
@@ -53,7 +53,6 @@
   "dependencies": {
     "react-native-my-hooks": "*",
     "react-native-my-text": "*",
-    "react-native-unistyles": "^2.12.0",
     "react-native-unstyled-components": "*"
   }
 }

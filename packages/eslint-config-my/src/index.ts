@@ -28,6 +28,12 @@ const rules: Linter.RulesRecord = {
       caughtErrorsIgnorePattern: '^_',
     },
   ],
+  '@typescript-eslint/no-empty-object-type': [
+    'error',
+    {
+      allowInterfaces: 'with-single-extends',
+    },
+  ],
 };
 
 module.exports = {

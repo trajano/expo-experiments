@@ -86,7 +86,7 @@ const SecureStorageView: FC<{
     } else {
       try {
         return JSON.stringify(JSON.parse(storedJSON), null, 2);
-      } catch (e: unknown) {
+      } catch (_e: unknown) {
         return storedJSON;
       }
     }

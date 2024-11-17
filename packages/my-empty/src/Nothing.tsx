@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-export type NothingProps = {};
+export type NothingProps = Record<string, unknown>;
 /**
  * This is a component that renders nothing.
  */

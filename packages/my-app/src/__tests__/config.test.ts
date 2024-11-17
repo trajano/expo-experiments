@@ -31,7 +31,7 @@ describe('Tests that change environment variables', () => {
   let savedProcessEnv = process.env;
   beforeEach(() => {
     jest.resetModules();
-    process.env = { ...savedProcessEnv };
+    process.env = { ...savedProcessEnv, BUILD_BUILDNUMBER: undefined };
   });
   afterEach(() => {
     process.env = savedProcessEnv;
@@ -49,7 +49,7 @@ describe('Tests that change environment variables', () => {
     });
 
   const tryBuildNumber = (
-    buildNumber: string,
+    buildNumber: string | undefined,
     expectedAndroidVersionCode: number,
   ): void => {
     process.env.BUILD_BUILDNUMBER = buildNumber;
@@ -61,6 +61,19 @@ describe('Tests that change environment variables', () => {
   };
   tryBuildNumber('20241003.03', 2024100303);
   tryBuildNumber('20241003.3', 2024100303);
+
+  it('should still work if build number is not set', () => {
+    const config = processedConfig();
+    expect(config.version).toEqual('1.2.3');
+    expect(config.android?.versionCode).toEqual(102);
+  });
+  it('should fail on Android version that would yield > 2100000000', () => {
+    process.env.BUILD_BUILDNUMBER = '21000101.02';
+
+    expect(processedConfig).toThrow(
+      new Error('Android limits version code to 2100000000'),
+    );
+  });
 
   it('adaptive-icon branding', () => {
     process.env.EXPO_APP_BRAND = 'release';

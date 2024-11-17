@@ -28,7 +28,7 @@ describe('MyBackgroundFetch', () => {
   });
 
   it('Use Hook', async () => {
-    const wrapper = ({ children }: PropsWithChildren<{}>) => (
+    const wrapper = ({ children }: PropsWithChildren) => (
       <MyBackgroundFetchContext.Provider
         value={{ registered: true, status: BackgroundFetchStatus.Available }}
       >

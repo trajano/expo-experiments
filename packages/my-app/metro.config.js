@@ -16,19 +16,15 @@ config.resolver = {
   ],
 };
 const additionalAssetExts = ['lottie', 'fbx'];
-if (Array.isArray(config.resolver.assetExts)) {
-  config.resolver.assetExts = [
-    ...config.resolver.assetExts,
-    ...additionalAssetExts,
-  ];
-} else {
-  config.resolver.assetExts = additionalAssetExts;
-}
-const testRegex = /^.*\/[^/]+\.test\.[^/]+$/;
+config.resolver.assetExts = [
+  ...config.resolver.assetExts,
+  ...additionalAssetExts,
+];
+const testRegexs = [/^.*\/[^/]+\.test\.[^/]+$/, /(\\__mocks__\\.*)$/];
 if (Array.isArray(config.resolver.blockList)) {
-  config.resolver.blockList = [...config.resolver.blockList, testRegex];
+  config.resolver.blockList = [...config.resolver.blockList, ...testRegexs];
 } else if (typeof config.resolver.blockList === 'object') {
-  config.resolver.blockList = [config.resolver.blockList, testRegex];
+  config.resolver.blockList = [config.resolver.blockList, ...testRegexs];
 }
 
 config.transformer = {

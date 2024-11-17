@@ -26,7 +26,7 @@ describe('DoNothing', () => {
   });
 
   it('Use Hook', async () => {
-    const wrapper = ({ children }: PropsWithChildren<{}>) => (
+    const wrapper = ({ children }: PropsWithChildren) => (
       <DoNothingContext.Provider value={{}}>
         {children}
       </DoNothingContext.Provider>
