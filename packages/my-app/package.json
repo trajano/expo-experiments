@@ -34,7 +34,6 @@
     "@react-native-picker/picker": "2.7.5",
     "@react-native-segmented-control/segmented-control": "2.5.2",
     "@react-navigation/drawer": "^6.7.2",
-    "@react-navigation/native": "^6.1.18",
     "@shopify/flash-list": "1.6.4",
     "expo": "^51.0.39",
     "expo-asset": "~10.0.10",
