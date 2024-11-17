@@ -62,6 +62,14 @@ describe('Tests that change environment variables', () => {
   tryBuildNumber('20241003.03', 2024100303);
   tryBuildNumber('20241003.3', 2024100303);
 
+  it('should fail on Android version that would yield > 2100000000', () => {
+    process.env.BUILD_BUILDNUMBER = '21000101.02';
+
+    expect(processedConfig).toThrow(
+      new Error('Android limits version code to 2100000000'),
+    );
+  });
+
   it('adaptive-icon branding', () => {
     process.env.EXPO_APP_BRAND = 'release';
     const config = processedConfig();
