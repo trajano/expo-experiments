@@ -15,7 +15,7 @@ import {
  * Interface representing an empty context value for the DoNothing context.
  * This interface can be expanded to include any values needed by the context.
  */
-export interface DoNothing {}
+export interface DoNothing extends Record<string, unknown> {}
 
 /**
  * The DoNothingContext provides an empty context value. This is exported
@@ -27,7 +27,7 @@ export const DoNothingContext = createContext<DoNothing>({});
 /**
  * Props type for the DoNothingProvider component, which wraps its children in the DoNothingContext.
  */
-export type DoNothingProps = PropsWithChildren<{}>;
+export type DoNothingProps = PropsWithChildren<Record<string, unknown>>;
 
 /**
  * A provider component for the DoNothingContext.

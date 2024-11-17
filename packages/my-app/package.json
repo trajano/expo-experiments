@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest",
     "typecheck": "expo customize tsconfig.json && tsc --noEmit",
-    "prepare": "expo customize tsconfig.json && sb-rn-get-stories && tsc --noEmit",
+    "prepare": "expo customize tsconfig.json && sb-rn-get-stories && tsc --noEmit && expo export",
     "lint": "eslint ."
   },
   "jest": {

@@ -21,7 +21,7 @@ const StorageRowView: FC<{ item: KeyValuePair }> = ({ item }) => {
     } else {
       try {
         return JSON.stringify(JSON.parse(item[1]), null, 2);
-      } catch (e: unknown) {
+      } catch (_e: unknown) {
         return item[1];
       }
     }

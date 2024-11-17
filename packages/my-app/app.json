@@ -7,6 +7,7 @@
     "scheme": "myapp",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
+    "platforms": ["ios", "android"],
     "splash": {
       "image": "./brand/splash-light.png",
       "resizeMode": "contain",
