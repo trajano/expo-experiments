@@ -30,7 +30,9 @@ const androidVersionCode = (
   return versionCode;
 };
 
-const stripUndefinedAndEmpty = <T extends Record<string, any>>(obj: T): T => {
+const stripUndefinedAndEmpty = <T extends Record<string, any>, R = T>(
+  obj: T,
+): R => {
   return _.transform(
     obj,
     (result: Partial<T>, value, key: keyof T) => {
@@ -47,7 +49,7 @@ const stripUndefinedAndEmpty = <T extends Record<string, any>>(obj: T): T => {
       }
     },
     {} as Partial<T>,
-  ) as T;
+  ) as R;
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => {
@@ -85,7 +87,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   // Find the first existing google-services.json file
   const googleServicesFilePath = googleServicesFilePaths.find(fs.existsSync);
 
-  const toMerge = stripUndefinedAndEmpty({
+  const toMerge = stripUndefinedAndEmpty<
+    Partial<ExpoConfig> & { name: string; slug: string }
+  >({
+    ...config,
     name: (process.env.EXPO_APP_NAME ?? config.name)!,
     slug: config.slug!,
     icon: branded(config.icon),
