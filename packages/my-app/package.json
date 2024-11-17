@@ -32,11 +32,6 @@
       "./jest-setup.ts"
     ]
   },
-  "overrides": {
-    "react-native-nfc-manager": {
-      "@expo/config-plugins": "^9.0.9"
-    }
-  },
   "dependencies": {
     "@expo-google-fonts/comic-neue": "^0.2.3",
     "@expo-google-fonts/nunito": "^0.2.3",
@@ -126,7 +121,7 @@
     "react-native-my-empty": "*",
     "react-native-my-hooks": "*",
     "react-native-my-text": "*",
-    "react-native-nfc-manager": "github:trajano/react-native-nfc-manager",
+    "react-native-nfc-manager": "^3.16.0",
     "react-native-pager-view": "6.4.1",
     "react-native-qrcode-svg": "^6.3.12",
     "react-native-reanimated": "~3.16.1",

@@ -21,6 +21,11 @@
   "eslintConfig": {
     "root": true
   },
+  "overrides": {
+    "react-native-nfc-manager@3.16.0": {
+      "@expo/config-plugins": "^9.0.9"
+    }
+  },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
