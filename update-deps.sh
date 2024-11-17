@@ -1,8 +1,9 @@
 #!/bin/sh
 set -ex
-jq --argjson overrides "$(cat node_modules/expo/bundledNativeModules.json)" \
-   '.overrides = $overrides' package.json > package.json.tmp 
-mv package.json.tmp package.json
+# expo install uses another method to pull the modules when running the command
+# jq --argjson overrides "$(cat node_modules/expo/bundledNativeModules.json)" \
+#    '.overrides = $overrides' package.json > package.json.tmp
+# mv package.json.tmp package.json
 
 npx -y npm-check-updates -u
 rm -rf node_modules/ packages/*/node_modules/
