@@ -1,9 +1,10 @@
 /**
- * This is extracted as jest does not support require.context
+ * This is extracted as jest does not support require.context.
+ * Note this does not work on production builds and will return null
+ * for the export.
  */
-export const devMenuModules = require.context(
-  '.',
-  true,
-  /^.+\.devmenu\.ts$/,
-  'sync',
-);
+let modules = null;
+if (__DEV__) {
+  modules = require.context('.', true, /^.+\.devmenu\.ts$/, 'sync');
+}
+export const devMenuModules = modules;

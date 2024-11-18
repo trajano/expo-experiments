@@ -5,16 +5,15 @@ const withStorybook = require('@storybook/react-native/metro/withStorybook');
 const path = require('path');
 
 const monorepoRoot = path.resolve(__dirname, '../..');
+
 const config = getDefaultConfig(__dirname);
 
 config.watchFolders = [monorepoRoot];
-config.resolver = {
-  ...config.resolver,
-  nodeModulesPaths: [
-    path.resolve(__dirname, 'node_modules'),
-    path.resolve(monorepoRoot, 'node_modules'),
-  ],
-};
+config.resolver.nodeModulesPaths = [
+  ...config.resolver.nodeModulesPaths,
+  path.resolve(__dirname, 'node_modules'),
+  path.resolve(monorepoRoot, 'node_modules'),
+];
 const additionalAssetExts = ['lottie', 'fbx'];
 config.resolver.assetExts = [
   ...config.resolver.assetExts,
@@ -27,10 +26,10 @@ if (Array.isArray(config.resolver.blockList)) {
   config.resolver.blockList = [config.resolver.blockList, ...testRegexs];
 }
 
-config.transformer = {
-  ...config.transformer,
-  unstable_allowRequireContext: true,
-};
+config.transformer.unstable_allowRequireContext = true;
+
+// due to the nature of this project where it's playing around with packages in and out it's best to reset the cache.
+config.resetCache = true;
 
 // @ts-ignore
 module.exports = withStorybook(config, {

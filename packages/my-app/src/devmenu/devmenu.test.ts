@@ -32,9 +32,9 @@ describe('register known menu items', () => {
     ShowSiteMap: { default: ShowSiteMapDevmenu },
   };
   test('register known test', async () => {
-    jest.mocked(devMenuModules.keys).mockReturnValue(Object.keys(menuItems));
+    jest.mocked(devMenuModules!.keys).mockReturnValue(Object.keys(menuItems));
     jest
-      .mocked(devMenuModules)
+      .mocked(devMenuModules!)
       .mockImplementation((key: keyof typeof menuItems) => menuItems[key]);
     await registerDevMenuItemsAsync({ router: jest.fn() as any });
   });
