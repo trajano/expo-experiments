@@ -4,7 +4,11 @@ import { WebViewProps } from 'react-native-webview';
 import { StyleProp } from 'react-native';
 
 export type PdfErrorEventData = {
-  error: Error;
+  error: Error | unknown;
+};
+
+export type PdfPageCountEventData = {
+  pageCount: number;
 };
 
 export type PdfViewPortEventData = {
@@ -13,13 +17,26 @@ export type PdfViewPortEventData = {
   scale: number;
 };
 
+export type PdfRenderEventData = {
+  /**
+   * Data URI containing the image of the page in PNG format.  So this will start with `data:image/png;base64,`
+   */
+  imageDataUri: string;
+};
+
 export type PdfLoadEventData =
   | PdfViewPortEventData
+  | PdfPageCountEventData
+  | PdfRenderEventData
   | {
       /**
-       * Data URI containing the image of the page in PNG format.  So this will start with `data:image/png;base64,`
+       * Source URI originally provided.
        */
-      dataUri: string;
+      uri: string;
+      /**
+       * URI pointing to the image in the cache or the data URI if disk cache is not used.
+       */
+      imageUri: string;
     };
 
 export type PdfViewProps = Omit<
@@ -27,7 +44,9 @@ export type PdfViewProps = Omit<
   | 'source'
   | 'injectedJavaScriptObject'
   | 'containerStyle'
+  | 'onLoad'
   | 'style'
+  | 'cacheEnabled'
   | 'onMessage'
 > & {
   /**
@@ -44,6 +63,11 @@ export type PdfViewProps = Omit<
   scale?: number;
 
   /**
+   * Cache policy
+   */
+  cachePolicy?: ImageProps['cachePolicy'];
+
+  /**
    * URL to the pdf.js script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs. It
    * can also be an asset reference.
    */
@@ -55,7 +79,9 @@ export type PdfViewProps = Omit<
    */
   pdfWorkerJs?: string | Asset;
 
+  onPageCountKnown?: (event: PdfPageCountEventData) => void;
   onViewPortKnown?: (event: PdfViewPortEventData) => void;
+  onRender?: (event: PdfRenderEventData) => void;
   onLoad?: (event: PdfLoadEventData) => void;
   onError?: (event: PdfErrorEventData) => void;
   style?: StyleProp<ImageStyle>;

@@ -6,6 +6,10 @@ type StagePdfViewMessage = {
   type: 'stage';
   stage: string;
 };
+type PageCountPdfViewMessage = {
+  type: 'numPages';
+  numPages: number;
+};
 type ViewPortPdfViewMessage = {
   type: 'viewport';
   width: number;
@@ -19,6 +23,7 @@ type ErrorPdfViewMessage = {
 
 export type PdfWebViewMessage =
   | OkPdfViewMessage
+  | PageCountPdfViewMessage
   | StagePdfViewMessage
   | ViewPortPdfViewMessage
   | ErrorPdfViewMessage;

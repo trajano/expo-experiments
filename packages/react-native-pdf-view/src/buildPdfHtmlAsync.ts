@@ -8,9 +8,10 @@ import * as Crypto from 'expo-crypto';
 const fetchOrAssetCopyAsync = async (
   src: string | Asset,
   ext: string,
+  cacheEnabled: boolean,
 ): Promise<string> => {
   if (typeof src === 'string') {
-    return fetchCachedFileAsync(src, ext);
+    return fetchCachedFileAsync(src, ext, cacheEnabled);
   } else {
     const downloadedAsset = await src.downloadAsync();
     return downloadedAsset.localUri!;
@@ -19,6 +20,7 @@ const fetchOrAssetCopyAsync = async (
 export const buildPdfHtmlAsync = async (
   pdfJs: string | Asset,
   pdfWorkerJs: string | Asset,
+  cacheEnabled: boolean,
 ): Promise<string> => {
   const filename = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
@@ -30,15 +32,15 @@ export const buildPdfHtmlAsync = async (
   );
   const pdfHtmlUri = `${FileSystem.cacheDirectory}${filename}.html`;
   const htmlFileInfo = await FileSystem.getInfoAsync(pdfHtmlUri);
-  if (htmlFileInfo.exists) {
+  if (htmlFileInfo.exists && cacheEnabled) {
     return await FileSystem.readAsStringAsync(pdfHtmlUri, {
       encoding: EncodingType.UTF8,
     });
   }
 
   const [pdfJsUri, pdfWorkerJsUri] = await Promise.all([
-    fetchOrAssetCopyAsync(pdfJs, 'mjs'),
-    fetchOrAssetCopyAsync(pdfWorkerJs, 'mjs'),
+    fetchOrAssetCopyAsync(pdfJs, 'mjs', cacheEnabled),
+    fetchOrAssetCopyAsync(pdfWorkerJs, 'mjs', cacheEnabled),
   ]);
   const pdfJsCode = await FileSystem.readAsStringAsync(pdfJsUri, {
     encoding: EncodingType.UTF8,

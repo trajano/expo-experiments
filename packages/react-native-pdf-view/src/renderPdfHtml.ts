@@ -29,6 +29,10 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = ${JSON.stringify(pdfJsWorkerDataUri)};
 const renderPdfAsync = async () => {
   const stored = JSON.parse(window.ReactNativeWebView.injectedObjectJson());
   const pdfDocument = await pdfjsLib.getDocument({ data: atob(stored.data) }).promise;
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({'type': 'numPages', 'numPages': pdfDocument.numPages}),
+  );
+
   const pdfPage = await pdfDocument.getPage(stored.pageNumber);
 
   /** @type {HTMLCanvasElement} */
@@ -36,9 +40,9 @@ const renderPdfAsync = async () => {
   const viewport = pdfPage.getViewport({ scale: stored.scale });
   canvasElement.height= viewport.height;
   canvasElement.width = viewport.width;
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({'type': 'viewport', 'width': viewport.width, 'height': viewport.height, 'scale': viewport.scale}),
-    );
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({'type': 'viewport', 'width': viewport.width, 'height': viewport.height, 'scale': viewport.scale}),
+  );
 
   await pdfPage.render({
     canvasContext: canvasElement.getContext('2d'),

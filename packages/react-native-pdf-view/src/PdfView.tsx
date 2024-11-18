@@ -6,7 +6,6 @@ import { Image } from 'expo-image';
 import { fetchCachedFileAsync } from './fetchCachedFileAsync';
 import { buildPdfHtmlAsync } from './buildPdfHtmlAsync';
 import * as Crypto from 'expo-crypto';
-import _ from 'lodash';
 import { PdfViewProps } from './PdfViewProps';
 import { PdfWebViewMessage } from './PdfWebViewMessage';
 
@@ -21,8 +20,9 @@ const getInjectedJavaScriptObjectAsync = async (
   sourceUri: string,
   pageNumber: number,
   scale: number,
+  cacheEnabled: boolean,
 ): Promise<InjectedJavaScriptObject> => {
-  const uri = await fetchCachedFileAsync(sourceUri, 'pdf');
+  const uri = await fetchCachedFileAsync(sourceUri, 'pdf', cacheEnabled);
   const base64Data = await FileSystem.readAsStringAsync(uri, {
     encoding: 'base64',
   });
@@ -52,9 +52,12 @@ export const PdfView: FC<PdfViewProps> = ({
   uri,
   pageNumber = 1,
   scale = 1.0,
-  onViewPortKnown = _.noop,
-  onLoad = _.noop,
-  onError = _.noop,
+  cachePolicy = 'disk',
+  onViewPortKnown = () => {},
+  onLoad = () => {},
+  onRender = () => {},
+  onError = () => {},
+  onPageCountKnown = () => {},
   pdfJs = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs',
   pdfWorkerJs = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs',
   style,
@@ -71,12 +74,22 @@ export const PdfView: FC<PdfViewProps> = ({
   const [html, setHtml] = useState<string>('');
   const [imageDataUri, setImageDataUri] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [pageCount, setPageCount] = useState(0);
   useEffect(() => {
     let mounted = true;
     (async () => {
       const [nextInjectedJavaScriptObject, nextHtml] = await Promise.all([
-        getInjectedJavaScriptObjectAsync(uri, pageNumber, scale),
-        buildPdfHtmlAsync(pdfJs, pdfWorkerJs),
+        getInjectedJavaScriptObjectAsync(
+          uri,
+          pageNumber,
+          scale,
+          cachePolicy === 'disk' || cachePolicy === 'memory-disk',
+        ),
+        buildPdfHtmlAsync(
+          pdfJs,
+          pdfWorkerJs,
+          cachePolicy === 'disk' || cachePolicy === 'memory-disk',
+        ),
       ]);
       if (mounted) {
         setInjectedJavaScriptObject(nextInjectedJavaScriptObject);
@@ -88,7 +101,7 @@ export const PdfView: FC<PdfViewProps> = ({
     return () => {
       mounted = false;
     };
-  }, [uri, scale, pageNumber, pdfJs, pdfWorkerJs]);
+  }, [uri, cachePolicy, scale, pageNumber, pdfJs, pdfWorkerJs]);
 
   const onWebViewMessage = useCallback(
     (event: WebViewMessageEvent) => {
@@ -99,8 +112,12 @@ export const PdfView: FC<PdfViewProps> = ({
       ) {
         webviewRef.current?.reload();
       } else if (pdfViewMessage.type === 'error') {
-        onError(new Error(pdfViewMessage.error));
-        console.log(pdfViewMessage);
+        onError({ error: new Error(pdfViewMessage.error) });
+      } else if (pdfViewMessage.type === 'numPages') {
+        setPageCount(pdfViewMessage.numPages);
+        onPageCountKnown({
+          pageCount: pdfViewMessage.numPages,
+        });
       } else if (pdfViewMessage.type === 'viewport') {
         setViewport({
           width: pdfViewMessage.width,
@@ -112,17 +129,14 @@ export const PdfView: FC<PdfViewProps> = ({
           height: pdfViewMessage.height,
           scale: pdfViewMessage.scale,
         });
-        console.log(pdfViewMessage);
       } else if (pdfViewMessage.type === 'ok') {
         setImageDataUri(pdfViewMessage.data);
-        console.log('OK', pdfViewMessage.data.substring(0, 40));
-        onLoad({
+        onRender({
           imageDataUri: pdfViewMessage.data,
-          ...viewport,
         });
       }
     },
-    [onViewPortKnown, onError, onLoad, viewport],
+    [onViewPortKnown, onError, onPageCountKnown, onRender],
   );
   const webviewRef = useRef<WebView>(null);
 
@@ -131,6 +145,18 @@ export const PdfView: FC<PdfViewProps> = ({
     if (!imageDataUri) {
       return;
     }
+    if (cachePolicy !== 'disk' && cachePolicy !== 'memory-disk') {
+      setImageUri(imageDataUri);
+      onLoad({
+        uri,
+        imageDataUri,
+        ...viewport,
+        pageCount,
+        imageUri: imageDataUri,
+      });
+      return;
+    }
+
     (async () => {
       try {
         const filename =
@@ -151,19 +177,40 @@ export const PdfView: FC<PdfViewProps> = ({
         );
         if (mounted) {
           setImageUri(filename);
+          onLoad({
+            uri,
+            imageDataUri,
+            ...viewport,
+            pageCount,
+            imageUri: filename,
+          });
         }
       } catch (e: unknown) {
-        onError(e);
+        onError({ error: e });
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [imageDataUri, uri, pageNumber, onError]);
+  }, [
+    imageDataUri,
+    uri,
+    pageNumber,
+    onError,
+    pageCount,
+    onLoad,
+    viewport,
+    cachePolicy,
+  ]);
 
   if (imageUri) {
-    console.log('Image');
-    return <Image source={{ uri: imageUri }} style={style} />;
+    return (
+      <Image
+        source={{ uri: imageUri }}
+        style={style}
+        cachePolicy={cachePolicy}
+      />
+    );
   } else if (injectedJavaScriptObject) {
     return (
       <WebView

@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system';
 export const fetchCachedFileAsync = async (
   sourceUri: string,
   ext: string,
+  cacheEnabled: boolean,
 ): Promise<string> => {
   if (
     sourceUri.startsWith(FileSystem.cacheDirectory!) ||
@@ -17,7 +18,7 @@ export const fetchCachedFileAsync = async (
   );
   const cachedFileUri = `${FileSystem.cacheDirectory}${filename}.${ext}`;
   const download = await FileSystem.downloadAsync(sourceUri, cachedFileUri, {
-    cache: true,
+    cache: cacheEnabled,
   });
   if (download.status === 200) {
     return download.uri;
