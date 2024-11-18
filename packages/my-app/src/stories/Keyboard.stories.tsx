@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { FC, useEffect, useState } from 'react';
-import { Keyboard, StyleSheet } from 'react-native';
+import { Keyboard, StyleSheet, Switch } from 'react-native';
 import { MyText as Text, MyTextInput as TextInput } from 'react-native-my-text';
 
 const KeyboardSample: FC = () => {
@@ -20,6 +20,8 @@ const KeyboardSample: FC = () => {
       hideSubscription.remove();
     };
   }, []);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   return (
     <>
@@ -29,15 +31,22 @@ const KeyboardSample: FC = () => {
         onSubmitEditing={Keyboard.dismiss}
       />
       <Text style={style.status}>{keyboardStatus}</Text>
+      <Switch
+        trackColor={{ false: '#767577', true: '#81b0ff' }}
+        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={toggleSwitch}
+        value={isEnabled}
+      />
     </>
   );
 };
 
 const meta: Meta<typeof KeyboardSample> = {
-  title: 'Keyboard',
+  title: 'Keyboard and Switch',
   component: KeyboardSample,
   parameters: {
-    notes: 'Nothing.',
+    notes: 'Tests React Native Keyboard and Switch',
   },
 };
 
