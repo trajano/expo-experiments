@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { FC, useEffect, useState } from 'react';
-import { Keyboard, StyleSheet, Switch } from 'react-native';
+import {
+  ActivityIndicator,
+  Keyboard,
+  StyleSheet,
+  Switch,
+  View,
+} from 'react-native';
 import { MyText as Text, MyTextInput as TextInput } from 'react-native-my-text';
 
 const KeyboardSample: FC = () => {
@@ -38,15 +44,21 @@ const KeyboardSample: FC = () => {
         onValueChange={toggleSwitch}
         value={isEnabled}
       />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <ActivityIndicator />
+        <ActivityIndicator size="large" />
+        <ActivityIndicator size="small" color="#0000ff" />
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>
     </>
   );
 };
 
 const meta: Meta<typeof KeyboardSample> = {
-  title: 'Keyboard and Switch',
+  title: 'Keyboard and etc',
   component: KeyboardSample,
   parameters: {
-    notes: 'Tests React Native Keyboard and Switch',
+    notes: 'Tests React Native Keyboard and Switch and Activity Indicator',
   },
 };
 
