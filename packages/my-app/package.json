@@ -24,6 +24,7 @@
     "@expo-google-fonts/comic-neue": "^0.2.3",
     "@expo-google-fonts/nunito": "^0.2.3",
     "@expo/vector-icons": "^14.0.4",
+    "@gorhom/bottom-sheet": "^5.0.5 <=5.0.5 || >5.0.6",
     "@hookform/resolvers": "^3.9.1",
     "@notifee/react-native": "^9.1.2",
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -124,7 +125,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@gorhom/bottom-sheet": "^5.0.5",
     "@storybook/addon-ondevice-actions": "^8.4.2",
     "@storybook/addon-ondevice-backgrounds": "^8.4.2",
     "@storybook/addon-ondevice-controls": "^8.4.2",
