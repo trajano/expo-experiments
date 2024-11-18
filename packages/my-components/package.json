@@ -30,7 +30,8 @@
     "react-dom": "*",
     "react-native": "*",
     "react-native-file-viewer": "*",
-    "react-native-my-text": "*"
+    "react-native-my-text": "*",
+    "react-native-unistyles": "*"
   },
   "jest": {
     "preset": "jest-expo",
