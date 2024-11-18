@@ -6,14 +6,18 @@ export const renderPdfHtml = (
 <!DOCTYPE html>
 <html lang="${locale}">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body, html { margin: 0; padding: 0; background-color: red;}
-body {
- display: flex;
- flex-direction: column;
+body, html {
+  margin: 0; padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 canvas {
-  flex: 1;
+  display: block;
+  max-width: 100%;
+  height: auto;
  }
 </style>
 <script type="module">

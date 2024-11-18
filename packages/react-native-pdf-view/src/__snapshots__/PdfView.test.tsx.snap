@@ -3,11 +3,6 @@
 exports[`PdfView renders MyResume story 1`] = `
 <View
   cacheEnabled={false}
-  containerStyle={
-    {
-      "aspectRatio": 0.5622188905547226,
-    }
-  }
   domStorageEnabled={false}
   injectedJavaScriptObject={
     {
@@ -37,11 +32,6 @@ exports[`PdfView renders MyResume story 1`] = `
 exports[`PdfView renders a file URI 1`] = `
 <View
   cacheEnabled={false}
-  containerStyle={
-    {
-      "aspectRatio": 0.5622188905547226,
-    }
-  }
   domStorageEnabled={false}
   injectedJavaScriptObject={
     {
@@ -65,14 +55,18 @@ exports[`PdfView renders a file URI 1`] = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body, html { margin: 0; padding: 0; background-color: red;}
-body {
- display: flex;
- flex-direction: column;
+body, html {
+  margin: 0; padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 canvas {
-  flex: 1;
+  display: block;
+  max-width: 100%;
+  height: auto;
  }
 </style>
 <script type="module">

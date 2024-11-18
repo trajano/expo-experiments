@@ -22,7 +22,11 @@ export const buildPdfHtmlAsync = async (
 ): Promise<string> => {
   const filename = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
-    JSON.stringify({ pdfJs, pdfWorkerJs }),
+    JSON.stringify({
+      pdfJs,
+      pdfWorkerJs,
+      render: renderPdfHtml('', ''),
+    }),
   );
   const pdfHtmlUri = `${FileSystem.cacheDirectory}${filename}.html`;
   const htmlFileInfo = await FileSystem.getInfoAsync(pdfHtmlUri);

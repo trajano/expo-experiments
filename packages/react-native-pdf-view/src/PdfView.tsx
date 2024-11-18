@@ -1,52 +1,14 @@
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import * as FileSystem from 'expo-file-system';
 import { EncodingType } from 'expo-file-system';
 import { Image } from 'expo-image';
-import {
-  Dimensions,
-  StyleProp,
-  StyleSheet,
-  ViewProps,
-  ViewStyle,
-} from 'react-native';
-import { Asset } from 'expo-asset';
 import { fetchCachedFileAsync } from './fetchCachedFileAsync';
 import { buildPdfHtmlAsync } from './buildPdfHtmlAsync';
 import * as Crypto from 'expo-crypto';
-
-export type PdfViewProps = Omit<
-  ViewProps,
-  | 'source'
-  | 'injectedJavaScriptObject'
-  | 'originWhitelist'
-  | 'onMessage'
-  | 'onContentProcessDidTerminate'
-> & {
-  /**
-   * URI to the PDF.
-   */
-  uri: string;
-  /**
-   * Page number of PDF to render. Defaults to 1.
-   */
-  pageNumber?: number;
-  /**
-   * Scale factor for the PDF.  The higher the number the sharper the text.  Defaults to 1.0
-   */
-  scale?: number;
-  onMessage?: (message: PdfViewMessage) => void;
-  /**
-   * URL to the pdf.js script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs. It
-   * can also be an asset reference.
-   */
-  pdfJs?: string | Asset;
-  /**
-   * URL to the pdf.js worker script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs.  It
-   * can also be an asset reference.
-   */
-  pdfWorkerJs?: string | Asset;
-};
+import _ from 'lodash';
+import { PdfViewProps } from './PdfViewProps';
+import { PdfWebViewMessage } from './PdfWebViewMessage';
 
 type InjectedJavaScriptObject = {
   /** base 64 data of PDF */
@@ -66,38 +28,15 @@ const getInjectedJavaScriptObjectAsync = async (
   });
   return { data: base64Data, pageNumber, scale };
 };
-
-type OkPdfViewMessage = {
-  type: 'ok';
-  data: string;
-};
-type StagePdfViewMessage = {
-  type: 'stage';
-  stage: string;
-};
-type ViewPortPdfViewMessage = {
-  type: 'viewport';
-  width: number;
-  height: number;
-  scale: number;
-};
-type ErrorPdfViewMessage = {
-  type: 'error';
-  error: string;
-};
-
 type ViewPortInfo = {
   width: number;
   height: number;
   scale: number;
 };
-export type PdfViewMessage =
-  | OkPdfViewMessage
-  | StagePdfViewMessage
-  | ViewPortPdfViewMessage
-  | ErrorPdfViewMessage;
-const convertToPdfViewMessage = (messageFromWebView: string): PdfViewMessage =>
-  JSON.parse(messageFromWebView);
+
+const convertToPdfWebViewMessage = (
+  messageFromWebView: string,
+): PdfWebViewMessage => JSON.parse(messageFromWebView);
 
 /**
  * This renders a PDF page using pdf.js inside a web view.
@@ -113,7 +52,9 @@ export const PdfView: FC<PdfViewProps> = ({
   uri,
   pageNumber = 1,
   scale = 1.0,
-  onMessage,
+  onViewPortKnown = _.noop,
+  onLoad = _.noop,
+  onError = _.noop,
   pdfJs = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs',
   pdfWorkerJs = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs',
   style,
@@ -124,8 +65,8 @@ export const PdfView: FC<PdfViewProps> = ({
   >(undefined);
   const [viewport, setViewport] = useState<ViewPortInfo>({
     scale,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: 0,
+    height: 0,
   });
   const [html, setHtml] = useState<string>('');
   const [imageDataUri, setImageDataUri] = useState<string | null>(null);
@@ -140,6 +81,7 @@ export const PdfView: FC<PdfViewProps> = ({
       if (mounted) {
         setInjectedJavaScriptObject(nextInjectedJavaScriptObject);
         setHtml(nextHtml);
+        setImageDataUri(null);
         setImageUri(null);
       }
     })();
@@ -150,35 +92,39 @@ export const PdfView: FC<PdfViewProps> = ({
 
   const onWebViewMessage = useCallback(
     (event: WebViewMessageEvent) => {
-      const pdfViewMessage = convertToPdfViewMessage(event.nativeEvent.data);
+      const pdfViewMessage = convertToPdfWebViewMessage(event.nativeEvent.data);
       if (
         pdfViewMessage.type === 'error' &&
         pdfViewMessage.error === 'no data'
       ) {
         webviewRef.current?.reload();
-      } else if (pdfViewMessage.type === 'viewport') {
+      } else if (pdfViewMessage.type === 'error') {
+        onError(new Error(pdfViewMessage.error));
         console.log(pdfViewMessage);
+      } else if (pdfViewMessage.type === 'viewport') {
         setViewport({
           width: pdfViewMessage.width,
           height: pdfViewMessage.height,
           scale: pdfViewMessage.scale,
         });
+        onViewPortKnown({
+          width: pdfViewMessage.width,
+          height: pdfViewMessage.height,
+          scale: pdfViewMessage.scale,
+        });
+        console.log(pdfViewMessage);
       } else if (pdfViewMessage.type === 'ok') {
         setImageDataUri(pdfViewMessage.data);
-      } else if (onMessage) {
-        onMessage(pdfViewMessage);
+        console.log('OK', pdfViewMessage.data.substring(0, 40));
+        onLoad({
+          imageDataUri: pdfViewMessage.data,
+          ...viewport,
+        });
       }
     },
-    [onMessage],
+    [onViewPortKnown, onError, onLoad, viewport],
   );
   const webviewRef = useRef<WebView>(null);
-
-  const aspectRatio = useMemo(() => {
-    return viewport.width / viewport.height;
-  }, [viewport]);
-  const viewStyle = useMemo<StyleProp<ViewStyle>>(() => {
-    return StyleSheet.compose(style, { aspectRatio });
-  }, [style, aspectRatio]);
 
   useEffect(() => {
     let mounted = true;
@@ -186,39 +132,38 @@ export const PdfView: FC<PdfViewProps> = ({
       return;
     }
     (async () => {
-      const filename =
-        FileSystem.cacheDirectory +
-        (await Crypto.digestStringAsync(
-          Crypto.CryptoDigestAlgorithm.SHA256,
-          JSON.stringify(uri),
-        )) +
-        pageNumber +
-        '.png';
+      try {
+        const filename =
+          FileSystem.cacheDirectory +
+          (await Crypto.digestStringAsync(
+            Crypto.CryptoDigestAlgorithm.SHA256,
+            JSON.stringify(uri),
+          )) +
+          pageNumber +
+          '.png';
 
-      await FileSystem.writeAsStringAsync(
-        filename,
-        imageDataUri.substring('data:image/png;base64,'.length),
-        {
-          encoding: EncodingType.Base64,
-        },
-      );
-      if (mounted) {
-        setImageUri(filename);
+        await FileSystem.writeAsStringAsync(
+          filename,
+          imageDataUri.substring('data:image/png;base64,'.length),
+          {
+            encoding: EncodingType.Base64,
+          },
+        );
+        if (mounted) {
+          setImageUri(filename);
+        }
+      } catch (e: unknown) {
+        onError(e);
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [imageDataUri, uri, pageNumber]);
+  }, [imageDataUri, uri, pageNumber, onError]);
 
   if (imageUri) {
-    return (
-      <Image
-        source={{ uri: imageUri }}
-        contentFit={'contain'}
-        style={style as any}
-      />
-    );
+    console.log('Image');
+    return <Image source={{ uri: imageUri }} style={style} />;
   } else if (injectedJavaScriptObject) {
     return (
       <WebView
@@ -233,10 +178,11 @@ export const PdfView: FC<PdfViewProps> = ({
         javaScriptEnabled={true}
         domStorageEnabled={false}
         scrollEnabled={false}
-        containerStyle={viewStyle}
+        containerStyle={style}
       />
     );
   } else {
+    console.log('WTF');
     return null;
   }
 };
