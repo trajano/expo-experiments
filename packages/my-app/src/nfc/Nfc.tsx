@@ -10,6 +10,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 import NfcManager, { NfcTech, TagEvent } from 'react-native-nfc-manager';
 
@@ -18,8 +19,14 @@ import NfcManager, { NfcTech, TagEvent } from 'react-native-nfc-manager';
  * This interface can be expanded to include any values needed by the context.
  */
 export interface Nfc {
-  nfcManager: typeof NfcManager;
-  getTagAsync: (...tech: NfcTech[]) => Promise<TagEvent | null>;
+  nfcManager: typeof NfcManager | null;
+  getTagAsync: (
+    /**
+     * Alert message, set it to an empty string to use the default
+     */
+    alertMessage: string,
+    ...tech: NfcTech[]
+  ) => Promise<TagEvent | null>;
 }
 
 /**
@@ -28,7 +35,7 @@ export interface Nfc {
  * is used.
  */
 export const NfcContext = createContext<Nfc>({
-  nfcManager: NfcManager,
+  nfcManager: null,
   getTagAsync: () => Promise.reject(new Error('uninitialized context')),
 });
 
@@ -44,27 +51,48 @@ export type NfcProps = PropsWithChildren;
  * @returns A provider that passes an empty value to all of its children.
  */
 export const NfcProvider: FC<NfcProps> = ({ children }) => {
-  const getTagAsync = useCallback(async (...nfcTechs: NfcTech[]) => {
-    try {
-      await NfcManager.requestTechnology(nfcTechs);
-      return NfcManager.getTag();
-    } finally {
-      await NfcManager.cancelTechnologyRequest();
-    }
-  }, []);
+  const [nfcManager, setNfcManager] = useState<typeof NfcManager | null>(null);
+  const getTagAsync = useCallback(
+    async (alertMessage = '', ...nfcTechs: NfcTech[]) => {
+      if (!nfcManager) {
+        throw new Error('NFC not available');
+      }
+      try {
+        await nfcManager.requestTechnology(
+          nfcTechs,
+          alertMessage ? { alertMessage } : {},
+        );
+        return nfcManager.getTag();
+      } finally {
+        await nfcManager.cancelTechnologyRequest();
+      }
+    },
+    [nfcManager],
+  );
   const value = useMemo<Nfc>(
     () => ({
-      nfcManager: NfcManager,
+      nfcManager,
       getTagAsync,
     }),
-    [getTagAsync],
+    [getTagAsync, nfcManager],
   );
 
   useEffect(() => {
+    let mounted = true;
     (async () => {
-      await NfcManager.start();
+      const deviceIsSupported = await NfcManager.isSupported();
+      if (deviceIsSupported) {
+        await NfcManager.start();
+        if (mounted) {
+          setNfcManager(NfcManager);
+        }
+      }
     })();
+    return () => {
+      mounted = false;
+    };
   }, []);
+
   return <NfcContext.Provider value={value}>{children}</NfcContext.Provider>;
 };
 

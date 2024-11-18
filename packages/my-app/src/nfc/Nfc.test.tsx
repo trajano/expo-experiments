@@ -1,4 +1,4 @@
-import { render, renderHook, screen } from '@testing-library/react-native';
+import { act, render, renderHook, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { NfcContext, NfcProvider, useNfc, WithNfc } from './Nfc';
 import { FC, PropsWithChildren } from 'react';
@@ -16,6 +16,8 @@ describe('Nfc', () => {
         <TestComponent />
       </NfcProvider>,
     );
+    await act(() => Promise.resolve());
+
     expect(screen.getByTestId('props').props.children).toStrictEqual(
       JSON.stringify({ nfcManager: {} }),
     );
@@ -23,8 +25,9 @@ describe('Nfc', () => {
   });
 
   it('Use Hook', async () => {
+    const nfcManager = jest.fn() as any;
     let value = {
-      nfcManager: jest.fn() as any,
+      nfcManager: nfcManager,
       getTagAsync: jest.fn(),
     };
     const wrapper = ({ children }: PropsWithChildren) => {
@@ -39,6 +42,8 @@ describe('Nfc', () => {
   it('Use HoC', async () => {
     const TestedComponent = WithNfc(TestComponent);
     render(<TestedComponent />);
+    await act(() => Promise.resolve());
+
     expect(screen.getByTestId('props').props.children).toStrictEqual(
       JSON.stringify({ nfcManager: {} }),
     );

@@ -15,7 +15,6 @@ import { WithNotifications } from 'react-native-my-hooks';
 
 import 'react-native-reanimated';
 import { registerDevMenuItemsAsync } from '@/devmenu';
-import { WithNfc } from '@/nfc';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -52,8 +51,8 @@ export type MyAppUserPreferences = {
   count: number;
 };
 // with load guard?
-const CompositeApp = WithNfc(
-  WithMyBackgroundFetch(WithUserPreferences(WithNotifications(RootLayout))),
+const CompositeApp = WithMyBackgroundFetch(
+  WithUserPreferences(WithNotifications(RootLayout)),
 );
 const MyApp = () => (
   <CompositeApp
