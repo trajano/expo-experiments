@@ -63,6 +63,7 @@ The following tools were evaluated but eventually replaced:
 - **[Bun](https://bun.sh/)**: Discontinued due to file-locking issues on Windows.
 - **[Lefthook](https://github.com/evilmartians/lefthook)**: Originally used but replaced with [Husky](https://typicode.github.io/husky) and [lint-staged](https://github.com/okonet/lint-staged) for simplicity.
 - **[create-react-native-library](https://github.com/callstack/react-native-builder-bob)**: Dropped due to its complexity and a preference for more streamlined approaches.
+- **[expo-module-scripts](https://www.npmjs.com/package/expo-module-scripts)**: Does not work in Windows. https://github.com/expo/expo/issues/30897
 
 ## Shell Scripts
 
