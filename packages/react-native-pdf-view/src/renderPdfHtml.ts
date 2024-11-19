@@ -10,14 +10,9 @@ export const renderPdfHtml = (
 <style>
 body, html {
   margin: 0; padding: 0;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
 }
 canvas {
-  display: block;
-  max-width: 100%;
-  height: auto;
+  width: 100%;
  }
 </style>
 <script type="module">
@@ -52,40 +47,34 @@ const renderPdfAsync = async () => {
   return { 'type': 'ok', 'data': canvasElement.toDataURL('image/png') };
 };
 window.onload = () => {
-  window.ReactNativeWebView.postMessage(
-    JSON.stringify({'type': 'stage', 'stage':'loaded', 'json': !!window.ReactNativeWebView.injectedObjectJson}),
-  );
-  if (window.ReactNativeWebView.injectedObjectJson && window.ReactNativeWebView.injectedObjectJson()) {
+  if (!(window.ReactNativeWebView.injectedObjectJson && window.ReactNativeWebView.injectedObjectJson())){
     window.ReactNativeWebView.postMessage(
-      JSON.stringify({'type': 'stage', 'stage': 'data injected: ' + window.ReactNativeWebView.injectedObjectJson().substring(0,40)}),
+      JSON.stringify({'type': 'nodata'}),
     );
-    renderPdfAsync()
-      .then(
-        (message) => {
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify(message),
-          );
-        },
-      )
-      .catch(
-        (error) => {
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify(
-              {
-                'type': 'error',
-                'error': error.message ?? error,
-              },
-            ),
-          );
-        },
-      );
-    return true;
-  } else {
-  window.ReactNativeWebView.postMessage(
-    JSON.stringify({'type': 'error', 'error':'no data'}),
-  );
     return true;
   }
+  renderPdfAsync()
+    .then(
+      (message) => {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify(message),
+        );
+      },
+    )
+    .catch(
+      (error) => {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify(
+            {
+              'type': 'error',
+              'error': error.message ?? error,
+              'where': 'renderPdfAsync'
+            },
+          ),
+        );
+      },
+    );
+  return true;
 };
 </script>
 </head>

@@ -23,7 +23,7 @@ const RemoteImageScreen: FC = () => {
         aspectRatio: source.width / source.height,
       };
     }
-  }, [source]);
+  }, [source, windowDimensions.width]);
   return (
     <Image
       source={{

@@ -2,6 +2,9 @@ type OkPdfViewMessage = {
   type: 'ok';
   data: string;
 };
+type NoDataPdfViewMessage = {
+  type: 'nodata';
+};
 type StagePdfViewMessage = {
   type: 'stage';
   stage: string;
@@ -19,9 +22,11 @@ type ViewPortPdfViewMessage = {
 type ErrorPdfViewMessage = {
   type: 'error';
   error: string;
+  where?: string;
 };
 
 export type PdfWebViewMessage =
+  | NoDataPdfViewMessage
   | OkPdfViewMessage
   | PageCountPdfViewMessage
   | StagePdfViewMessage

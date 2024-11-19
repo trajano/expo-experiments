@@ -5,6 +5,7 @@ import { StyleProp } from 'react-native';
 
 export type PdfErrorEventData = {
   error: Error | unknown;
+  where?: string;
 };
 
 export type PdfPageCountEventData = {
@@ -65,24 +66,24 @@ export type PdfViewProps = Omit<
   /**
    * Cache policy
    */
-  cachePolicy?: ImageProps['cachePolicy'];
+  // cachePolicy?: ImageProps['cachePolicy'];
 
   /**
-   * URL to the pdf.js script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs. It
+   * Asset pointing to the pdf.js script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs. It
    * can also be an asset reference.
    */
-  pdfJs?: string | Asset;
+  pdfJs?: Asset;
 
   /**
-   * URL to the pdf.js worker script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs.  It
+   * Asset pointing to the pdf.js worker script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs.  It
    * can also be an asset reference.
    */
-  pdfWorkerJs?: string | Asset;
+  pdfWorkerJs?: Asset;
 
   onPageCountKnown?: (event: PdfPageCountEventData) => void;
   onViewPortKnown?: (event: PdfViewPortEventData) => void;
   onRender?: (event: PdfRenderEventData) => void;
-  onLoad?: (event: PdfLoadEventData) => void;
+  // onLoad?: (event: PdfLoadEventData) => void;
   onError?: (event: PdfErrorEventData) => void;
   style?: StyleProp<ImageStyle>;
 };
