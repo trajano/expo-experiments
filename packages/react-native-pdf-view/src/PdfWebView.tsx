@@ -96,11 +96,11 @@ export const PdfWebView: FC<
       try {
         const [pdfJsCode, pdfWorkerBase64Code] = await Promise.all([
           FileSystem.readAsStringAsync(
-            (await pdfJsAsset.downloadAsync()).localUri,
+            (await pdfJsAsset.downloadAsync()).localUri!,
             { encoding: 'utf8' },
           ),
           FileSystem.readAsStringAsync(
-            (await pdfWorkerJsAsset.downloadAsync()).localUri,
+            (await pdfWorkerJsAsset.downloadAsync()).localUri!,
             { encoding: 'base64' },
           ),
         ]);
