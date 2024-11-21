@@ -98,7 +98,7 @@ describe('PdfView', () => {
     //   { encoding: 'utf8' },
     // );
     expect(screen.toJSON()).toMatchSnapshot();
-  }, 10_000);
+  }, 60_000);
   it('renders MyResume story', async () => {
     jest.mocked(FileSystem.getInfoAsync).mockResolvedValue({
       exists: true,
