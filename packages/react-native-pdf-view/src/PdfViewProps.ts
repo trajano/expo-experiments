@@ -4,7 +4,7 @@ import { WebViewProps } from 'react-native-webview';
 import { StyleProp } from 'react-native';
 
 export type PdfErrorEventData = {
-  error: Error | unknown;
+  error: unknown;
   where?: string;
 };
 
