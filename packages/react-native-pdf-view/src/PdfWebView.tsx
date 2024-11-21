@@ -61,11 +61,11 @@ export const PdfWebView: FC<
           where: pdfViewMessage.where,
         });
       } else if (pdfViewMessage.type === 'numPages') {
-        onPageCountKnown!({
+        onPageCountKnown({
           pageCount: pdfViewMessage.numPages,
         });
       } else if (pdfViewMessage.type === 'viewport') {
-        onViewPortKnown!({
+        onViewPortKnown({
           width: pdfViewMessage.width,
           height: pdfViewMessage.height,
           scale: pdfViewMessage.scale,
