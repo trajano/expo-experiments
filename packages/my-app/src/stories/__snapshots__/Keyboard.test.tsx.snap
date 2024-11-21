@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`simple story test 1`] = `
+[
+  <TextInput
+    onSubmitEditing={[Function]}
+    placeholder="Click here…"
+    style={
+      {
+        "borderRadius": 4,
+        "borderWidth": 0.5,
+        "fontFamily": undefined,
+        "fontStyle": undefined,
+        "fontWeight": undefined,
+        "lineHeight": undefined,
+        "padding": 10,
+      }
+    }
+  />,
+  <Text
+    style={
+      {
+        "fontFamily": undefined,
+        "fontStyle": undefined,
+        "fontWeight": undefined,
+        "lineHeight": undefined,
+        "padding": 16,
+        "textAlign": "center",
+      }
+    }
+  >
+    Keyboard Hidden
+  </Text>,
+  <RCTSwitch
+    accessibilityRole="switch"
+    onChange={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    onTintColor="#81b0ff"
+    style={
+      [
+        {
+          "height": 31,
+          "width": 51,
+        },
+        {
+          "backgroundColor": "#3e3e3e",
+          "borderRadius": 16,
+        },
+      ]
+    }
+    thumbTintColor="#f4f3f4"
+    tintColor="#767577"
+    value={false}
+  />,
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "justifyContent": "space-evenly",
+      }
+    }
+  >
+    <ActivityIndicator />
+    <ActivityIndicator
+      size="large"
+    />
+    <ActivityIndicator
+      color="#0000ff"
+      size="small"
+    />
+    <ActivityIndicator
+      color="#00ff00"
+      size="large"
+    />
+  </View>,
+]
+`;
