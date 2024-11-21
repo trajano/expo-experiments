@@ -7,18 +7,20 @@ const samples = [
   'https://trajano.net/assets/Archimedes%20Trajano.pdf',
   'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/examples/learning/helloworld.pdf',
   'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-  'http://samples.leanpub.com/thereactnativebook-sample.pdf',
+  'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
+  'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf',
+  'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-with-images.pdf',
 ];
 
 const ResumeScreen: FC = () => {
   const [uri, setUri] = useState(
-    'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf',
+    'https://trajano.net/assets/Archimedes%20Trajano.pdf',
   );
   const windowDimensions = useWindowDimensions();
-  const [viewWidth, setViewWidth] = useState(0);
-  const [viewHeight, setViewHeight] = useState(0);
+  const [pdfWidth, setPdfWidth] = useState(0);
+  const [pdfHeight, setPdfHeight] = useState(0);
   const viewDimensions = useMemo<ImageStyle>(() => {
-    if (viewWidth === 0 || viewHeight === 0) {
+    if (pdfWidth === 0 || pdfHeight === 0) {
       return {
         width: windowDimensions.width,
         height: 1,
@@ -26,18 +28,18 @@ const ResumeScreen: FC = () => {
     } else {
       return {
         width: windowDimensions.width,
-        height: (windowDimensions.width / viewWidth) * viewHeight,
+        height: (windowDimensions.width / pdfWidth) * pdfHeight,
       };
     }
-  }, [windowDimensions.width, viewWidth, viewHeight]);
+  }, [windowDimensions.width, pdfWidth, pdfHeight]);
   const handleViewPortKnown = useCallback(
     (
       _numberOfPages: number,
       _path: string,
       size: { height: number; width: number },
     ) => {
-      setViewWidth(size.width);
-      setViewHeight(size.height);
+      setPdfWidth(size.width);
+      setPdfHeight(size.height);
     },
     [],
   );
@@ -55,6 +57,8 @@ const ResumeScreen: FC = () => {
           console.error(error);
         }}
         style={viewDimensions}
+        fitPolicy={0}
+        progressContainerStyle={viewDimensions}
       />
       <Button title={uri} onPress={flip} />
     </View>
