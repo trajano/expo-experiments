@@ -80,7 +80,6 @@ export const PdfWebView: FC<
   );
 
   useEffect(() => {
-    console.log('setHtmlEffect');
     // set the HTML
     let mounted = true;
     const pdfJsAsset =
@@ -122,7 +121,6 @@ export const PdfWebView: FC<
   }, [pdfJs, pdfWorkerJs, onError]);
 
   useEffect(() => {
-    console.log('setInjectedJavascriptObject', pageNumber);
     // set the Injected Javascript Object
     let mounted = true;
 
@@ -142,13 +140,6 @@ export const PdfWebView: FC<
     };
   }, [uri, scale, pageNumber]);
 
-  console.log(
-    'X',
-    style,
-    onWebViewMessage,
-    injectedJavaScriptObject?.pageNumber,
-    injectedJavaScriptObject?.data?.substring(0, 50),
-  );
   if (!html || !injectedJavaScriptObject) {
     return null;
   }
