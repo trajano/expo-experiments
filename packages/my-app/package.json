@@ -19,6 +19,21 @@
       "./jest-setup.ts"
     ]
   },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "expo-background-fetch",
+          "react-native-file-viewer",
+          "react-native-fs",
+          "react-native-i18n",
+          "react-native-nfc-manager",
+          "react-native-pdf-view"
+        ],
+        "listUnknownPackages": false
+      }
+    }
+  },
   "dependencies": {
     "@expo-google-fonts/comic-neue": "^0.2.3",
     "@expo-google-fonts/nunito": "^0.2.3",
@@ -33,7 +48,7 @@
     "@react-native-masked-view/masked-view": "0.3.2",
     "@react-native-picker/picker": "2.9.0",
     "@react-native-segmented-control/segmented-control": "2.5.4",
-    "@react-navigation/drawer": "^7.0.0 <=7.0.0",
+    "@react-navigation/drawer": "^7.0.0",
     "@shopify/flash-list": "1.7.1",
     "expo": "^52.0.10",
     "expo-asset": "~11.0.1",
@@ -116,7 +131,7 @@
     "react-native-qrcode-svg": "^6.3.12",
     "react-native-reanimated": "~3.16.2",
     "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.1.0 <= 4.1.0",
+    "react-native-screens": "^4.0.0",
     "react-native-sticky-parallax-header": "^1.1.1",
     "react-native-svg": "15.8.0",
     "react-native-try-catch": "*",
