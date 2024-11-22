@@ -1,7 +1,8 @@
-import { useRouter, useFocusEffect } from 'expo-router';
 import * as ComicNeue from '@expo-google-fonts/comic-neue';
 import * as Nunito from '@expo-google-fonts/nunito';
 import { isDevelopmentBuild } from 'expo-dev-client';
+import { useFocusEffect, useRouter } from 'expo-router';
+import * as Updates from 'expo-updates';
 import LottieView from 'lottie-react-native';
 import {
   FC,
@@ -11,11 +12,9 @@ import {
   useRef,
   useState,
 } from 'react';
-import * as Updates from 'expo-updates';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 // Use MyTextE to ensure the embedded versions of the font are used
 import { MyTextE as MyText, useExpoGoogleFonts } from 'react-native-my-text';
-import { useFonts } from 'expo-font';
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 const LoaderScreen: FC = () => {
@@ -23,21 +22,13 @@ const LoaderScreen: FC = () => {
   const router = useRouter();
   const progress = useRef(new Animated.Value(0)).current; // Animated value to control progress
   const [loadedItems, incrementLoadedItems] = useReducer((i) => i + 1, 0);
-  const totalItemsToLoad = 5;
+  const totalItemsToLoad = 4;
   const [backgroundColor, setBackgroundColor] = useState('#eee');
   const [shown, setShown] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  const [loaded] = useFonts({
-    SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
-  });
   const [expoFontsLoaded] = useExpoGoogleFonts(Nunito, ComicNeue);
 
-  useEffect(() => {
-    if (loaded) {
-      incrementLoadedItems();
-    }
-  }, [loaded]);
   useEffect(() => {
     if (expoFontsLoaded) {
       incrementLoadedItems();
