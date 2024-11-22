@@ -15,7 +15,9 @@ RUN --mount=type=cache,target=/root/.android/cache \
   yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --install \
   "platform-tools" \
   "build-tools;34.0.0" \
+  "build-tools;35.0.0" \
   "platforms;android-34" \
+  "platforms;android-35" \
   "ndk;25.1.8937393" \
   "ndk;26.1.10909125" \
   "ndk;26.3.11579264" \
