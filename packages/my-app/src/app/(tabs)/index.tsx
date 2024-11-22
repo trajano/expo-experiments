@@ -1,4 +1,6 @@
 import { VibrateButton } from '@/components/VibrateButton';
+import { sharePushCurlCommandAsync } from '@/notifications';
+import { openMenu } from 'expo-dev-client';
 import { useRouter } from 'expo-router';
 import { FC, useCallback, useReducer } from 'react';
 import {
@@ -17,8 +19,6 @@ import {
 } from 'react-native-my-components';
 import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText, Strong } from 'react-native-my-text';
-import { sharePushCurlCommandAsync } from '@/notifications';
-import { DevMenu } from 'expo-dev-client';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -79,7 +79,7 @@ const HomeScreen: FC = () => {
           testID="open-dev-menu"
           onPress={() => {
             if (__DEV__) {
-              DevMenu.openMenu();
+              openMenu();
             }
           }}
           disabled={!__DEV__}

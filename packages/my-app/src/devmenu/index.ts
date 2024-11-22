@@ -1,4 +1,4 @@
-import { DevMenu } from 'expo-dev-client';
+import { registerDevMenuItems } from 'expo-dev-client';
 import { DevMenuItemModule, RegisterDevMenuItemProps } from '@/devmenu/types';
 import { devMenuModules } from './requireContext';
 
@@ -23,6 +23,6 @@ export const registerDevMenuItemsAsync = async (
         },
         shouldCollapse: true,
       }));
-    await DevMenu.registerDevMenuItems(expoDevMenuItems);
+    await registerDevMenuItems(expoDevMenuItems);
   }
 };

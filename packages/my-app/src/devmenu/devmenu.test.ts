@@ -12,9 +12,7 @@ jest.mock('@/devmenu/requireContext', () => {
   return { devMenuModules };
 });
 jest.mock('expo-dev-client', () => ({
-  DevMenu: {
-    registerDevMenuItems: jest.fn(),
-  },
+  registerDevMenuItems: jest.fn(),
 }));
 
 test('nothing registered', async () => {

@@ -12,6 +12,8 @@ test('Show site map', async () => {
     dismissAll: jest.fn(),
     setParams: jest.fn(),
     navigate: jest.fn(),
+    dismissTo: jest.fn(),
+    reload: jest.fn(),
   });
 
   await ShowSiteMapDevmenu.callback({ router: mockRouter });
