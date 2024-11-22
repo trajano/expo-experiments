@@ -70,9 +70,6 @@
       "expo-secure-store",
       "expo-tracking-transparency",
       "expo-video",
-      "@config-plugins/android-jsc-intl",
-      "@config-plugins/react-native-blob-util",
-      "@config-plugins/react-native-pdf",
       "react-native-nfc-manager"
     ],
     "experiments": {

@@ -21,10 +21,7 @@
   "eslintConfig": {
     "root": true
   },
-  "overrides": {
-    "react": "18.2.0",
-    "react-native": "0.74.5"
-  },
+  "overrides": {},
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
