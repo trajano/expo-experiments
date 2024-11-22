@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/expo-50.0.0.json#",
+  "$schema": "https://json.schemastore.org/expo-52.0.0.json#",
   "expo": {
     "name": "My App Go",
     "slug": "my-app",
@@ -91,6 +91,7 @@
       "url": "https://u.expo.dev/82884520-3f2f-4a6f-a85f-e6257469b267",
       "checkAutomatically": "NEVER"
     },
+    "newArchEnabled": true,
     "runtimeVersion": {
       "policy": "appVersion"
     }
