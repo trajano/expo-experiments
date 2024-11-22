@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/expo-50.0.0.json#",
   "expo": {
     "name": "My App Go",
     "slug": "my-app",
@@ -41,6 +42,7 @@
     },
     "plugins": [
       "expo-router",
+      ["expo-asset", {}],
       "expo-background-fetch",
       [
         "expo-font",
@@ -69,6 +71,8 @@
       "expo-tracking-transparency",
       "expo-video",
       "@config-plugins/android-jsc-intl",
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf",
       "react-native-nfc-manager"
     ],
     "experiments": {

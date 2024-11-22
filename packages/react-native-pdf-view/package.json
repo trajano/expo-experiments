@@ -1,6 +1,6 @@
 {
-  "name": "react-native-my-components",
-  "description": "Styled components",
+  "name": "react-native-pdf-view",
+  "description": "Expo PDF Viewer",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "react-native": "./src/index.ts",
@@ -17,29 +17,24 @@
     "@types/react": "*",
     "babel-jest": "*",
     "eslint-config-my": "*",
+    "jest": "*",
+    "jest-expo": "*",
+    "expo-asset": "*",
     "react-test-renderer": "*",
+    "react-native-webview": "*",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3"
   },
   "peerDependencies": {
-    "@shopify/flash-list": "*",
-    "@storybook/react": "*",
-    "@storybook/react-native": "*",
-    "expo-file-system": "*",
+    "expo-asset": "*",
     "react": "*",
-    "react-dom": "*",
     "react-native": "*",
-    "react-native-file-viewer": "*",
-    "react-native-my-text": "*",
-    "react-native-unistyles": "*"
+    "react-native-webview": "*"
   },
   "jest": {
     "preset": "jest-expo",
     "modulePathIgnorePatterns": [
       "<rootDir>/dist/"
-    ],
-    "setupFiles": [
-      "./jest-setup.ts"
     ]
   },
   "eslintConfig": {
@@ -52,8 +47,7 @@
     "dist/"
   ],
   "dependencies": {
-    "react-native-my-hooks": "*",
-    "react-native-my-text": "*",
-    "react-native-unstyled-components": "*"
+    "html-minifier-terser": "^7.2.0",
+    "react-native-webview": "*"
   }
 }

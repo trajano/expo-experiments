@@ -16,6 +16,9 @@ jest.mock('@/hooks/UserPreferences', () => ({
 jest.mock('@/hooks/MyBackgroundFetch', () => ({
   WithMyBackgroundFetch: jest.fn((i: any) => i),
 }));
+jest.mock('@/nfc', () => ({
+  WithNfc: jest.fn((i: any) => i),
+}));
 jest.mock('react-native-my-hooks', () => ({
   ...jest.requireActual('react-native-my-hooks'),
   WithNotifications: jest.fn((i: any) => i),

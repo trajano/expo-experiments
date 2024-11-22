@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`simple story test 1`] = `
+[
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text>
+      Current Pixel Ratio is:
+    </Text>
+    <Text
+      style={
+        {
+          "fontSize": 24,
+          "marginBottom": 12,
+          "marginTop": 4,
+        }
+      }
+    >
+      2
+    </Text>
+  </View>,
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text>
+      Current Font Scale is:
+    </Text>
+    <Text
+      style={
+        {
+          "fontSize": 24,
+          "marginBottom": 12,
+          "marginTop": 4,
+        }
+      }
+    >
+      2
+    </Text>
+  </View>,
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text>
+      On this device images with a layout width of
+    </Text>
+    <Text
+      style={
+        {
+          "fontSize": 24,
+          "marginBottom": 12,
+          "marginTop": 4,
+        }
+      }
+    >
+      50
+       px
+    </Text>
+    <Image
+      source={
+        {
+          "height": 50,
+          "uri": "https://reactnative.dev/docs/assets/p_cat1.png",
+          "width": 50,
+        }
+      }
+    />
+  </View>,
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text>
+      require images with a pixel width of
+    </Text>
+    <Text
+      style={
+        {
+          "fontSize": 24,
+          "marginBottom": 12,
+          "marginTop": 4,
+        }
+      }
+    >
+      100
+       px
+    </Text>
+    <Image
+      source={
+        {
+          "height": 50,
+          "uri": "https://reactnative.dev/docs/assets/p_cat1.png",
+          "width": 50,
+        }
+      }
+      style={
+        {
+          "height": 100,
+          "width": 100,
+        }
+      }
+    />
+  </View>,
+]
+`;
