@@ -156,7 +156,7 @@ export const PdfWebView: FC<
       javaScriptEnabled={true}
       domStorageEnabled={false}
       scrollEnabled={false}
-      style={style}
+      style={style as any}
       pointerEvents="none"
       useSharedProcessPool={false}
     />
