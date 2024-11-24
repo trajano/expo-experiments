@@ -15,6 +15,7 @@ import { WithNotifications } from 'react-native-my-hooks';
 
 import 'react-native-reanimated';
 import { registerDevMenuItemsAsync } from '@/devmenu';
+import { useShakeDetection, WithShakeDetection } from '@/hooks/ShakeDetection';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -22,15 +23,22 @@ SplashScreen.preventAutoHideAsync();
 export const RootLayout: FC = () => {
   const colorScheme = useColorScheme();
   const router = useRouter();
+  const { addListener: addShakeListener } = useShakeDetection();
   // useLoadGuard
   useEffect(() => {
+    const shakeSubscription = addShakeListener(() => {
+      // router.navigate('/_sitemap');
+    });
     (async () => {
       // before hiding the splashscreen the fonts and assets for the loader screen should be loaded
       await registerDevMenuItemsAsync({ router });
       await SplashScreen.hideAsync();
       // this may be moved to load guard.
     })();
-  }, [router]);
+    return () => {
+      shakeSubscription.remove();
+    };
+  }, [router, addShakeListener]);
 
   // if (!loaded), but I want it already on the stack right?
   return (
@@ -51,11 +59,12 @@ export type MyAppUserPreferences = {
   count: number;
 };
 // with load guard?
-const CompositeApp = WithMyBackgroundFetch(
-  WithUserPreferences(WithNotifications(RootLayout)),
+const CompositeApp = WithShakeDetection(
+  WithMyBackgroundFetch(WithUserPreferences(WithNotifications(RootLayout))),
 );
 const MyApp = () => (
   <CompositeApp
+    shakeDetectionDisabled={__DEV__}
     backgroundFetchTaskName={BACKGROUND_FETCH_TASK}
     notificationTaskName={BACKGROUND_NOTIFICATION_TASK}
     stopOnTerminate={false}

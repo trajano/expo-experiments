@@ -1,6 +1,6 @@
 import { VibrateButton } from '@/components/VibrateButton';
 import { useRouter } from 'expo-router';
-import { FC, useCallback, useReducer } from 'react';
+import { FC, useCallback, useEffect, useReducer } from 'react';
 import {
   Button,
   Image,
@@ -19,6 +19,7 @@ import { useClockState, useNotifications } from 'react-native-my-hooks';
 import { MyText, Strong } from 'react-native-my-text';
 import { sharePushCurlCommandAsync } from '@/notifications';
 import { DevMenu } from 'expo-dev-client';
+import { useShakeDetection } from '@/hooks/ShakeDetection';
 
 const formatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -31,13 +32,21 @@ const HomeScreen: FC = () => {
   const router = useRouter();
   const formattedTime = formatter.format(clock);
   const [pressCount, incrementPressCount] = useReducer((i) => i + 1, 0);
+  const { addListener: addShakeListener } = useShakeDetection();
 
   const { expoPushToken, permissionStatus } = useNotifications();
 
   const onShareCurlCommand = useCallback(() => {
     (async () => sharePushCurlCommandAsync(expoPushToken!))();
   }, [expoPushToken]);
-
+  useEffect(() => {
+    const shakeSubscription = addShakeListener(() => {
+      incrementPressCount();
+    });
+    return () => {
+      shakeSubscription.remove();
+    };
+  }, []);
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
