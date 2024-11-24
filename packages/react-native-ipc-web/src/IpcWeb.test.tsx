@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { Button } from 'react-native';
-import { IpcWebContext, IpcWebProvider } from './IpcWeb';
+import { IpcWebConsumer, IpcWebProvider } from './index';
 import { simpleEchoServer } from './simpleEchoServer';
 
 describe('IpcWeb', () => {
@@ -8,19 +8,19 @@ describe('IpcWeb', () => {
     const onMessage = jest.fn();
     render(
       <IpcWebProvider sourceProvider={simpleEchoServer} onMessage={onMessage}>
-        <IpcWebContext.Consumer>
+        <IpcWebConsumer>
           {({ IpcWebView, postMessage }) => {
             return (
               <>
                 <IpcWebView />
                 <Button
-                  onPress={() => postMessage({ input: 'foo' })}
+                  onPress={() => postMessage({ input: 'foo', for: 'xyz' })}
                   title="send"
                 />
               </>
             );
           }}
-        </IpcWebContext.Consumer>
+        </IpcWebConsumer>
       </IpcWebProvider>,
     );
     await act(() => Promise.resolve());

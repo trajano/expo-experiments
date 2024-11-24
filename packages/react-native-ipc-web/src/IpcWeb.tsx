@@ -60,7 +60,7 @@ export type IpcWebProps<T extends object> = PropsWithChildren<{
    */
   onMessage: (message: T) => void;
 }>;
-
+export const IpcWebConsumer = IpcWebContext.Consumer;
 /**
  * A provider component for the DoNothingContext.
  *
