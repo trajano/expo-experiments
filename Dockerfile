@@ -81,7 +81,7 @@ ENV JAVA_OPTS="-Xmx4g -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg
 FROM gradle-build-env AS devclient
 COPY --from=prebuild-devclient --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleDebug,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
-  ./gradlew assembleDebug
+  ./gradlew assembleDebug -Dorg.gradle.jvmargs="-Xmx4g"
 
 # Stage 9: Build Preview APKs (build platform-specific)
 FROM gradle-build-env AS preview-apk
@@ -90,7 +90,7 @@ ENV EXPO_APP_NAME="My App"
 ENV EXPO_APP_BRAND="release"
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
-  ./gradlew assembleRelease
+  ./gradlew assembleRelease -Dorg.gradle.jvmargs="-Xmx4g"
 
 # EAS build
 FROM prebuild-env AS eas-build-ios-devclient
