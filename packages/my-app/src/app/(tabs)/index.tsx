@@ -46,7 +46,7 @@ const HomeScreen: FC = () => {
     return () => {
       shakeSubscription.remove();
     };
-  }, []);
+  }, [addShakeListener]);
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
