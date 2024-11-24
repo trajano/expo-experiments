@@ -1,0 +1,48 @@
+{
+  "name": "react-native-ipc-web",
+  "description": "A context that uses WebView to process data.",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "react-native": "./src/index.ts",
+  "scripts": {
+    "dev": "tsup --watch",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "prepare": "tsup"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "*",
+    "@types/jest": "*",
+    "@types/react": "*",
+    "babel-jest": "*",
+    "eslint-config-my": "*",
+    "jest": "*",
+    "jest-expo": "*",
+    "react-test-renderer": "*",
+    "react-native-webview": "*",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-webview": "*"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "my"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "dist/"
+  ]
+}

@@ -13,7 +13,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { IpcWebView } from '@/components/IpcWeb/IpcWebView';
+import { IpcWebView } from './IpcWebView';
 import { WebViewMessageEvent } from 'react-native-webview/src/WebViewTypes';
 import { WebView } from 'react-native-webview';
 
@@ -50,13 +50,22 @@ export const IpcWebContext = createContext<IpcWeb>({
  * Props type for the DoNothingProvider component, which wraps its children in the DoNothingContext.
  */
 export type IpcWebProps<T extends object> = PropsWithChildren<{
+  /**
+   * HTML source provider.  It allows async operations to populate the source
+   */
   sourceProvider: () => Promise<string>;
+  /**
+   * handles messages sent from the web view
+   * @param message message
+   */
   onMessage: (message: T) => void;
 }>;
 
 /**
  * A provider component for the DoNothingContext.
  *
+ * @param sourceProvider HTML source provider
+ * @param onMessage message handler
  * @param children The child components that will have access to the context.
  * @returns A provider that passes an empty value to all of its children.
  */
@@ -73,6 +82,7 @@ export const IpcWebProvider = <T extends object>({
     [onMessage],
   );
   const ContextIpcWebView = useMemo<FC<Record<string, never>>>(() => {
+    // eslint-disable-next-line react/display-name
     return () => (
       <IpcWebView
         sourceProvider={sourceProvider}
@@ -80,7 +90,7 @@ export const IpcWebProvider = <T extends object>({
         ref={ipcWebViewRef}
       />
     );
-  }, [sourceProvider]);
+  }, [sourceProvider, ipcOnMessage]);
   ContextIpcWebView.displayName = 'IpcWebView';
 
   const postMessage = useCallback((message: object) => {

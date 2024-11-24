@@ -6,7 +6,7 @@ import {
   IpcWebProvider,
   useIpcWeb,
   SimpleEchoServerMessage,
-} from '@/components/IpcWeb';
+} from 'react-native-ipc-web';
 
 const WebViewCommunicationForm: FC<{
   messages: string[];

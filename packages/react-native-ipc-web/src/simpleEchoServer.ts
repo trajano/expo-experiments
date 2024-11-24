@@ -23,6 +23,5 @@ export const simpleEchoServer = async () => {
 </script>
 </body>
 </html>
-
 `;
 };
