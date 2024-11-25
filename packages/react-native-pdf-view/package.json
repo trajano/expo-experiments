@@ -21,6 +21,7 @@
     "jest-expo": "*",
     "expo-asset": "*",
     "react-test-renderer": "*",
+    "react-native-ipc-web": "*",
     "react-native-webview": "*",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
@@ -29,6 +30,7 @@
     "expo-asset": "*",
     "react": "*",
     "react-native": "*",
+    "react-native-ipc-web": "*",
     "react-native-webview": "*"
   },
   "jest": {
