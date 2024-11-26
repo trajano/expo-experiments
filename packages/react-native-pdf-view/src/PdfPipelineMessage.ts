@@ -1,37 +1,39 @@
-type OkPdfViewMessage = {
+import { EventSubscription } from 'react-native';
+
+export type OkPdfViewMessage = {
   type: 'ok';
   data: string;
   correlationId: string;
 };
-type NoDataPdfViewMessage = {
-  type: 'nodata';
-};
-type StagePdfViewMessage = {
-  type: 'stage';
-  stage: string;
-};
-type PageCountPdfViewMessage = {
+export type PageCountPdfViewMessage = {
   type: 'numPages';
   numPages: number;
   correlationId: string;
 };
-type ViewPortPdfViewMessage = {
+export type ViewPortPdfViewMessage = {
   type: 'viewport';
   width: number;
   height: number;
   scale: number;
   correlationId: string;
 };
-type ErrorPdfViewMessage = {
+export type ErrorPdfViewMessage = {
   type: 'error';
   error: string;
+  correlationId?: string;
   where?: string;
 };
 
 export type PdfPipelineMessage =
-  | NoDataPdfViewMessage
   | OkPdfViewMessage
   | PageCountPdfViewMessage
-  | StagePdfViewMessage
   | ViewPortPdfViewMessage
   | ErrorPdfViewMessage;
+
+type PdfEventName = PdfPipelineMessage['type'];
+type PdfPipelineListener = (event: PdfPipelineMessage) => void;
+export type AddListenerFunction = (
+  eventName: PdfEventName,
+  correlationId: string,
+  listener: PdfPipelineListener,
+) => EventSubscription;

@@ -14,7 +14,11 @@ import {
   useRef,
 } from 'react';
 import { IpcWebView } from './IpcWebView';
-import { WebViewMessageEvent } from 'react-native-webview/src/WebViewTypes';
+import {
+  WebViewErrorEvent,
+  WebViewMessageEvent,
+} from 'react-native-webview/src/WebViewTypes';
+import * as Crypto from 'expo-crypto';
 import { WebView } from 'react-native-webview';
 
 /**
@@ -32,6 +36,10 @@ export interface IpcWeb {
    * @param message message
    */
   postMessage: (message: object) => void;
+  /**
+   * Will be set to true once the web view is loaded.
+   */
+  ipcWebViewReadyPromise: Promise<boolean>;
 }
 
 /**
@@ -44,6 +52,7 @@ export const IpcWebContext = createContext<IpcWeb>({
     <IpcWebView sourceProvider={async () => ''} onMessage={() => {}} />
   ),
   postMessage: () => {},
+  ipcWebViewReadyPromise: Promise.resolve(true),
 });
 
 /**
@@ -81,12 +90,32 @@ export const IpcWebProvider = <T extends object>({
     },
     [onMessage],
   );
+  let resolveIpcWebViewReady: (value: boolean) => void;
+  let rejectIpcWebViewReady: (error: unknown) => void;
+
+  const ipcWebViewReadyPromise = new Promise<boolean>((resolve, reject) => {
+    resolveIpcWebViewReady = resolve; // Store the resolve function
+    rejectIpcWebViewReady = reject;
+  });
+  const ipcOnLoad = useCallback(() => {
+    resolveIpcWebViewReady(true);
+  }, []);
+  const ipcOnError = useCallback((event: WebViewErrorEvent) => {
+    rejectIpcWebViewReady(
+      new Error(`Webview Error: ${event.nativeEvent.code}`),
+    );
+  }, []);
   const ContextIpcWebView = useMemo<FC<Record<string, never>>>(() => {
+    // The random UUID is needed to allow reloads
     // eslint-disable-next-line react/display-name
     return () => (
       <IpcWebView
+        key={Crypto.randomUUID()}
         sourceProvider={sourceProvider}
         onMessage={ipcOnMessage}
+        pointerEvents="none"
+        onLoad={ipcOnLoad}
+        onError={ipcOnError}
         ref={ipcWebViewRef}
       />
     );
@@ -101,8 +130,9 @@ export const IpcWebProvider = <T extends object>({
     () => ({
       IpcWebView: ContextIpcWebView,
       postMessage,
+      ipcWebViewReadyPromise,
     }),
-    [ContextIpcWebView, postMessage],
+    [ContextIpcWebView, postMessage, ipcWebViewReadyPromise],
   );
 
   return (

@@ -26,6 +26,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = ${JSON.stringify(pdfJsWorkerDataUri)};
 /**
 *
 * @param {string} pdfData PDF data as base64
+* @param {number} pageNumber page number
 * @param {number} scale scale
 * @param {string} correlationId correlation ID
 * @returns {Promise<{data: string, type: string}>}
@@ -59,15 +60,15 @@ const renderPdfAsync = async (pdfData, pageNumber, scale, correlationId) => {
       viewport: viewport,
     }).promise;
 
-    console.log(canvasElement)
-    
-    return {
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({
       type: 'ok',
       data: canvasElement.toDataURL('image/png'),
       correlationId
-    };
+}));
   } finally {
     document.body.removeChild(canvasElement);
+    canvasElement.remove();
   }
 };
 

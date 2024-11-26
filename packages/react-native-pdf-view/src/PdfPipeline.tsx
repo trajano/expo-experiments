@@ -19,21 +19,17 @@ import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
 import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import { EventSubscription } from 'react-native';
-import { PdfPipelineMessage } from './PdfPipelineMessage';
-
-type PdfPipelineEventListener = (event: PdfPipelineMessage) => void;
+import { AddListenerFunction, PdfPipelineMessage } from './PdfPipelineMessage';
 
 export interface PdfPipeline {
   /**
    * Adds an event listener
    * the event
    * @param eventName PDF EventName
+   * @param correlationId correlation ID
    * @param listener event listener
    */
-  addListener(
-    eventName: string,
-    listener: PdfPipelineEventListener,
-  ): EventSubscription;
+  addListener: AddListenerFunction;
 
   /**
    * @param correlationId correlation ID use Crypto.randomUUID()
@@ -47,6 +43,8 @@ export interface PdfPipeline {
     pageNumber?: number,
     scale?: number,
   ): void;
+
+  pdfPipelineReadyPromise: Promise<boolean>;
 }
 
 export const PdfPipelineContext = createContext<PdfPipeline>({
@@ -55,19 +53,17 @@ export const PdfPipelineContext = createContext<PdfPipeline>({
       remove: () => {},
     }) as EventSubscription,
   postPdfRequest: () => {},
+  pdfPipelineReadyPromise: Promise.resolve(true),
 });
 
 export const usePdfPipeline = () => useContext(PdfPipelineContext);
 
 const InternalPdfPipelineProvider: FC<
   PropsWithChildren<{
-    addListener: (
-      eventName: string,
-      event: PdfPipelineEventListener,
-    ) => EventSubscription;
+    addListener: AddListenerFunction;
   }>
 > = ({ addListener, children }) => {
-  const { IpcWebView, postMessage } = useIpcWeb();
+  const { IpcWebView, postMessage, ipcWebViewReadyPromise } = useIpcWeb();
 
   const postPdfRequest = useCallback(
     (
@@ -89,8 +85,9 @@ const InternalPdfPipelineProvider: FC<
     () => ({
       addListener,
       postPdfRequest,
+      pdfPipelineReadyPromise: ipcWebViewReadyPromise,
     }),
-    [addListener, postPdfRequest],
+    [addListener, postPdfRequest, ipcWebViewReadyPromise],
   );
   return (
     <PdfPipelineContext.Provider value={value}>
@@ -99,12 +96,24 @@ const InternalPdfPipelineProvider: FC<
     </PdfPipelineContext.Provider>
   );
 };
-export const PdfPipelineProvider: FC<
-  PropsWithChildren<{
-    pdfJs?: Asset;
-    pdfWorkerJs?: Asset;
-  }>
-> = ({ pdfJs, pdfWorkerJs, children }) => {
+type PdfPipelineProviderProps = PropsWithChildren<{
+  /**
+   * Asset pointing to the pdf.js script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs. It
+   * can also be an asset reference.
+   */
+  pdfJs?: Asset;
+
+  /**
+   * Asset pointing to the pdf.js worker script, defaults to https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs.  It
+   * can also be an asset reference.
+   */
+  pdfWorkerJs?: Asset;
+}>;
+export const PdfPipelineProvider: FC<PdfPipelineProviderProps> = ({
+  pdfJs,
+  pdfWorkerJs,
+  children,
+}) => {
   const eventEmitterRef = useRef(new EventEmitter());
   const renderSourceAsync = useCallback(async () => {
     const pdfJsAsset =
@@ -136,19 +145,22 @@ export const PdfPipelineProvider: FC<
   const onMessage = useCallback((message: PdfPipelineMessage) => {
     const eventEmitter = eventEmitterRef.current;
     // emit an event
-    console.log(message);
     eventEmitter.emit(message.type, message);
   }, []);
-  const addListener = useCallback(
-    (eventName: string, pdfPipelineEventListener: PdfPipelineEventListener) => {
-      console.log({ eventName });
-      return eventEmitterRef.current.addListener(
-        eventName,
-        pdfPipelineEventListener,
-      );
-    },
-    [],
-  );
+  const addListener: AddListenerFunction = (
+    eventName,
+    correlationId,
+    pdfPipelineEventListener,
+  ) => {
+    return eventEmitterRef.current.addListener(
+      eventName,
+      (event: PdfPipelineMessage) => {
+        if (event.correlationId === correlationId) {
+          pdfPipelineEventListener(event);
+        }
+      },
+    );
+  };
   useEffect(() => {
     const eventEmitter = eventEmitterRef.current;
 

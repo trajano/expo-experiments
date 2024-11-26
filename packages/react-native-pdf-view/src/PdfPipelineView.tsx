@@ -1,11 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 import { Image } from 'expo-image';
-import { PdfViewProps } from './PdfViewProps';
 import { fetchToBase64 } from './fetchToBase64';
 
 import * as Crypto from 'expo-crypto';
 import { usePdfPipeline } from './PdfPipeline';
-import { PdfPipelineMessage } from './PdfPipelineMessage';
+import { PdfPipelineViewProps } from './PdfPipelineViewProps';
 
 /**
  * This renders a PDF page using pdf.js inside a web view that's set up via PdfPipeline
@@ -13,57 +12,112 @@ import { PdfPipelineMessage } from './PdfPipelineMessage';
  * event for the given correlation ID
  * Once it receives the image data it returns a ExpoImage
  */
-export const PdfPipelineView: FC<PdfViewProps> = ({
+export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
   uri,
   pageNumber = 1,
   scale = 1.0,
   onViewPortKnown = () => {},
-  onRender = () => {},
   onError = () => {},
   onPageCountKnown = () => {},
-  pdfJs,
-  pdfWorkerJs,
+  contentFit = 'cover',
   style,
   ...props
 }) => {
-  const [imageDataUri, setImageDataUri] = useState<string | null>(null);
-  const { postPdfRequest, addListener: addPdfListener } = usePdfPipeline();
+  const [imageDataUri, setImageDataUri] = useState<string | undefined>(
+    undefined,
+  );
+  const {
+    postPdfRequest,
+    addListener: addPdfListener,
+    pdfPipelineReadyPromise,
+  } = usePdfPipeline();
 
   useEffect(() => {
-    setImageDataUri(null);
     const correlationId = Crypto.randomUUID();
-    const listenerSubscription = addPdfListener(
+    const viewportListenerSubscription = addPdfListener(
+      'viewport',
+      correlationId,
+      (event) => {
+        if (event.type !== 'viewport') {
+          return;
+        }
+        onViewPortKnown({
+          width: event.width,
+          height: event.height,
+          scale: event.scale,
+        });
+        viewportListenerSubscription.remove();
+      },
+    );
+
+    const pageCountListenerSubscription = addPdfListener(
+      'numPages',
+      correlationId,
+      (event) => {
+        if (event.type !== 'numPages') {
+          return;
+        }
+        onPageCountKnown({
+          pageCount: event.numPages,
+        });
+        pageCountListenerSubscription.remove();
+      },
+    );
+    const okListenerSubscription = addPdfListener(
       'ok',
-      (event: PdfPipelineMessage) => {
-        console.log({ event });
-        if (event.type !== 'ok' || event.correlationId !== correlationId) {
+      correlationId,
+      (event) => {
+        if (event.type !== 'ok') {
           return;
         }
         // may cache this later
         setImageDataUri(event.data);
-        listenerSubscription.remove();
+        okListenerSubscription.remove();
+      },
+    );
+    const errorListenerSubscription = addPdfListener(
+      'error',
+      correlationId,
+      (event) => {
+        if (event.type !== 'error') {
+          return;
+        }
+        onError({
+          error: event.error,
+        });
       },
     );
     (async () => {
-      const data = await fetchToBase64(uri);
-      console.log({
-        correlationId,
-        pageNumber,
-        scale,
-        data: data.substring(0, 20),
-      });
-      postPdfRequest(correlationId, data, pageNumber, scale);
+      try {
+        const data = await fetchToBase64(uri);
+        await pdfPipelineReadyPromise;
+        postPdfRequest(correlationId, data, pageNumber, scale);
+      } catch (error: unknown) {
+        console.error('posted', error);
+      }
     })();
     return () => {
-      listenerSubscription.remove();
+      okListenerSubscription.remove();
+      errorListenerSubscription.remove();
+      viewportListenerSubscription.remove();
     };
-  }, [uri, addPdfListener, postPdfRequest]);
+  }, [
+    uri,
+    addPdfListener,
+    postPdfRequest,
+    onPageCountKnown,
+    onViewPortKnown,
+    pageNumber,
+    onError,
+    pdfPipelineReadyPromise,
+    scale,
+  ]);
   return (
     <Image
       {...props}
       source={{ uri: imageDataUri }}
       style={style}
-      contentFit="contain"
+      contentFit={contentFit}
     />
   );
 };
