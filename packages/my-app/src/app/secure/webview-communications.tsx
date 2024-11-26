@@ -7,6 +7,7 @@ import {
   useIpcWeb,
   SimpleEchoServerMessage,
 } from 'react-native-ipc-web';
+import * as FileSystem from 'expo-file-system';
 
 const WebViewCommunicationForm: FC<{
   messages: string[];
@@ -19,12 +20,22 @@ const WebViewCommunicationForm: FC<{
   const onSendMessage = useCallback(() => {
     postMessage({ input });
   }, [postMessage, input]);
+  const onSendUriMessage = useCallback(() => {
+    (async () => {
+      const fileUri = FileSystem.cacheDirectory + 'testFile.txt';
+      await FileSystem.writeAsStringAsync(fileUri, input, {
+        encoding: 'utf8',
+      });
+      postMessage({ input: fileUri, isUri: true });
+    })();
+  }, [postMessage, input]);
   return (
     <View style={{ backgroundColor: 'silver' }}>
       <IpcWebView />
       <MyText>Data to send to webview</MyText>
       <MyTextInput onChangeText={onChangeText} defaultValue={input} />
       <Button title="Send message to webview" onPress={onSendMessage} />
+      <Button title="Send URI message to webview" onPress={onSendUriMessage} />
       <MyText>{JSON.stringify(messages, null, 2)}</MyText>
     </View>
   );

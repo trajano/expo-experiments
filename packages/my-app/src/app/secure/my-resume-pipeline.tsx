@@ -1,57 +1,54 @@
-import { PdfPipelineView, PdfViewPortEventData } from 'react-native-pdf-view';
-import { FC, useCallback, useMemo, useState } from 'react';
-import { Button, useWindowDimensions } from 'react-native';
+import { PdfPipelineView } from 'react-native-pdf-view';
+import { FC, useCallback, useState } from 'react';
+import { Button, StyleSheet, View } from 'react-native';
 import samples from '@/data/samplePdfUrls.json';
-import { ImageStyle } from 'expo-image';
 import { WithPdfView } from 'react-native-pdf-view/src/PdfPipeline';
 import * as Crypto from 'expo-crypto';
+import PagerView from 'react-native-pager-view';
 
 const ResumeScreen: FC = () => {
   const [uri, setUri] = useState(samples[0]);
-  const windowDimensions = useWindowDimensions();
-  const [pdfWidth, setPdfWidth] = useState(0);
-  const [pdfHeight, setPdfHeight] = useState(0);
-  const viewDimensions = useMemo<ImageStyle>(() => {
-    if (pdfWidth === 0 || pdfHeight === 0) {
-      return {
-        width: windowDimensions.width,
-        height: 1,
-      };
-    } else {
-      return {
-        width: windowDimensions.width,
-        height: (windowDimensions.width / pdfWidth) * pdfHeight,
-      };
-    }
-  }, [windowDimensions.width, pdfWidth, pdfHeight]);
-  const handleViewPortKnown = useCallback(
-    ({ height, width }: PdfViewPortEventData) => {
-      setPdfWidth(width);
-      setPdfHeight(height);
-    },
-    [],
-  );
+  const [pageCount, setPageCount] = useState(1);
   const flip = useCallback(() => {
     const randomUri = samples[Crypto.getRandomBytes(1)[0] % samples.length];
     setUri(randomUri);
+    setPageCount(1);
   }, []);
+  console.debug({ uri, pageCount });
   return (
-    <>
-      <PdfPipelineView
-        uri={uri}
-        style={viewDimensions}
-        onPageCountKnown={(e) => {
-          console.log(e);
-        }}
-        onError={(e) => {
-          console.error(e);
-        }}
-        onViewPortKnown={handleViewPortKnown}
-      />
+    <View style={styles.container}>
+      <PagerView style={styles.pager}>
+        {Array.from({ length: pageCount }, (_ignore, index) => index + 1).map(
+          (pageNumber) => (
+            <View key={`${uri}.${pageNumber}`}>
+              <PdfPipelineView
+                style={styles.pdf}
+                uri={uri}
+                pageNumber={pageNumber}
+                onPageCountKnown={(e) => {
+                  console.info(e);
+                  if (pageNumber === 1) {
+                    setPageCount(e.pageCount);
+                  }
+                }}
+                onError={(e) => {
+                  console.error(e);
+                }}
+              />
+            </View>
+          ),
+        )}
+      </PagerView>
       <Button title={uri} onPress={flip} />
-    </>
+    </View>
   );
 };
 
 const CompositeScreen = WithPdfView(ResumeScreen);
 export default CompositeScreen;
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  pager: { flex: 1 },
+  pdf: { ...StyleSheet.absoluteFillObject, flex: 1 },
+});
