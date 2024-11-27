@@ -1,5 +1,13 @@
 import { EventSubscription } from 'react-native';
 
+export type ReceivedPdfViewMessage = {
+  type: 'received';
+  uri: string;
+  pageNumber: number;
+  scale: number;
+  correlationId: string;
+};
+
 export type OkPdfViewMessage = {
   type: 'ok';
   data: string;
@@ -25,6 +33,7 @@ export type ErrorPdfViewMessage = {
 };
 
 export type PdfPipelineMessage =
+  | ReceivedPdfViewMessage
   | OkPdfViewMessage
   | PageCountPdfViewMessage
   | ViewPortPdfViewMessage

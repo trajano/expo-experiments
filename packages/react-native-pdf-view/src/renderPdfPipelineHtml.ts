@@ -1,6 +1,6 @@
 export const renderPdfPipelineHtml = (
-  pdfJsCode: string,
-  pdfJsWorkerDataUri: string,
+  pdfJsCodeUri: string,
+  pdfWorkerCodeUri: string,
   locale: string = 'en',
 ) => `
 <!DOCTYPE html>
@@ -16,23 +16,20 @@ canvas {
   width: 100%;
  }
 </style>
-<script type="module">
-${pdfJsCode};
-</script>
+<script type="module" src="${pdfJsCodeUri}"></script>
 <script type="module">
 const { pdfjsLib } = /** @type {{ pdfjsLib: typeof import('pdfjs-dist') }} */ (globalThis);
-pdfjsLib.GlobalWorkerOptions.workerSrc = ${JSON.stringify(pdfJsWorkerDataUri)};
-
+pdfjsLib.GlobalWorkerOptions.workerSrc = ${JSON.stringify(pdfWorkerCodeUri)};
 /**
 *
-* @param {string} pdfData PDF data as base64
+* @param {ArrayBuffer} arrayBuffer array buffer of PDF file
 * @param {number} pageNumber page number
 * @param {number} scale scale
 * @param {string} correlationId correlation ID
 * @returns {Promise<{data: string, type: string}>}
 */
-const renderPdfAsync = async (pdfData, pageNumber, scale, correlationId) => {
-  const pdfDocument = await pdfjsLib.getDocument({ data: atob(pdfData) }).promise;
+const renderPdfAsync = async (arrayBuffer, pageNumber, scale, correlationId) => {
+  const pdfDocument = await pdfjsLib.getDocument({data: new Uint8Array(arrayBuffer)}).promise;
   window.ReactNativeWebView.postMessage(
     JSON.stringify({'type': 'numPages', 'numPages': pdfDocument.numPages, correlationId}),
   );
@@ -74,7 +71,23 @@ const renderPdfAsync = async (pdfData, pageNumber, scale, correlationId) => {
 
 window.addEventListener('message', (rawMessage) => {
   const message = JSON.parse(rawMessage.data)
-  renderPdfAsync(message.pdfData, message.pageNumber, message.scale, message.correlationId).then();
+
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({'type': 'received', ...message}),
+  );
+
+  const xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = () => {
+    console.log(xhr.readyState, message.uri);
+    if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
+        renderPdfAsync(xhr.response, message.pageNumber, message.scale, message.correlationId).then();
+    }
+  }
+  xhr.open("GET", message.uri);
+  xhr.responseType ="arraybuffer";
+  setTimeout(()=> xhr.send(), 3000);
+
 });
 
 </script>

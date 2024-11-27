@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Image } from 'expo-image';
-import { fetchToBase64 } from './fetchToBase64';
 
 import * as Crypto from 'expo-crypto';
 import { usePdfPipeline } from './PdfPipeline';
 import { PdfPipelineViewProps } from './PdfPipelineViewProps';
+import { Asset } from 'expo-asset';
 
 /**
  * This renders a PDF page using pdf.js inside a web view that's set up via PdfPipeline
@@ -31,9 +31,22 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
     addListener: addPdfListener,
     pdfPipelineReadyPromise,
   } = usePdfPipeline();
+  const lastUriRef = useRef<string | null>(null);
+  const correlationId = useRef(Crypto.randomUUID()).current;
 
   useEffect(() => {
-    const correlationId = Crypto.randomUUID();
+    if (lastUriRef.current !== uri) {
+      setImageDataUri(undefined);
+    }
+    const receivedListenerSubscription = addPdfListener(
+      'received',
+      correlationId,
+      (event) => {
+        if (event.type !== 'received') {
+          return;
+        }
+      },
+    );
     const viewportListenerSubscription = addPdfListener(
       'viewport',
       correlationId,
@@ -46,7 +59,6 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
           height: event.height,
           scale: event.scale,
         });
-        viewportListenerSubscription.remove();
       },
     );
 
@@ -57,10 +69,10 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
         if (event.type !== 'numPages') {
           return;
         }
+        console.log(event);
         onPageCountKnown({
           pageCount: event.numPages,
         });
-        pageCountListenerSubscription.remove();
       },
     );
     const okListenerSubscription = addPdfListener(
@@ -72,7 +84,7 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
         }
         // may cache this later
         setImageDataUri(event.data);
-        okListenerSubscription.remove();
+        lastUriRef.current = uri;
       },
     );
     const errorListenerSubscription = addPdfListener(
@@ -89,17 +101,19 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
     );
     (async () => {
       try {
-        const data = await fetchToBase64(uri);
+        const localUri = (await Asset.fromURI(uri).downloadAsync()).localUri!;
         await pdfPipelineReadyPromise;
-        postPdfRequest(correlationId, data, pageNumber, scale);
+        postPdfRequest(correlationId, localUri, pageNumber, scale);
       } catch (error: unknown) {
         console.error('posted', error);
       }
     })();
     return () => {
       okListenerSubscription.remove();
+      pageCountListenerSubscription.remove();
       errorListenerSubscription.remove();
       viewportListenerSubscription.remove();
+      receivedListenerSubscription.remove();
     };
   }, [
     uri,

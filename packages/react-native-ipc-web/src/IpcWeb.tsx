@@ -18,7 +18,6 @@ import {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from 'react-native-webview/src/WebViewTypes';
-import * as Crypto from 'expo-crypto';
 import { WebView } from 'react-native-webview';
 
 /**
@@ -93,10 +92,12 @@ export const IpcWebProvider = <T extends object>({
   let resolveIpcWebViewReady: (value: boolean) => void;
   let rejectIpcWebViewReady: (error: unknown) => void;
 
-  const ipcWebViewReadyPromise = new Promise<boolean>((resolve, reject) => {
-    resolveIpcWebViewReady = resolve; // Store the resolve function
-    rejectIpcWebViewReady = reject;
-  });
+  const ipcWebViewReadyPromise = useRef(
+    new Promise<boolean>((resolve, reject) => {
+      resolveIpcWebViewReady = resolve; // Store the resolve function
+      rejectIpcWebViewReady = reject;
+    }),
+  ).current;
   const ipcOnLoad = useCallback(() => {
     resolveIpcWebViewReady(true);
   }, []);
@@ -110,10 +111,8 @@ export const IpcWebProvider = <T extends object>({
     // eslint-disable-next-line react/display-name
     return () => (
       <IpcWebView
-        key={Crypto.randomUUID()}
         sourceProvider={sourceProvider}
         onMessage={ipcOnMessage}
-        pointerEvents="none"
         onLoad={ipcOnLoad}
         onError={ipcOnError}
         ref={ipcWebViewRef}

@@ -47,7 +47,6 @@ const IpcWebViewWithRef = (
   if (htmlUri === null) {
     return null;
   }
-  console.log(htmlUri);
   return (
     <WebView
       {...props}
@@ -59,6 +58,7 @@ const IpcWebViewWithRef = (
       originWhitelist={['*']}
       source={{ uri: htmlUri, baseUrl: sourceFolder }}
       style={styles.webview}
+      pointerEvents="none"
       webviewDebuggingEnabled={__DEV__}
     />
   );

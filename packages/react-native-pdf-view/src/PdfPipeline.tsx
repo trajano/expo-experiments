@@ -16,7 +16,6 @@ import {
 import { IpcWebProvider, useIpcWeb } from 'react-native-ipc-web';
 import { renderPdfPipelineHtml } from './renderPdfPipelineHtml';
 import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
 import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import { EventSubscription } from 'react-native';
 import { AddListenerFunction, PdfPipelineMessage } from './PdfPipelineMessage';
@@ -33,13 +32,13 @@ export interface PdfPipeline {
 
   /**
    * @param correlationId correlation ID use Crypto.randomUUID()
-   * @param pdfData base64 data for the PDF.
+   * @param uri URI of the PDF.
    * @param pageNumber defaults to 1
    * @param scale default to 1.0
    */
   postPdfRequest(
     correlationId: string,
-    pdfData: string,
+    uri: string,
     pageNumber?: number,
     scale?: number,
   ): void;
@@ -68,13 +67,13 @@ const InternalPdfPipelineProvider: FC<
   const postPdfRequest = useCallback(
     (
       correlationId: string,
-      pdfData: string,
+      uri: string,
       pageNumber: number = 1,
       scale: number = 1.0,
     ) => {
       postMessage({
         correlationId,
-        pdfData,
+        uri,
         pageNumber,
         scale,
       });
@@ -119,28 +118,20 @@ export const PdfPipelineProvider: FC<PdfPipelineProviderProps> = ({
     const pdfJsAsset =
       pdfJs ??
       Asset.fromURI(
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs',
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.mjs',
       );
     const pdfWorkerJsAsset =
       pdfWorkerJs ??
       Asset.fromURI(
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs',
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.mjs',
       );
 
-    const [pdfJsCode, pdfWorkerBase64Code] = await Promise.all([
-      FileSystem.readAsStringAsync(
-        (await pdfJsAsset.downloadAsync()).localUri!,
-        { encoding: 'utf8' },
-      ),
-      FileSystem.readAsStringAsync(
-        (await pdfWorkerJsAsset.downloadAsync()).localUri!,
-        { encoding: 'base64' },
-      ),
+    const [pdfJsCodeUri, pdfWorkerCodeUri] = await Promise.all([
+      (await pdfJsAsset.downloadAsync()).localUri!,
+      (await pdfWorkerJsAsset.downloadAsync()).localUri!,
     ]);
-    return renderPdfPipelineHtml(
-      pdfJsCode,
-      `data:application/javascript;base64,${pdfWorkerBase64Code}`,
-    );
+
+    return renderPdfPipelineHtml(pdfJsCodeUri, pdfWorkerCodeUri);
   }, [pdfJs, pdfWorkerJs]);
   const onMessage = useCallback((message: PdfPipelineMessage) => {
     const eventEmitter = eventEmitterRef.current;

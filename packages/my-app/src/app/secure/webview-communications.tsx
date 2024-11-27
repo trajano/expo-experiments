@@ -1,4 +1,4 @@
-import { FC, useCallback, useReducer, useState } from 'react';
+import { FC, RefObject, useCallback, useRef, useState } from 'react';
 import { Button, View } from 'react-native';
 import { MyText, MyTextInput } from 'react-native-my-text';
 import {
@@ -10,8 +10,9 @@ import {
 import * as FileSystem from 'expo-file-system';
 
 const WebViewCommunicationForm: FC<{
-  messages: string[];
-}> = ({ messages }) => {
+  messagesRef: RefObject<string[]>;
+}> = ({ messagesRef }) => {
+  const [messages, setMessages] = useState<string[]>([]);
   const { IpcWebView, postMessage } = useIpcWeb();
   const [input, setInput] = useState('test message');
   const onChangeText = useCallback((nextInput: string) => {
@@ -27,10 +28,13 @@ const WebViewCommunicationForm: FC<{
       await FileSystem.writeAsStringAsync(fileUri, input, {
         encoding: 'utf8',
       });
-      console.log('onSendUri');
       postMessage({ input: fileUri, isUri: true });
     })();
   }, [postMessage, input]);
+  const onRefresh = useCallback(() => {
+    setMessages(messagesRef.current ?? []);
+  }, [postMessage, input]);
+
   return (
     <View style={{ backgroundColor: 'silver' }}>
       <IpcWebView />
@@ -39,24 +43,23 @@ const WebViewCommunicationForm: FC<{
       <Button title="Send message to webview" onPress={onSendMessage} />
       <MyText></MyText>
       <Button title="Send URI message to webview" onPress={onSendUriMessage} />
+      <MyText></MyText>
+      <Button title="Refresh" onPress={onRefresh} />
       <MyText>{JSON.stringify(messages, null, 2)}</MyText>
     </View>
   );
 };
 
 const WebViewCommunicationScreen: FC = () => {
-  const [messages, pushMessage] = useReducer(
-    (prev: string[], current: string) => [current, ...prev],
-    [],
-  );
+  const messagesRef = useRef<string[]>([]);
   const onMessage = useCallback((message: SimpleEchoServerMessage) => {
     if (message.event === 'message') {
-      pushMessage(message.fromServer);
+      messagesRef.current = [message.fromServer, ...messagesRef.current];
     }
   }, []);
   return (
     <IpcWebProvider sourceProvider={simpleEchoServer} onMessage={onMessage}>
-      <WebViewCommunicationForm messages={messages} />
+      <WebViewCommunicationForm messagesRef={messagesRef} />
     </IpcWebProvider>
   );
 };
