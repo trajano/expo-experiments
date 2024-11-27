@@ -27,7 +27,9 @@ export const RootLayout: FC = () => {
   // useLoadGuard
   useEffect(() => {
     const shakeSubscription = addShakeListener(() => {
-      // router.navigate('/_sitemap');
+      if (!__DEV__) {
+        router.navigate('/_sitemap');
+      }
     });
     (async () => {
       // before hiding the splashscreen the fonts and assets for the loader screen should be loaded
