@@ -2,27 +2,52 @@ import { ForwardedRef, forwardRef, useEffect, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import { StyleSheet } from 'react-native';
 import { IpcWebViewProps } from './IpcWebViewProps';
+import * as Crypto from 'expo-crypto';
+import * as FileSystem from 'expo-file-system';
+import { CryptoDigestAlgorithm } from 'expo-crypto';
+
+/*
+ * On iOS for it to read files, a file URI must be passed in
+ * https://github.com/react-native-webview/react-native-webview/blob/8ad2360ccbd62de5112b90c41fcdee56129b6294/apple/RNCWebViewImpl.m#L881
+ */
 
 const IpcWebViewWithRef = (
-  { sourceProvider, onMessage, ...props }: IpcWebViewProps,
+  {
+    sourceProvider,
+    sourceFolder = FileSystem.cacheDirectory!,
+    onMessage,
+    ...props
+  }: IpcWebViewProps,
   ref: ForwardedRef<WebView>,
 ) => {
-  const [html, setHtml] = useState<string | null>(null);
+  const [htmlUri, setHtmlUri] = useState<string | null>(null);
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const nextHtml = await sourceProvider();
+      const htmlContent = await sourceProvider();
+      const nextHtmlUri = `${
+        sourceFolder +
+        (await Crypto.digestStringAsync(
+          CryptoDigestAlgorithm.SHA1,
+          htmlContent,
+        ))
+      }.html`;
+      await FileSystem.writeAsStringAsync(nextHtmlUri, htmlContent, {
+        encoding: 'utf8',
+      });
+
       if (mounted) {
-        setHtml(nextHtml);
+        setHtmlUri(nextHtmlUri);
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [sourceProvider]);
-  if (html === null) {
+  }, [sourceProvider, sourceFolder]);
+  if (htmlUri === null) {
     return null;
   }
+  console.log(htmlUri);
   return (
     <WebView
       {...props}
@@ -30,8 +55,9 @@ const IpcWebViewWithRef = (
       onMessage={onMessage}
       allowFileAccessFromFileURLs
       allowFileAccess
+      allowingReadAccessToURL={sourceFolder}
       originWhitelist={['*']}
-      source={{ html }}
+      source={{ uri: htmlUri, baseUrl: sourceFolder }}
       style={styles.webview}
       webviewDebuggingEnabled={__DEV__}
     />
@@ -41,6 +67,8 @@ const IpcWebViewWithRef = (
 export const IpcWebView = forwardRef<WebView, IpcWebViewProps>((props, ref) =>
   IpcWebViewWithRef(props, ref),
 );
+IpcWebView.displayName = 'IpcWebView';
+
 const styles = StyleSheet.create({
   webview: {
     position: 'absolute',

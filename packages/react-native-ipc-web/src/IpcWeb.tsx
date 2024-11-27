@@ -123,7 +123,13 @@ export const IpcWebProvider = <T extends object>({
   ContextIpcWebView.displayName = 'IpcWebView';
 
   const postMessage = useCallback((message: object) => {
-    ipcWebViewRef.current?.postMessage(JSON.stringify(message));
+    const messageString = JSON.stringify(message);
+    // see https://github.com/react-native-webview/react-native-webview/issues/2779
+    // see https://github.com/react-native-webview/react-native-webview/issues/2980
+    // see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+    ipcWebViewRef.current?.injectJavaScript(
+      `window.postMessage('${messageString}', '*')`,
+    );
   }, []);
 
   const value = useMemo<IpcWeb>(
