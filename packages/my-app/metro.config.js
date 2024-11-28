@@ -32,7 +32,7 @@ module.exports = mergeConfig(config, {
       path.resolve(__dirname, 'node_modules'),
       path.resolve(monorepoRoot, 'node_modules'),
     ],
-    assetExts: [...(config.resolver?.assetExts ?? []), 'lottie', 'fbx'],
+    assetExts: [...(config.resolver?.assetExts ?? []), 'lottie', 'fbx', 'html'],
     blockList,
   },
   transformer: {
