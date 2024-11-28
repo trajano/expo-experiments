@@ -1,4 +1,11 @@
-import { FC, RefObject, useCallback, useRef, useState } from 'react';
+import {
+  FC,
+  RefObject,
+  useCallback,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import { Button, View } from 'react-native';
 import { MyText, MyTextInput } from 'react-native-my-text';
 import {
@@ -12,14 +19,13 @@ import * as FileSystem from 'expo-file-system';
 const WebViewCommunicationForm: FC<{
   messagesRef: RefObject<string[]>;
 }> = ({ messagesRef }) => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, refreshMessages] = useReducer(() => messagesRef.current, []);
   const { IpcWebView, postMessage } = useIpcWeb();
   const [input, setInput] = useState('test message');
   const onChangeText = useCallback((nextInput: string) => {
     setInput(nextInput);
   }, []);
   const onSendMessage = useCallback(() => {
-    console.log('onSend');
     postMessage({ input });
   }, [postMessage, input]);
   const onSendUriMessage = useCallback(() => {
@@ -31,9 +37,6 @@ const WebViewCommunicationForm: FC<{
       postMessage({ input: fileUri, isUri: true });
     })();
   }, [postMessage, input]);
-  const onRefresh = useCallback(() => {
-    setMessages(messagesRef.current ?? []);
-  }, [postMessage, input]);
 
   return (
     <View style={{ backgroundColor: 'silver' }}>
@@ -44,7 +47,7 @@ const WebViewCommunicationForm: FC<{
       <MyText></MyText>
       <Button title="Send URI message to webview" onPress={onSendUriMessage} />
       <MyText></MyText>
-      <Button title="Refresh" onPress={onRefresh} />
+      <Button title="Refresh" onPress={refreshMessages} />
       <MyText>{JSON.stringify(messages, null, 2)}</MyText>
     </View>
   );

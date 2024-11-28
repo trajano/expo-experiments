@@ -31,13 +31,13 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
     addListener: addPdfListener,
     pdfPipelineReadyPromise,
   } = usePdfPipeline();
-  const lastUriRef = useRef<string | null>(null);
+  /**
+   * This is string for fast comparison consisting of the uri_pageNumber_scale
+   */
+  const lastUriPageScaleRef = useRef<string | null>(null);
   const correlationId = useRef(Crypto.randomUUID()).current;
 
   useEffect(() => {
-    if (lastUriRef.current !== uri) {
-      setImageDataUri(undefined);
-    }
     const receivedListenerSubscription = addPdfListener(
       'received',
       correlationId,
@@ -45,13 +45,23 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
         if (event.type !== 'received') {
           return;
         }
+        if (
+          lastUriPageScaleRef.current !==
+          event.uri + '_' + event.pageNumber + '_' + event.scale
+        ) {
+          setImageDataUri(undefined);
+        }
       },
     );
+
     const viewportListenerSubscription = addPdfListener(
       'viewport',
       correlationId,
       (event) => {
-        if (event.type !== 'viewport') {
+        if (
+          event.type !== 'viewport' ||
+          typeof onViewPortKnown !== 'function'
+        ) {
           return;
         }
         onViewPortKnown({
@@ -66,15 +76,46 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
       'numPages',
       correlationId,
       (event) => {
-        if (event.type !== 'numPages') {
+        if (
+          event.type !== 'numPages' ||
+          typeof onPageCountKnown !== 'function'
+        ) {
           return;
         }
-        console.log(event);
         onPageCountKnown({
           pageCount: event.numPages,
         });
       },
     );
+    const errorListenerSubscription = addPdfListener(
+      'error',
+      correlationId,
+      (event) => {
+        if (event.type !== 'error' || typeof onError !== 'function') {
+          return;
+        }
+        onError({
+          error: event.error,
+          where: 'event',
+        });
+      },
+    );
+
+    return () => {
+      receivedListenerSubscription?.remove();
+      viewportListenerSubscription?.remove();
+      pageCountListenerSubscription?.remove();
+      errorListenerSubscription?.remove();
+    };
+  }, [
+    addPdfListener,
+    correlationId,
+    onViewPortKnown,
+    onPageCountKnown,
+    onError,
+  ]);
+
+  useEffect(() => {
     const okListenerSubscription = addPdfListener(
       'ok',
       correlationId,
@@ -84,19 +125,7 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
         }
         // may cache this later
         setImageDataUri(event.data);
-        lastUriRef.current = uri;
-      },
-    );
-    const errorListenerSubscription = addPdfListener(
-      'error',
-      correlationId,
-      (event) => {
-        if (event.type !== 'error') {
-          return;
-        }
-        onError({
-          error: event.error,
-        });
+        lastUriPageScaleRef.current = uri + '_' + pageNumber + '_' + scale;
       },
     );
     (async () => {
@@ -105,31 +134,26 @@ export const PdfPipelineView: FC<PdfPipelineViewProps> = ({
         await pdfPipelineReadyPromise;
         postPdfRequest(correlationId, localUri, pageNumber, scale);
       } catch (error: unknown) {
-        console.error('posted', error);
+        onError({ error, where: 'posting' });
       }
     })();
     return () => {
-      okListenerSubscription.remove();
-      pageCountListenerSubscription.remove();
-      errorListenerSubscription.remove();
-      viewportListenerSubscription.remove();
-      receivedListenerSubscription.remove();
+      okListenerSubscription?.remove();
     };
   }, [
     uri,
+    correlationId,
     addPdfListener,
     postPdfRequest,
-    onPageCountKnown,
-    onViewPortKnown,
-    pageNumber,
     onError,
+    pageNumber,
     pdfPipelineReadyPromise,
     scale,
   ]);
   return (
     <Image
       {...props}
-      source={{ uri: imageDataUri }}
+      source={imageDataUri && { uri: imageDataUri }}
       style={style}
       contentFit={contentFit}
     />

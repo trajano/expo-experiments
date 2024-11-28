@@ -33,7 +33,7 @@ const ResumeScreen: FC = () => {
     }
     const localUri = (await Asset.fromURI(randomUri).downloadAsync()).localUri!;
     postPdfRequest('a', localUri);
-  }, [loadedUri]);
+  }, [loadedUri, postPdfRequest]);
   const router = useRouter();
   console.debug({ uri, pageCount, dimensions });
   return (

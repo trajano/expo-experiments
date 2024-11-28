@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PdfPipelineView sets up event listeners and posts PDF request 1`] = `
+<ViewManagerAdapter_ExpoImage
+  containerViewRef={"[React.ref]"}
+  contentFit="cover"
+  contentPosition={
+    {
+      "left": "50%",
+      "top": "50%",
+    }
+  }
+  nativeViewRef={"[React.ref]"}
+  onError={[Function]}
+  onLoad={[Function]}
+  onLoadStart={[Function]}
+  onProgress={[Function]}
+  placeholder={[]}
+  source={
+    [
+      {
+        "uri": "abc",
+      },
+    ]
+  }
+  style={{}}
+  testID="pdf-pipeline-view"
+  transition={null}
+/>
+`;
+
+exports[`PdfPipelineView sets up event listeners and posts PDF request 2`] = `
+<ViewManagerAdapter_ExpoImage
+  containerViewRef={"[React.ref]"}
+  contentFit="cover"
+  contentPosition={
+    {
+      "left": "50%",
+      "top": "50%",
+    }
+  }
+  nativeViewRef={"[React.ref]"}
+  onError={[Function]}
+  onLoad={[Function]}
+  onLoadStart={[Function]}
+  onProgress={[Function]}
+  placeholder={[]}
+  source={
+    [
+      {
+        "uri": "new-abc",
+      },
+    ]
+  }
+  style={{}}
+  testID="pdf-pipeline-view"
+  transition={null}
+/>
+`;

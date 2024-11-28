@@ -89,22 +89,25 @@ export const IpcWebProvider = <T extends object>({
     },
     [onMessage],
   );
-  let resolveIpcWebViewReady: (value: boolean) => void;
-  let rejectIpcWebViewReady: (error: unknown) => void;
+  const resolveIpcWebViewReadyRef = useRef<(value: boolean) => void>();
+  const rejectIpcWebViewReadyRef = useRef<(error: unknown) => void>();
 
   const ipcWebViewReadyPromise = useRef(
     new Promise<boolean>((resolve, reject) => {
-      resolveIpcWebViewReady = resolve; // Store the resolve function
-      rejectIpcWebViewReady = reject;
+      resolveIpcWebViewReadyRef.current = resolve; // Store the resolve function
+      rejectIpcWebViewReadyRef.current = reject;
     }),
   ).current;
   const ipcOnLoad = useCallback(() => {
-    resolveIpcWebViewReady(true);
+    resolveIpcWebViewReadyRef.current &&
+      resolveIpcWebViewReadyRef.current(true);
   }, []);
   const ipcOnError = useCallback((event: WebViewErrorEvent) => {
-    rejectIpcWebViewReady(
-      new Error(`Webview Error: ${event.nativeEvent.code}`),
-    );
+    if (rejectIpcWebViewReadyRef.current) {
+      rejectIpcWebViewReadyRef.current(
+        new Error(`Webview Error: ${event.nativeEvent.code}`),
+      );
+    }
   }, []);
   const ContextIpcWebView = useMemo<FC<Record<string, never>>>(() => {
     // The random UUID is needed to allow reloads
@@ -118,7 +121,7 @@ export const IpcWebProvider = <T extends object>({
         ref={ipcWebViewRef}
       />
     );
-  }, [sourceProvider, ipcOnMessage]);
+  }, [sourceProvider, ipcOnMessage, ipcOnLoad, ipcOnError]);
   ContextIpcWebView.displayName = 'IpcWebView';
 
   const postMessage = useCallback((message: object) => {

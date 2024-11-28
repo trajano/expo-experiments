@@ -35,7 +35,7 @@ export const useViewDimensions = (
         height: (windowWidth / width) * height,
       };
     }
-  }, [width, height]);
+  }, [initialHeight, width, height]);
   return {
     setHeight,
     setWidth,
