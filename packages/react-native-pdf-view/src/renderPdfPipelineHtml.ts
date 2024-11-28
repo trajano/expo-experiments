@@ -79,14 +79,13 @@ window.addEventListener('message', (rawMessage) => {
   const xhr = new XMLHttpRequest();
 
   xhr.onreadystatechange = () => {
-    console.log(xhr.readyState, message.uri);
     if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
         renderPdfAsync(xhr.response, message.pageNumber, message.scale, message.correlationId).then();
     }
   }
   xhr.open("GET", message.uri);
   xhr.responseType ="arraybuffer";
-  setTimeout(()=> xhr.send(), 3000);
+  xhr.send();
 
 });
 
