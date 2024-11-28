@@ -22,6 +22,7 @@ RUN --mount=type=cache,target=/root/.android/cache \
   "ndk;26.1.10909125" \
   "ndk;26.3.11579264" \
   "ndk;28.0.12674087" \
+  "cmake;3.22.1" \
   "cmake;3.31.0" \
   && yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 # "system-images;android-34;google_apis;x86_64" \
