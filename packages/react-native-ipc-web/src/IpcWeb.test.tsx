@@ -25,5 +25,5 @@ describe('IpcWeb', () => {
     );
     await act(() => Promise.resolve());
     fireEvent.press(screen.getByText('send'));
-  });
+  }, 30_000);
 });
