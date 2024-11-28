@@ -9,7 +9,7 @@ import {
 import * as Crypto from 'expo-crypto';
 import { Asset } from 'expo-asset';
 import { useRouter } from 'expo-router';
-import { useViewDimensions } from '@/hooks/useViewDimensions';
+import { useViewDimensions } from 'react-native-my-hooks';
 import PagerView from 'react-native-pager-view';
 import { MyText } from 'react-native-my-text';
 
@@ -93,19 +93,6 @@ const ResumeScreen: FC = () => {
     </ScrollView>
   );
 };
-/*
-    //   <PagerView style={styles.pager}>
-    //     {Array.from({ length: pageCount }, (_ignore, index) => index + 1).map(
-    //       (pageNumber) => (
-    //         <View key={`${uri}.${pageNumber}`}>
-
-
-            </View>
-          ),
-        )}
-      </PagerView>
-
- */
 const CompositeScreen = WithPdfView(ResumeScreen);
 export default CompositeScreen;
 

@@ -6,3 +6,4 @@ export {
   useNotifications,
   WithNotifications,
 } from './NotificationsContext';
+export { useViewDimensions, ViewDimensionsProps } from './useViewDimensions';
