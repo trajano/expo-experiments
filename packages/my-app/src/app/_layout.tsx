@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 
 import { SplashScreen, Stack, useRouter } from 'expo-router';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
 import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
@@ -21,10 +21,11 @@ import { useShakeDetection, WithShakeDetection } from '@/hooks/ShakeDetection';
 SplashScreen.preventAutoHideAsync();
 
 export const RootLayout: FC = () => {
+  const [loaded, setLoaded] = useState(false);
   const colorScheme = useColorScheme();
   const router = useRouter();
   const { addListener: addShakeListener } = useShakeDetection();
-  // useLoadGuard
+
   useEffect(() => {
     const shakeSubscription = addShakeListener(() => {
       if (!__DEV__) {
@@ -34,7 +35,7 @@ export const RootLayout: FC = () => {
     (async () => {
       // before hiding the splashscreen the fonts and assets for the loader screen should be loaded
       await registerDevMenuItemsAsync({ router });
-      await SplashScreen.hideAsync();
+      setLoaded(true);
       // this may be moved to load guard.
     })();
     return () => {
@@ -42,7 +43,15 @@ export const RootLayout: FC = () => {
     };
   }, [router, addShakeListener]);
 
-  // if (!loaded), but I want it already on the stack right?
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
