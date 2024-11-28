@@ -16,10 +16,13 @@ RUN --mount=type=cache,target=/root/.android/cache \
   "platform-tools" \
   "build-tools;34.0.0" \
   "platforms;android-34" \
+  "build-tools;35.0.0" \
+  "platforms;android-35" \
   "ndk;25.1.8937393" \
   "ndk;26.1.10909125" \
   "ndk;26.3.11579264" \
-  "cmake;3.22.1" \
+  "ndk;28.0.12674087" \
+  "cmake;3.31.0" \
   && yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 # "system-images;android-34;google_apis;x86_64" \
 # "emulator" \
