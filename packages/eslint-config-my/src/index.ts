@@ -10,6 +10,7 @@ const rules: Linter.RulesRecord = {
     },
   ],
   eqeqeq: ['error'],
+  'react-hooks/exhaustive-deps': ['error'],
   'import/no-unresolved': ['error'],
   'no-restricted-imports': [
     'error',

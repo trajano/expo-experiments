@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/expo-50.0.0.json#",
   "expo": {
     "name": "My App Go",
     "slug": "my-app",

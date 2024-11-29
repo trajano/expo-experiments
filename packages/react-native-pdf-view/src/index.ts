@@ -11,3 +11,5 @@ export {
   PdfErrorEventData,
   PdfLoadEventData,
 } from './PdfViewProps';
+export {PdfPipelineView} from './PdfPipelineView';
+export { PdfPipeline } from './PdfPipeline';

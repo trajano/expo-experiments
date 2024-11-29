@@ -16,9 +16,14 @@ config = withStorybook(config, {
 
 const testRegExps = [/^.*\/[^/]+\.test\.[^/]+$/, /(\\__mocks__\\.*)$/];
 /** @type {RegExp[]} */
-const blockList = Array.isArray(config.resolver.blockList)
-  ? [...config.resolver.blockList, ...testRegExps]
-  : [config.resolver.blockList, ...testRegExps];
+let blockList;
+if (config.resolver?.blockList) {
+  blockList = Array.isArray(config.resolver?.blockList)
+    ? [...config.resolver.blockList, ...testRegExps]
+    : [config.resolver.blockList, ...testRegExps];
+} else {
+  blockList = testRegExps;
+}
 
 module.exports = mergeConfig(config, {
   watchFolders: [monorepoRoot],
@@ -27,7 +32,7 @@ module.exports = mergeConfig(config, {
       path.resolve(__dirname, 'node_modules'),
       path.resolve(monorepoRoot, 'node_modules'),
     ],
-    assetExts: [...(config.resolver.assetExts ?? []), 'lottie', 'fbx'],
+    assetExts: [...(config.resolver?.assetExts ?? []), 'lottie', 'fbx', 'html'],
     blockList,
   },
   transformer: {

@@ -19,7 +19,7 @@
     "eslint-config-my": "*",
     "jest": "^29.7.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "peerDependencies": {
     "react": "*",
@@ -35,6 +35,6 @@
     "dist/"
   ],
   "dependencies": {
-    "webdriverio": "^9.3.0"
+    "webdriverio": "^9.4.1"
   }
 }

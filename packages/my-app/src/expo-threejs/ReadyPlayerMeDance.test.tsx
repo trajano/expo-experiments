@@ -4,11 +4,6 @@ import { composeStories } from '@storybook/react';
 import * as stories from './ReadyPlayerMeDance.stories';
 import * as FileSystem from 'expo-file-system';
 
-// jest.mock('react-native-webview', () => {
-//   return {
-//     WebView: jest.fn((props) => forwardRef((_props, ref)=><div role="role" ref={ref} {...props} />)),
-//   };
-// });
 jest.mock('expo-file-system', () => ({
   ...jest.requireActual('expo-file-system'),
   downloadAsync: jest.fn(() => ({
@@ -16,10 +11,17 @@ jest.mock('expo-file-system', () => ({
   })),
   readAsStringAsync: jest.fn(() => {}),
 }));
-jest.mock('@/assets/animations/Breakdance-Footwork-1.fbx', () => jest.fn());
-jest.mock('@/assets/animations/Hip-Hop-Dancing.fbx', () => jest.fn());
-jest.mock('@/assets/animations/Rumba-Dancing.fbx', () => jest.fn());
-jest.mock('@/assets/animations/Talking-On-Phone.fbx', () => jest.fn());
+jest.mock('expo-asset', () => ({
+  Asset: {
+    loadAsync: () => {
+      return [
+        {
+          localUri: 'Foo/Bar/file.txt',
+        },
+      ];
+    },
+  },
+}));
 
 const { ThreeJsReadyPlayerMeSample } = composeStories(stories);
 describe('ThreeJsExample', () => {
@@ -29,12 +31,16 @@ describe('ThreeJsExample', () => {
         testID="webview"
         modelUri="https://threejs.org/examples/models/gltf/readyplayer.me.glb"
         fbxAnimationUri="https://threejs.org/examples/models/fbx/mixamo.fbx"
-        useLocalUri={false}
       />,
     );
     await act(() => Promise.resolve());
     const webView = screen.getByTestId('webview');
     expect(webView).toBeTruthy();
+    expect(FileSystem.downloadAsync).toBeCalledWith(
+      'https://threejs.org/build/three.webgpu.js',
+      'Foo/Bar/three.webgpu.js',
+      { cache: true },
+    );
   });
   it('renders ThreeJsExample story', async () => {
     jest.mocked(FileSystem.readAsStringAsync).mockResolvedValueOnce('AAAAA');

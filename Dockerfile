@@ -16,10 +16,14 @@ RUN --mount=type=cache,target=/root/.android/cache \
   "platform-tools" \
   "build-tools;34.0.0" \
   "platforms;android-34" \
+  "build-tools;35.0.0" \
+  "platforms;android-35" \
   "ndk;25.1.8937393" \
   "ndk;26.1.10909125" \
   "ndk;26.3.11579264" \
+  "ndk;28.0.12674087" \
   "cmake;3.22.1" \
+  "cmake;3.31.0" \
   && yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 # "system-images;android-34;google_apis;x86_64" \
 # "emulator" \
@@ -79,7 +83,7 @@ ENV JAVA_OPTS="-Xmx4g -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg
 FROM gradle-build-env AS devclient
 COPY --from=prebuild-devclient --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleDebug,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
-  ./gradlew assembleDebug
+  ./gradlew assembleDebug -Dorg.gradle.jvmargs="-Xmx4g"
 
 # Stage 9: Build Preview APKs (build platform-specific)
 FROM gradle-build-env AS preview-apk
@@ -88,7 +92,7 @@ ENV EXPO_APP_NAME="My App"
 ENV EXPO_APP_BRAND="release"
 COPY --from=prebuild-preview --chown=ubuntu:ubuntu /home/ubuntu/work/ /home/ubuntu/work/
 RUN --mount=type=cache,id=assembleRelease,target=/home/ubuntu/.gradle,uid=1000,gid=1000 \
-  ./gradlew assembleRelease
+  ./gradlew assembleRelease -Dorg.gradle.jvmargs="-Xmx4g"
 
 # EAS build
 FROM prebuild-env AS eas-build-ios-devclient

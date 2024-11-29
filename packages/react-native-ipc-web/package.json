@@ -1,6 +1,6 @@
 {
-  "name": "react-native-my-empty",
-  "description": "Empty starter module",
+  "name": "react-native-ipc-web",
+  "description": "A context that uses WebView to process data.",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
   "react-native": "./src/index.ts",
@@ -20,13 +20,15 @@
     "jest": "*",
     "jest-expo": "*",
     "react-test-renderer": "*",
+    "react-native-webview": "*",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
     "expo": "*",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-webview": "*"
   },
   "jest": {
     "preset": "jest-expo",
