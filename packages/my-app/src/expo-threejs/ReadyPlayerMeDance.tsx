@@ -33,7 +33,7 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
     let mounted = true;
     (async () => {
       const [htmlAsset] = await Asset.loadAsync(
-        require('@/assets/animations/animation-retargeting.html'),
+        require('./animation-retargeting.html'),
       );
       if (mounted) {
         setHtmlUri(htmlAsset.localUri);
