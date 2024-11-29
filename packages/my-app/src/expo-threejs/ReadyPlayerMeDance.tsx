@@ -5,7 +5,7 @@ import { Asset } from 'expo-asset';
 
 export type ReadyPlayerMeDanceProps = Omit<
   WebViewProps,
-  'source' | 'originWhiteList'
+  'source' | 'originWhiteList' | 'onMessage'
 > & {
   fbxAnimationUri?: string;
   animationResource?: number;
@@ -35,12 +35,27 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
       const [htmlAsset] = await Asset.loadAsync(
         require('./animation-retargeting.html'),
       );
-      const threeWebgpuJsTargetUri =
-        htmlAsset.localUri!.substring(0, htmlAsset.localUri!.lastIndexOf('/')) +
-        '/three.webgpu.js';
+      const htmlBaseFolder = htmlAsset.localUri!.substring(
+        0,
+        htmlAsset.localUri!.lastIndexOf('/'),
+      );
+      await FileSystem.downloadAsync(
+        'https://threejs.org/build/three.core.js',
+        `${htmlBaseFolder}/three.core.js`,
+        {
+          cache: true,
+        },
+      );
+      await FileSystem.downloadAsync(
+        'https://threejs.org/build/three.tsl.js',
+        `${htmlBaseFolder}/three.tsl.js`,
+        {
+          cache: true,
+        },
+      );
       await FileSystem.downloadAsync(
         'https://threejs.org/build/three.webgpu.js',
-        threeWebgpuJsTargetUri,
+        `${htmlBaseFolder}/three.webgpu.js`,
         {
           cache: true,
         },
@@ -55,6 +70,7 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
   }, []);
   const webviewRef = useRef<WebView>(null);
   const handleMessage = useCallback(() => {
+    console.log('loaded');
     setLoaded(true);
   }, []);
   useEffect(() => {

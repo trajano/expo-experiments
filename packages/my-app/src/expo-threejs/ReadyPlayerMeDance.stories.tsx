@@ -43,6 +43,8 @@ export const SelectableSamples: Story = {
         type: 'select',
       },
     },
+    onError: { action: 'error' },
+    onLoad: { action: 'loaded' },
     animationResource: {
       options: [
         require('@/assets/animations/Breakdance-Footwork-1.fbx'),

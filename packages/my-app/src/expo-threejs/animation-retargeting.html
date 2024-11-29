@@ -40,7 +40,8 @@
   {
     "imports": {
       "three": "./three.webgpu.js",
-      "three/tsl": "./three.webgpu.js",
+      "three/webgpu": "./three.webgpu.js",
+      "three/tsl": "./three.tsl.js",
       "three/addons/": "https://threejs.org/examples/jsm/"
     }
   }
@@ -55,6 +56,8 @@
   import {FBXLoader} from 'three/addons/loaders/FBXLoader.js';
 
   import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+
+  console.log({"event": "E"})
 
   const getSource = (sourceModel) => {
 
@@ -115,6 +118,18 @@
   let sourceModel;
   let targetModel;
 
+  const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .25, 50);
+  camera.position.set(0, 3, 5);
+
+  const animateFn = (source, mixer, controls, renderer) => () => {
+
+    const delta = clock.getDelta();
+    source.mixer.update(delta);
+    mixer.update(delta);
+    controls.update();
+    renderer.render(scene, camera);
+
+  }
   window.addEventListener('message', async (message) => {
     /**
      * @type {{fbxAnimationUri:string, remoteModelUri:string}}
@@ -141,9 +156,6 @@
     const keyLight = new THREE.DirectionalLight(0xfff9ea, 4);
     keyLight.position.set(3, 5, 3);
     scene.add(keyLight);
-
-    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, .25, 50);
-    camera.position.set(0, 3, 5);
 
     // floor
     const reflection = reflector();
@@ -190,17 +202,8 @@
       controls.target.set(0, 1, 0);
       controls.maxPolarAngle = Math.PI / 2;
 
-      const animate = () => {
-
-        const delta = clock.getDelta();
-        source.mixer.update(delta);
-        mixer.update(delta);
-        controls.update();
-        renderer.render(scene, camera);
-
-      }
       // renderer
-      renderer.setAnimationLoop(animate);
+      renderer.setAnimationLoop(animateFn(source, mixer, controls, renderer));
       document.body.appendChild(renderer.domElement);
       //
     } else {
@@ -209,17 +212,8 @@
       controls.maxDistance = 12;
       controls.target.set(0, 1, 0);
       controls.maxPolarAngle = Math.PI / 2;
-      const animate = () => {
-
-        const delta = clock.getDelta();
-        source.mixer.update(delta);
-        mixer.update(delta);
-        controls.update();
-        renderer.render(scene, camera);
-
-      }
       // renderer
-      renderer.setAnimationLoop(animate);
+      renderer.setAnimationLoop(animateFn(source, mixer, controls, renderer));
     }
   })
   window.ReactNativeWebView.postMessage(JSON.stringify({event: "started"}));

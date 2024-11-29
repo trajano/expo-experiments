@@ -36,7 +36,7 @@ describe('ThreeJsExample', () => {
     await act(() => Promise.resolve());
     const webView = screen.getByTestId('webview');
     expect(webView).toBeTruthy();
-    expect(FileSystem.downloadAsync).toBeCalledWith(
+    expect(FileSystem.downloadAsync).toHaveBeenCalledWith(
       'https://threejs.org/build/three.webgpu.js',
       'Foo/Bar/three.webgpu.js',
       { cache: true },
