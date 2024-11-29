@@ -28,53 +28,8 @@
       text-transform: uppercase;
     }
 
-    #info {
-      position: absolute;
-      top: 0px;
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      text-align: center;
-      -moz-user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      pointer-events: none;
-      z-index: 1;
-    }
-
     a, button, input, select {
       pointer-events: auto;
-    }
-
-    .lil-gui {
-      z-index: 2 !important;
-    }
-
-    @media all and ( max-width: 640px ) {
-      .lil-gui.root {
-        right: auto;
-        top: auto;
-        max-height: 50%;
-        max-width: 80%;
-        bottom: 0;
-        left: 0;
-      }
-    }
-
-    #overlay {
-      position: absolute;
-      font-size: 16px;
-      z-index: 2;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      background: rgba(0, 0, 0, 0.7);
     }
 
     #overlay button {
@@ -88,13 +43,6 @@
       cursor: pointer;
     }
 
-    #notSupported {
-      width: 50%;
-      margin: auto;
-      background-color: #f00;
-      margin-top: 20px;
-      padding: 10px;
-    }
   </style>
 </head>
 <body>
@@ -168,8 +116,16 @@
   }
 
   const clock = new THREE.Clock();
+  const scene = new THREE.Scene();
+  const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649));
+  const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68));
+  scene.backgroundNode = horizontalEffect.add(lightEffect);
+  const light = new THREE.HemisphereLight(0x311649, 0x0c5d68, 10);
+  scene.add(light);
 
   let renderer;
+  let sourceModel;
+  let targetModel;
 
   window.addEventListener('message', async (message) => {
     /**
@@ -177,28 +133,21 @@
      */
     const parsed = JSON.parse(message.data);
 
-    console.log({
-      parsed, renderer
-    })
     if (renderer) {
-      document.body.removeChild(renderer.domElement);
-      renderer.dispose();
+      // document.body.removeChild(renderer.domElement);
+      // renderer.dispose();
+      scene.remove(sourceModel)
+      scene.remove(targetModel.scene)
     }
 
     const sourceModelPromise = new Promise((resolve, reject) => new FBXLoader().load(parsed.fbxAnimationUri, resolve, undefined, reject));
     const targetModelPromise = new Promise((resolve, reject) => new GLTFLoader().load(parsed.remoteModelUri, resolve, undefined, reject));
 
-    const [sourceModel, targetModel] = await Promise.all([
+    [sourceModel, targetModel] = await Promise.all([
       sourceModelPromise,
       targetModelPromise,
     ]);
 
-    const scene = new THREE.Scene();
-    const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649));
-    const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68));
-    scene.backgroundNode = horizontalEffect.add(lightEffect);
-    const light = new THREE.HemisphereLight(0x311649, 0x0c5d68, 10);
-    scene.add(light);
 
     const backLight = new THREE.DirectionalLight(0xffffff, 10);
     backLight.position.set(0, 5, -5);
@@ -244,31 +193,49 @@
     const source = getSource(sourceModel);
     const mixer = retargetModel(source, targetModel);
 
-    renderer = new THREE.WebGPURenderer({antialias: true});
-    renderer.toneMapping = THREE.NeutralToneMapping;
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (!renderer) {
+      renderer = new THREE.WebGPURenderer({antialias: true});
+      renderer.toneMapping = THREE.NeutralToneMapping;
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 3;
-    controls.maxDistance = 12;
-    controls.target.set(0, 1, 0);
-    controls.maxPolarAngle = Math.PI / 2;
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.minDistance = 3;
+      controls.maxDistance = 12;
+      controls.target.set(0, 1, 0);
+      controls.maxPolarAngle = Math.PI / 2;
 
-    const animate = () => {
+      const animate = () => {
 
-      const delta = clock.getDelta();
-      source.mixer.update(delta);
-      mixer.update(delta);
-      controls.update();
-      renderer.render(scene, camera);
+        const delta = clock.getDelta();
+        source.mixer.update(delta);
+        mixer.update(delta);
+        controls.update();
+        renderer.render(scene, camera);
 
+      }
+      // renderer
+      renderer.setAnimationLoop(animate);
+      document.body.appendChild(renderer.domElement);
+      //
+    } else {
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.minDistance = 3;
+      controls.maxDistance = 12;
+      controls.target.set(0, 1, 0);
+      controls.maxPolarAngle = Math.PI / 2;
+      const animate = () => {
+
+        const delta = clock.getDelta();
+        source.mixer.update(delta);
+        mixer.update(delta);
+        controls.update();
+        renderer.render(scene, camera);
+
+      }
+      // renderer
+      renderer.setAnimationLoop(animate);
     }
-    // renderer
-    renderer.setAnimationLoop(animate);
-    document.body.appendChild(renderer.domElement);
-    //
-
   })
   window.ReactNativeWebView.postMessage(JSON.stringify({event: "started"}));
 
