@@ -39,15 +39,14 @@
 <script type="importmap">
   {
     "imports": {
-      "three": "https://threejs.org/build/three.webgpu.js",
-      "three/tsl": "https://threejs.org/build/three.webgpu.js",
+      "three": "./three.webgpu.js",
+      "three/tsl": "./three.webgpu.js",
       "three/addons/": "https://threejs.org/examples/jsm/"
     }
   }
 </script>
 
 <script type="module">
-
   import * as THREE from 'three';
   import {screenUV, color, vec2, vec4, reflector, positionWorld} from 'three/tsl';
 
@@ -134,7 +133,6 @@
       sourceModelPromise,
       targetModelPromise,
     ]);
-
 
     const backLight = new THREE.DirectionalLight(0xffffff, 10);
     backLight.position.set(0, 5, -5);

@@ -11,6 +11,17 @@ jest.mock('expo-file-system', () => ({
   })),
   readAsStringAsync: jest.fn(() => {}),
 }));
+jest.mock('expo-asset', () => ({
+  Asset: {
+    loadAsync: () => {
+      return [
+        {
+          localUri: 'Foo/Bar/file.txt',
+        },
+      ];
+    },
+  },
+}));
 
 const { ThreeJsReadyPlayerMeSample } = composeStories(stories);
 describe('ThreeJsExample', () => {
@@ -25,6 +36,11 @@ describe('ThreeJsExample', () => {
     await act(() => Promise.resolve());
     const webView = screen.getByTestId('webview');
     expect(webView).toBeTruthy();
+    expect(FileSystem.downloadAsync).toBeCalledWith(
+      'https://threejs.org/build/three.webgpu.js',
+      'Foo/Bar/three.webgpu.js',
+      { cache: true },
+    );
   });
   it('renders ThreeJsExample story', async () => {
     jest.mocked(FileSystem.readAsStringAsync).mockResolvedValueOnce('AAAAA');

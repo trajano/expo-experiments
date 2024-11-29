@@ -35,6 +35,16 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
       const [htmlAsset] = await Asset.loadAsync(
         require('./animation-retargeting.html'),
       );
+      const threeWebgpuJsTargetUri =
+        htmlAsset.localUri!.substring(0, htmlAsset.localUri!.lastIndexOf('/')) +
+        '/three.webgpu.js';
+      await FileSystem.downloadAsync(
+        'https://threejs.org/build/three.webgpu.js',
+        threeWebgpuJsTargetUri,
+        {
+          cache: true,
+        },
+      );
       if (mounted) {
         setHtmlUri(htmlAsset.localUri);
       }
