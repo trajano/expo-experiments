@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>three.js webgpu - animation retargeting</title>
+  <meta charSet="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+<body>
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://threejs.org/build/three.webgpu.js",
+      "three/tsl": "https://threejs.org/build/three.webgpu.js",
+      "three/addons/": "https://threejs.org/examples/jsm/"
+    }
+  }
+</script>
+
+<script type="module">
+
+  import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+  import {FBXLoader} from 'three/addons/loaders/FBXLoader.js';
+
+  let resolveSourceModelPromise;
+  let resolveTargetModelPromise;
+
+  let rejectSourceModelPromise;
+  let rejectTargetModelPromise;
+
+  const sourceModelPromise = new Promise((resolve, reject) => {
+    resolveSourceModelPromise = resolve;
+    rejectSourceModelPromise = reject;
+  });
+
+  const targetModelPromise = new Promise((resolve, reject) => {
+    resolveTargetModelPromise = resolve;
+    rejectTargetModelPromise = reject;
+  });
+
+
+  window.addEventListener('message', (message) => {
+    /**
+     * @type {{fbxAnimationUri:string, remoteModelUri:string}}
+     */
+    const parsed = JSON.parse(message.data);
+    document.getElementById("foo").textContent = JSON.stringify(parsed, null, 2);
+    new FBXLoader().load(parsed.fbxAnimationUri, resolveSourceModelPromise, undefined, rejectSourceModelPromise);
+    new GLTFLoader().load(parsed.remoteModelUri, resolveTargetModelPromise, undefined, rejectTargetModelPromise);
+  })
+  window.ReactNativeWebView.postMessage(JSON.stringify({event: "started"}));
+
+  const [sourceModel, targetModel] = await Promise.all([
+    sourceModelPromise,
+    targetModelPromise,
+  ]);
+  document.getElementById("foo").textContent = "LOADED";
+
+
+</script>
+<pre id="foo">HELLO WORLD</pre>
+</body>
+</html>

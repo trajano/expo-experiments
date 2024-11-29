@@ -18,7 +18,6 @@ export const ThreeJsReadyPlayerMeSample: Story = {
   args: {
     modelUri: 'https://threejs.org/examples/models/gltf/readyplayer.me.glb',
     fbxAnimationUri: 'https://threejs.org/examples/models/fbx/mixamo.fbx',
-    useLocalUri: true,
     testID: 'webview',
   },
   parameters: {
@@ -31,7 +30,6 @@ export const SelectableSamples: Story = {
   args: {
     avatarId: '673053f10e05f44f8d84fe69',
     animationResource: require('@/assets/animations/Talking-On-Phone.fbx'),
-    useLocalUri: true,
   },
   argTypes: {
     avatarId: {
