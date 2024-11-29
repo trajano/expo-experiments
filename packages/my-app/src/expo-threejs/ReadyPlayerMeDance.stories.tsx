@@ -49,6 +49,10 @@ export const SelectableSamples: Story = {
         require('@/assets/animations/Hip-Hop-Dancing.fbx'),
         require('@/assets/animations/Rumba-Dancing.fbx'),
         require('@/assets/animations/Talking-On-Phone.fbx'),
+        require('@/assets/animations/Gangnam-Style.fbx'),
+        require('@/assets/animations/Ymca-Dance.fbx'),
+        require('@/assets/animations/Dancing-Running-Man.fbx'),
+        require('@/assets/animations/Capoeira.fbx'),
       ],
       control: {
         type: 'select',
@@ -58,6 +62,11 @@ export const SelectableSamples: Story = {
           [require('@/assets/animations/Hip-Hop-Dancing.fbx')]: 'Hip hop',
           [require('@/assets/animations/Rumba-Dancing.fbx')]: 'Rumba',
           [require('@/assets/animations/Talking-On-Phone.fbx')]: 'OTP',
+          [require('@/assets/animations/Gangnam-Style.fbx')]: 'Gangam',
+          [require('@/assets/animations/Ymca-Dance.fbx')]: 'YMCA',
+          [require('@/assets/animations/Dancing-Running-Man.fbx')]:
+            'Running Man',
+          [require('@/assets/animations/Capoeira.fbx')]: 'Capoeira',
         },
       },
     },

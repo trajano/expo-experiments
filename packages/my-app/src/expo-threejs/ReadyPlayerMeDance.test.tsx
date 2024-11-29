@@ -11,10 +11,6 @@ jest.mock('expo-file-system', () => ({
   })),
   readAsStringAsync: jest.fn(() => {}),
 }));
-jest.mock('@/assets/animations/Breakdance-Footwork-1.fbx', () => jest.fn());
-jest.mock('@/assets/animations/Hip-Hop-Dancing.fbx', () => jest.fn());
-jest.mock('@/assets/animations/Rumba-Dancing.fbx', () => jest.fn());
-jest.mock('@/assets/animations/Talking-On-Phone.fbx', () => jest.fn());
 
 const { ThreeJsReadyPlayerMeSample } = composeStories(stories);
 describe('ThreeJsExample', () => {
