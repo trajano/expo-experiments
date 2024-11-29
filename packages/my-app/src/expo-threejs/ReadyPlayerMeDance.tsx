@@ -28,7 +28,7 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
   ...props
 }) => {
   const [htmlUri, setHtmlUri] = useState<string | null>(null);
-  const loadedRef = useRef(false);
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -45,28 +45,19 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
   }, []);
   const webviewRef = useRef<WebView>(null);
   const handleMessage = useCallback(() => {
-    const messageString = JSON.stringify({
-      fbxAnimationUri: animationUri,
-      remoteModelUri: modelUri,
-    });
-    // if (loadedRef.current) {
-    //   webviewRef.current?.reload();
-    // }
-    webviewRef.current?.injectJavaScript(
-      `window.postMessage('${messageString}', '*')`,
-    );
-  }, [animationUri, modelUri]);
+    setLoaded(true);
+  }, []);
   useEffect(() => {
-    const messageString = JSON.stringify({
-      fbxAnimationUri: animationUri,
-      remoteModelUri: modelUri,
-    });
-    if (loadedRef.current) {
+    if (loaded) {
+      const messageString = JSON.stringify({
+        fbxAnimationUri: animationUri,
+        remoteModelUri: modelUri,
+      });
       webviewRef.current?.injectJavaScript(
         `window.postMessage('${messageString}', '*')`,
       );
     }
-  }, [animationUri, modelUri]);
+  }, [animationUri, modelUri, loaded]);
 
   if (animationUri === null || htmlUri === null || modelUri === null) {
     return null;
@@ -80,9 +71,6 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
       webviewDebuggingEnabled={__DEV__}
       originWhitelist={['*']}
       bounces={false}
-      onLoad={() => {
-        loadedRef.current = true;
-      }}
       onMessage={handleMessage}
       ref={webviewRef}
       source={{ uri: htmlUri }}
