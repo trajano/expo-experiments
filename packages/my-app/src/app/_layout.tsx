@@ -62,6 +62,7 @@ export const RootLayout: FC = () => {
         <Stack.Screen name="splash" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="storybook" options={{ headerShown: false }} />
+        <Stack.Screen name="secure" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
