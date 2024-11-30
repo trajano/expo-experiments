@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as TaskManager from 'expo-task-manager';
 import { TaskManagerTask } from 'expo-task-manager';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MyText, Strong } from 'react-native-my-text';
 import * as BackgroundFetch from 'expo-background-fetch';
@@ -9,7 +9,9 @@ import {
   BACKGROUND_FETCH_TASK,
   BACKGROUND_LOCATION_TASK,
   BACKGROUND_NOTIFICATION_TASK,
+  CLEAN_CACHE_DIRECTORY_TASK,
 } from '@/tasks';
+import { FlashList } from '@shopify/flash-list';
 
 const TaskManagerView: FC = () => {
   const [tasks, setTasks] = useState<TaskManagerTask[]>([]);
@@ -38,7 +40,6 @@ const TaskManagerView: FC = () => {
       mounted = false;
     };
   }, []);
-  const tasksJson = useMemo(() => JSON.stringify(tasks, null, 2), [tasks]);
 
   return (
     <View style={styles.container}>
@@ -57,13 +58,23 @@ const TaskManagerView: FC = () => {
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>Registered Tasks</MyText>
       </View>
-      <MyText style={styles.text}>{tasksJson}</MyText>
+      <FlashList
+        renderItem={(it) => (
+          <MyText style={styles.text}>{JSON.stringify(it, null, 2)}</MyText>
+        )}
+        data={tasks}
+        estimatedItemSize={184}
+      />
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>Known tasks</MyText>
       </View>
       <MyText style={styles.text}>
         <Strong>BACKGROUND_NOTIFICATION_TASK:</Strong>
         {TaskManager.isTaskDefined(BACKGROUND_NOTIFICATION_TASK) ? 'yes' : 'no'}
+      </MyText>
+      <MyText style={styles.text}>
+        <Strong>CLEAN_CACHE_DIRECTORY_TASK:</Strong>
+        {TaskManager.isTaskDefined(CLEAN_CACHE_DIRECTORY_TASK) ? 'yes' : 'no'}
       </MyText>
       <MyText style={styles.text}>
         <Strong>BACKGROUND_LOCATION_TASK:</Strong>

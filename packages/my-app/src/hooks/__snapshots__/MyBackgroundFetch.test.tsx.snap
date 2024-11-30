@@ -4,7 +4,7 @@ exports[`MyBackgroundFetch Use HoC 1`] = `
 <Text
   testID="props"
 >
-  {}
+  {"registrations":[]}
 </Text>
 `;
 
@@ -12,6 +12,6 @@ exports[`MyBackgroundFetch Use provider 1`] = `
 <Text
   testID="props"
 >
-  {}
+  {"registrations":[]}
 </Text>
 `;

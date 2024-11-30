@@ -10,7 +10,7 @@ describe('useWhyEffect', () => {
     const { result } = renderHook(() => {
       const [deps, setDeps] = useState<any[]>([1, 'test', true]);
 
-      useWhyEffect(mockEffect, mockOnChange, deps);
+      useWhyEffect(mockEffect, deps, mockOnChange);
 
       return { setDeps };
     });

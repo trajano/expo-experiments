@@ -18,12 +18,17 @@ import * as TaskManager from 'expo-task-manager';
 // 2. Register the task at some point in your app by providing the same name,
 // and some configuration options for how the background fetch should behave
 
+type BackgroundFetchRegistration = {
+  taskName: string;
+  registered: boolean;
+};
+
 /**
  * Interface representing an empty context value for the MyBackgroundFetch context.
  * This interface can be expanded to include any values needed by the context.
  */
 export interface MyBackgroundFetch {
-  registered: boolean;
+  registrations: BackgroundFetchRegistration[];
   status: BackgroundFetch.BackgroundFetchStatus | null;
 }
 
@@ -33,7 +38,7 @@ export interface MyBackgroundFetch {
  * is used.
  */
 export const MyBackgroundFetchContext = createContext<MyBackgroundFetch>({
-  registered: false,
+  registrations: [],
   status: null,
 });
 
@@ -42,62 +47,113 @@ export const MyBackgroundFetchContext = createContext<MyBackgroundFetch>({
  */
 export type MyBackgroundFetchProps = PropsWithChildren<
   {
-    backgroundFetchTaskName: string;
+    backgroundFetchTaskNames: string | string[];
   } & BackgroundFetch.BackgroundFetchOptions
 >;
 
+const registerBackgroundFetchAsync = async (
+  backgroundFetchTaskName: string,
+  minimumInterval: number,
+) =>
+  BackgroundFetch.registerTaskAsync(backgroundFetchTaskName, {
+    minimumInterval,
+    startOnBoot: true,
+    stopOnTerminate: false,
+  });
+
+const updateBackgroundFetchRegistrationAsync = async (
+  backgroundFetchTaskNames: string[],
+  backgroundFetchRegistrations: BackgroundFetchRegistration[],
+  minimumInterval: number,
+) => {
+  const backgroundTasksToRegister = backgroundFetchRegistrations
+    .filter((registration) =>
+      backgroundFetchTaskNames.find(
+        (it) => it === registration.taskName && !registration.registered,
+      ),
+    )
+    .map((it) => it.taskName);
+  const backgroundTasksToUnregister = backgroundFetchRegistrations
+    .filter(
+      (registration) =>
+        backgroundFetchTaskNames.findIndex(
+          (it) => it === registration.taskName,
+        ) === -1,
+    )
+    .map((it) => it.taskName);
+  for (const backgroundFetchTaskName of backgroundTasksToUnregister) {
+    await BackgroundFetch.unregisterTaskAsync(backgroundFetchTaskName);
+  }
+  for (const backgroundFetchTaskName of backgroundTasksToRegister) {
+    await registerBackgroundFetchAsync(
+      backgroundFetchTaskName,
+      minimumInterval,
+    );
+  }
+};
 /**
  * A provider component for the MyBackgroundFetchContext.
  *
- * @param backgroundFetchTaskName background fetch task name
+ * @param backgroundFetchTaskNames background fetch task names
  * @param minimumInterval minimum interval, defaults to 10 minutes
  * @param children The child components that will have access to the context.
- * @param backgroundFetchOptions
  * @returns A provider that passes an empty value to all of its children.
  */
 export const MyBackgroundFetchProvider: FC<MyBackgroundFetchProps> = ({
-  backgroundFetchTaskName,
+  backgroundFetchTaskNames: inBackgroundFetchTaskNames,
   minimumInterval = 600,
   children,
-  ...backgroundFetchOptions
 }) => {
-  const [registered, setRegistered] = useState(false);
+  const backgroundFetchTaskNames = useMemo(
+    () =>
+      Array.isArray(inBackgroundFetchTaskNames)
+        ? inBackgroundFetchTaskNames
+        : [inBackgroundFetchTaskNames],
+    [inBackgroundFetchTaskNames],
+  );
+  const [registrations, setRegistrations] = useState<
+    BackgroundFetchRegistration[]
+  >([]);
   const [status, setStatus] =
     useState<BackgroundFetch.BackgroundFetchStatus | null>(null);
   useEffect(() => {
     let mounted = true;
-    const registerBackgroundFetchAsync = async () =>
-      BackgroundFetch.registerTaskAsync(backgroundFetchTaskName, {
-        ...backgroundFetchOptions,
-        minimumInterval,
-      });
+    const getRegisteredBackgroundTasksAsync = async (): Promise<
+      BackgroundFetchRegistration[]
+    > =>
+      (await TaskManager.getRegisteredTasksAsync())
+        .filter((it) => it.taskType === 'backgroundFetch')
+        .map((it) => ({ taskName: it.taskName, registered: true }));
+
     (async () => {
       const nextBackgroundFetchStatus = await BackgroundFetch.getStatusAsync();
-      const nextRegistered = await TaskManager.isTaskRegisteredAsync(
-        backgroundFetchTaskName,
-      );
+      const nextRegistrations = await getRegisteredBackgroundTasksAsync();
       if (mounted) {
         setStatus(nextBackgroundFetchStatus);
-        setRegistered(nextRegistered);
+        setRegistrations(nextRegistrations);
       }
       if (
         nextBackgroundFetchStatus ===
-          BackgroundFetch.BackgroundFetchStatus.Available &&
-        !nextRegistered
+        BackgroundFetch.BackgroundFetchStatus.Available
       ) {
-        await registerBackgroundFetchAsync();
+        await updateBackgroundFetchRegistrationAsync(
+          backgroundFetchTaskNames,
+          nextRegistrations,
+          minimumInterval,
+        );
+        const nextNextRegistrations = await getRegisteredBackgroundTasksAsync();
         if (mounted) {
-          setRegistered(true);
+          setRegistrations(nextNextRegistrations);
         }
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [backgroundFetchTaskName, backgroundFetchOptions, minimumInterval]);
+  }, [backgroundFetchTaskNames, minimumInterval]);
   const value = useMemo<MyBackgroundFetch>(
-    () => ({ registered, status }),
-    [registered, status],
+    () => ({ registrations, status }),
+    [registrations, status],
   );
 
   return (
@@ -125,11 +181,11 @@ export const WithMyBackgroundFetch = <P extends object>(
   Component: ComponentType<P>,
 ): FC<P & MyBackgroundFetchProps> => {
   const WrappedComponent = ({
-    backgroundFetchTaskName,
+    backgroundFetchTaskNames,
     ...props
   }: P & MyBackgroundFetchProps) => (
     <MyBackgroundFetchProvider
-      backgroundFetchTaskName={backgroundFetchTaskName}
+      backgroundFetchTaskNames={backgroundFetchTaskNames}
     >
       <Component {...(props as P)} />
     </MyBackgroundFetchProvider>

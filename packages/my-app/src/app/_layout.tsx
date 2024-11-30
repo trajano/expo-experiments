@@ -8,7 +8,10 @@ import { SplashScreen, Stack, useRouter } from 'expo-router';
 import { FC, useEffect, useState } from 'react';
 
 import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
-import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
+import {
+  BACKGROUND_NOTIFICATION_TASK,
+  CLEAN_CACHE_DIRECTORY_TASK,
+} from '@/tasks';
 import { WithUserPreferences } from '@/hooks/UserPreferences';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
@@ -76,7 +79,7 @@ const CompositeApp = WithShakeDetection(
 const MyApp = () => (
   <CompositeApp
     shakeDetectionDisabled={__DEV__}
-    backgroundFetchTaskName={BACKGROUND_FETCH_TASK}
+    backgroundFetchTaskNames={[CLEAN_CACHE_DIRECTORY_TASK]}
     notificationTaskName={BACKGROUND_NOTIFICATION_TASK}
     stopOnTerminate={false}
     startOnBoot={true}

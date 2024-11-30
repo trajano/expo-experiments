@@ -75,7 +75,7 @@ const traverseDirectorySkipFontsAsync = async (
   return files;
 };
 
-TaskManager.defineTask('clean-cache', async () => {
+TaskManager.defineTask(CLEAN_CACHE_DIRECTORY_TASK, async () => {
   const files = await traverseDirectorySkipFontsAsync(
     FileSystem.cacheDirectory!,
   );
