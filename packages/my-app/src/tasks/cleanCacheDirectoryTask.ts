@@ -76,42 +76,47 @@ const traverseDirectorySkipFontsAsync = async (
 };
 
 TaskManager.defineTask(CLEAN_CACHE_DIRECTORY_TASK, async () => {
-  const files = await traverseDirectorySkipFontsAsync(
-    FileSystem.cacheDirectory!,
-  );
+  try {
+    const files = await traverseDirectorySkipFontsAsync(
+      FileSystem.cacheDirectory!,
+    );
 
-  // Process file info in batches
-  const fileInfos = await processFilesInBatchesAsync(files, async (file) => {
-    const info = await FileSystem.getInfoAsync(file, { size: true });
-    if (info.isDirectory || !info.exists || info.modificationTime === 0) {
-      return null;
-    } else {
-      return info;
-    }
-  });
-
-  const totalSizeOfCacheDirectoryInBytes = fileInfos.reduce(
-    (c, info) => c + info.size,
-    0,
-  );
-
-  backgroundFetchLog.info(
-    `totalSizeOfCacheDirectoryInBytes ${totalSizeOfCacheDirectoryInBytes}, number of files in cache ${fileInfos.length}`,
-  );
-
-  if (
-    totalSizeOfCacheDirectoryInBytes >= TRIGGER_CACHE_SIZE_IN_BYTES ||
-    fileInfos.length > MIN_FILES_TO_KEEP
-  ) {
-    fileInfos.sort((a, b) => a.modificationTime - b.modificationTime);
-    const filesToDelete = fileInfos
-      .slice(0, fileInfos.length - MIN_FILES_TO_KEEP)
-      .map((f) => f.uri);
-
-    // Delete files in batches
-    await processFilesInBatchesAsync(filesToDelete, async (fileUri) => {
-      await FileSystem.deleteAsync(fileUri, { idempotent: true });
+    // Process file info in batches
+    const fileInfos = await processFilesInBatchesAsync(files, async (file) => {
+      const info = await FileSystem.getInfoAsync(file, { size: true });
+      if (info.isDirectory || !info.exists || info.modificationTime === 0) {
+        return null;
+      } else {
+        return info;
+      }
     });
+
+    const totalSizeOfCacheDirectoryInBytes = fileInfos.reduce(
+      (c, info) => c + info.size,
+      0,
+    );
+
+    backgroundFetchLog.info(
+      `totalSizeOfCacheDirectoryInBytes ${totalSizeOfCacheDirectoryInBytes}, number of files in cache ${fileInfos.length}`,
+    );
+
+    if (
+      totalSizeOfCacheDirectoryInBytes >= TRIGGER_CACHE_SIZE_IN_BYTES ||
+      fileInfos.length > MIN_FILES_TO_KEEP
+    ) {
+      fileInfos.sort((a, b) => a.modificationTime - b.modificationTime);
+      const filesToDelete = fileInfos
+        .slice(0, fileInfos.length - MIN_FILES_TO_KEEP)
+        .map((f) => f.uri);
+
+      // Delete files in batches
+      await processFilesInBatchesAsync(filesToDelete, async (fileUri) => {
+        await FileSystem.deleteAsync(fileUri, { idempotent: true });
+      });
+    }
+    return BackgroundFetch.BackgroundFetchResult.NoData;
+  } catch (e: unknown) {
+    backgroundFetchLog.error('Error', e);
+    return BackgroundFetch.BackgroundFetchResult.Failed;
   }
-  return BackgroundFetch.BackgroundFetchResult.NoData;
 });
