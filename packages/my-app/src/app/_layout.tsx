@@ -7,7 +7,6 @@ import {
 import { SplashScreen, Stack, useRouter } from 'expo-router';
 import { FC, useEffect, useState } from 'react';
 
-import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
 import {
   BACKGROUND_NOTIFICATION_TASK,
   CLEAN_CACHE_DIRECTORY_TASK,
@@ -19,6 +18,7 @@ import { WithNotifications } from 'react-native-my-hooks';
 import 'react-native-reanimated';
 import { registerDevMenuItemsAsync } from '@/devmenu';
 import { useShakeDetection, WithShakeDetection } from '@/hooks/ShakeDetection';
+import { WithBackgroundFetchRegistration } from '@/hooks/BackgroundFetchRegistration/BackgroundFetchRegistration';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -75,7 +75,9 @@ export type MyAppUserPreferences = {
 };
 // with load guard?
 const CompositeApp = WithShakeDetection(
-  WithMyBackgroundFetch(WithUserPreferences(WithNotifications(RootLayout))),
+  WithBackgroundFetchRegistration(
+    WithUserPreferences(WithNotifications(RootLayout)),
+  ),
 );
 const MyApp = () => (
   <CompositeApp

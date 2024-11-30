@@ -1,16 +1,16 @@
 import { act, render, renderHook } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import {
-  MyBackgroundFetchContext,
-  MyBackgroundFetchProvider,
-  useMyBackgroundFetch,
-  WithMyBackgroundFetch,
-} from './MyBackgroundFetch';
+  BackgroundFetchRegistrationContext,
+  BackgroundFetchRegistrationProvider,
+  useBackgroundFetchRegistration,
+  WithBackgroundFetchRegistration,
+} from './BackgroundFetchRegistration';
 import { BackgroundFetchStatus } from 'expo-background-fetch';
 import { FC, PropsWithChildren } from 'react';
 
 const TestComponent: FC = () => {
-  const MyBackgroundFetchProps = useMyBackgroundFetch();
+  const MyBackgroundFetchProps = useBackgroundFetchRegistration();
 
   return <Text testID="props">{JSON.stringify(MyBackgroundFetchProps)}</Text>;
 };
@@ -22,9 +22,9 @@ jest.mock('expo-task-manager', () => ({
 describe('MyBackgroundFetch', () => {
   it('Use provider', async () => {
     const { getByTestId, toJSON } = render(
-      <MyBackgroundFetchProvider backgroundFetchTaskNames="taskName">
+      <BackgroundFetchRegistrationProvider backgroundFetchTaskNames="taskName">
         <TestComponent />
-      </MyBackgroundFetchProvider>,
+      </BackgroundFetchRegistrationProvider>,
     );
     await act(() => Promise.resolve());
     expect(getByTestId('props').props.children).toBe('{"registrations":[]}');
@@ -33,7 +33,7 @@ describe('MyBackgroundFetch', () => {
 
   it('Use Hook', async () => {
     const wrapper = ({ children }: PropsWithChildren) => (
-      <MyBackgroundFetchContext.Provider
+      <BackgroundFetchRegistrationContext.Provider
         value={{
           registrations: [
             {
@@ -45,9 +45,11 @@ describe('MyBackgroundFetch', () => {
         }}
       >
         {children}
-      </MyBackgroundFetchContext.Provider>
+      </BackgroundFetchRegistrationContext.Provider>
     );
-    const { result } = renderHook(() => useMyBackgroundFetch(), { wrapper });
+    const { result } = renderHook(() => useBackgroundFetchRegistration(), {
+      wrapper,
+    });
     await act(() => Promise.resolve());
     expect(result.current).toStrictEqual({
       registrations: [{ registered: true, taskName: 'foo' }],
@@ -56,7 +58,7 @@ describe('MyBackgroundFetch', () => {
   });
 
   it('Use HoC', async () => {
-    const TestedComponent = WithMyBackgroundFetch(TestComponent);
+    const TestedComponent = WithBackgroundFetchRegistration(TestComponent);
     const { getByTestId, toJSON } = render(
       <TestedComponent backgroundFetchTaskNames="taskName" />,
     );
