@@ -59,8 +59,8 @@ const TaskManagerView: FC = () => {
         <MyText style={styles.sectionHeaderText}>Registered Tasks</MyText>
       </View>
       <FlashList
-        renderItem={(it) => (
-          <MyText style={styles.text}>{JSON.stringify(it, null, 2)}</MyText>
+        renderItem={({ item }) => (
+          <MyText style={styles.text}>{JSON.stringify(item, null, 2)}</MyText>
         )}
         data={tasks}
         estimatedItemSize={184}
