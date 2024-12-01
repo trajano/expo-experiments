@@ -1,4 +1,4 @@
-import { useMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
+import { useBackgroundFetchRegistration } from '@/hooks/BackgroundFetchRegistration';
 import { useUserPreferences } from '@/hooks/UserPreferences';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FC } from 'react';
@@ -6,7 +6,7 @@ import { StyleSheet, View } from 'react-native';
 import { useNotifications } from 'react-native-my-hooks';
 import { MyText } from 'react-native-my-text';
 const ContextsView: FC = () => {
-  const myBackgroundFetch = useMyBackgroundFetch();
+  const backgroundFetchRegistration = useBackgroundFetchRegistration();
   const notifications = useNotifications();
   const userPreferences = useUserPreferences();
   return (
@@ -15,7 +15,7 @@ const ContextsView: FC = () => {
         <MyText style={styles.sectionHeaderText}>useMyBackgroundFetch</MyText>
       </View>
       <MyText style={styles.text}>
-        {JSON.stringify(myBackgroundFetch, null, 2)}
+        {JSON.stringify(backgroundFetchRegistration, null, 2)}
       </MyText>
       <View style={styles.sectionHeader}>
         <MyText style={styles.sectionHeaderText}>useNotifications</MyText>

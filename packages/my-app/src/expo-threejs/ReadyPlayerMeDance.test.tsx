@@ -9,6 +9,7 @@ jest.mock('expo-file-system', () => ({
   downloadAsync: jest.fn(() => ({
     status: 200,
   })),
+  cacheDirectory: 'file://foo/cache/',
   readAsStringAsync: jest.fn(() => {}),
 }));
 jest.mock('expo-asset', () => ({
@@ -37,8 +38,18 @@ describe('ThreeJsExample', () => {
     const webView = screen.getByTestId('webview');
     expect(webView).toBeTruthy();
     expect(FileSystem.downloadAsync).toHaveBeenCalledWith(
+      'https://threejs.org/build/three.core.js',
+      'file://foo/cache/animation-retargeting/three.core.js',
+      { cache: true },
+    );
+    expect(FileSystem.downloadAsync).toHaveBeenCalledWith(
+      'https://threejs.org/build/three.tsl.js',
+      'file://foo/cache/animation-retargeting/three.tsl.js',
+      { cache: true },
+    );
+    expect(FileSystem.downloadAsync).toHaveBeenCalledWith(
       'https://threejs.org/build/three.webgpu.js',
-      'Foo/Bar/three.webgpu.js',
+      'file://foo/cache/animation-retargeting/three.webgpu.js',
       { cache: true },
     );
   });

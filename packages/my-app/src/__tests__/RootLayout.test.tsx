@@ -3,6 +3,13 @@ import { act } from '@testing-library/react-native';
 import RootLayout from '@/app/_layout';
 import { View } from 'react-native';
 import { registerDevMenuItemsAsync } from '@/devmenu';
+import * as TaskManager from 'expo-task-manager';
+import {
+  BACKGROUND_FETCH_TASK,
+  BACKGROUND_LOCATION_TASK,
+  BACKGROUND_NOTIFICATION_TASK,
+  CLEAN_CACHE_DIRECTORY_TASK,
+} from '@/tasks';
 
 jest.mock('expo-dev-client');
 jest.mock('@/devmenu', () => ({
@@ -13,7 +20,7 @@ jest.mock('@/devmenu', () => ({
 jest.mock('@/hooks/UserPreferences', () => ({
   WithUserPreferences: jest.fn((i: any) => i),
 }));
-jest.mock('@/hooks/MyBackgroundFetch', () => ({
+jest.mock('@/hooks/BackgroundFetchRegistration', () => ({
   WithMyBackgroundFetch: jest.fn((i: any) => i),
 }));
 jest.mock('@/nfc', () => ({
@@ -22,6 +29,10 @@ jest.mock('@/nfc', () => ({
 jest.mock('react-native-my-hooks', () => ({
   ...jest.requireActual('react-native-my-hooks'),
   WithNotifications: jest.fn((i: any) => i),
+}));
+jest.mock('expo-task-manager', () => ({
+  getRegisteredTasksAsync: jest.fn(() => Promise.resolve([])),
+  defineTask: jest.fn(),
 }));
 
 test('RootLayout', async () => {
@@ -36,10 +47,28 @@ test('RootLayout', async () => {
   await act(() => Promise.resolve());
   expect(screen.getByTestId('faux')).toBeTruthy();
   expect(getPathname()).toStrictEqual('/');
-});
-
-test('ensure devmenu mock', () => {
   expect(
     registerDevMenuItemsAsync({ router: jest.fn() as any }),
   ).resolves.toBeUndefined();
+
+  expect(TaskManager.defineTask).toHaveBeenCalledWith(
+    CLEAN_CACHE_DIRECTORY_TASK,
+    expect.anything(),
+  );
+  expect(TaskManager.defineTask).toHaveBeenCalledWith(
+    BACKGROUND_NOTIFICATION_TASK,
+    expect.anything(),
+  );
+  expect(TaskManager.defineTask).toHaveBeenCalledWith(
+    BACKGROUND_LOCATION_TASK,
+    expect.anything(),
+  );
+  expect(TaskManager.defineTask).toHaveBeenCalledWith(
+    BACKGROUND_FETCH_TASK,
+    expect.anything(),
+  );
+});
+
+afterEach(() => {
+  jest.resetAllMocks();
 });

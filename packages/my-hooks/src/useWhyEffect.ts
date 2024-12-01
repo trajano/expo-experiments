@@ -1,18 +1,20 @@
 import { DependencyList, EffectCallback, useEffect, useRef } from 'react';
 import { whyEffect } from './whyEffect';
 
+const defaultOnChange = (changedIndices: number[]) => {
+  console.debug(`changedIndices: ${changedIndices}`);
+};
 /**
  * Custom hook that triggers an effect function and provides a callback
  * with the indices of changed dependencies.
  *
  * @param effect - The effect function to be executed when dependencies change.
- * @param onChange - Callback that receives the indices of the dependencies that have changed.
  * @param dependencies - Dependency array for the effect function.
- */
+ @param onChange - Callback that receives the indices of the dependencies that have changed. */
 export const useWhyEffect = (
   effect: EffectCallback,
-  onChange: (changedIndices: number[]) => void,
   dependencies: DependencyList,
+  onChange: (changedIndices: number[]) => void = defaultOnChange,
 ) => {
   const previousDepsRef = useRef<DependencyList>();
 

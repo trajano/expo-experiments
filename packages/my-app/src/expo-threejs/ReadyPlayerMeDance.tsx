@@ -15,19 +15,48 @@ export type ReadyPlayerMeDanceProps = Omit<
 };
 
 type AnimationRetargetingViewProps = Omit<
-  ReadyPlayerMeDanceProps,
-  'avatarId' | 'animationResource' | 'fbxAnimationUri'
+  WebViewProps,
+  'source' | 'onMessage'
 > & {
   animationUri: string | null;
   modelUri: string | null;
+  cacheDirectory?: string;
 };
 
 const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
   animationUri,
   modelUri,
+  cacheDirectory = FileSystem.cacheDirectory! + 'animation-retargeting/',
   ...props
 }) => {
   const [htmlUri, setHtmlUri] = useState<string | null>(null);
+  const commonFileUri = useMemo(() => {
+    // Helper function to extract the base directory from a file URI
+    const getBaseDirectory = (uri: string) => {
+      const lastSlashIndex = uri.lastIndexOf('/');
+      return lastSlashIndex !== -1 ? uri.substring(0, lastSlashIndex + 1) : uri;
+    };
+
+    const uris = [modelUri, animationUri, htmlUri].filter((uri) =>
+      uri?.startsWith('file://'),
+    ) as string[];
+
+    // Ensure cacheDirectory is included as it is guaranteed to start with "file://"
+    uris.push(cacheDirectory);
+
+    // Compute the common base directory
+    let commonBase = getBaseDirectory(uris[0]);
+    for (const uri of uris) {
+      while (!uri.startsWith(commonBase)) {
+        // Trim the trailing slash and the last segment
+        commonBase = commonBase
+          .slice(0, -1)
+          .substring(0, commonBase.lastIndexOf('/') + 1);
+      }
+    }
+
+    return commonBase;
+  }, [modelUri, animationUri, cacheDirectory, htmlUri]);
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     let mounted = true;
@@ -35,42 +64,49 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
       const [htmlAsset] = await Asset.loadAsync(
         require('./animation-retargeting.html'),
       );
-      const htmlBaseFolder = htmlAsset.localUri!.substring(
-        0,
-        htmlAsset.localUri!.lastIndexOf('/'),
-      );
-      await FileSystem.downloadAsync(
-        'https://threejs.org/build/three.core.js',
-        `${htmlBaseFolder}/three.core.js`,
-        {
-          cache: true,
-        },
-      );
-      await FileSystem.downloadAsync(
-        'https://threejs.org/build/three.tsl.js',
-        `${htmlBaseFolder}/three.tsl.js`,
-        {
-          cache: true,
-        },
-      );
-      await FileSystem.downloadAsync(
-        'https://threejs.org/build/three.webgpu.js',
-        `${htmlBaseFolder}/three.webgpu.js`,
-        {
-          cache: true,
-        },
-      );
+      await FileSystem.makeDirectoryAsync(cacheDirectory, {
+        intermediates: true,
+      });
+      const nextHtmlUri = cacheDirectory + 'animation-retargeting.html';
+
+      await Promise.all([
+        FileSystem.copyAsync({
+          from: htmlAsset.localUri!,
+          to: nextHtmlUri,
+        }),
+        FileSystem.downloadAsync(
+          'https://threejs.org/build/three.core.js',
+          `${cacheDirectory}three.core.js`,
+          {
+            cache: true,
+          },
+        ),
+        FileSystem.downloadAsync(
+          'https://threejs.org/build/three.tsl.js',
+          `${cacheDirectory}three.tsl.js`,
+          {
+            cache: true,
+          },
+        ),
+        FileSystem.downloadAsync(
+          'https://threejs.org/build/three.webgpu.js',
+          `${cacheDirectory}three.webgpu.js`,
+          {
+            cache: true,
+          },
+        ),
+      ]);
+
       if (mounted) {
-        setHtmlUri(htmlAsset.localUri);
+        setHtmlUri(nextHtmlUri);
       }
     })();
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [cacheDirectory]);
   const webviewRef = useRef<WebView>(null);
   const handleMessage = useCallback(() => {
-    console.log('loaded');
     setLoaded(true);
   }, []);
   useEffect(() => {
@@ -93,8 +129,7 @@ const AnimationRetargetingView: FC<AnimationRetargetingViewProps> = ({
       {...props}
       allowFileAccessFromFileURLs
       allowFileAccess
-      allowingReadAccessToURL={FileSystem.cacheDirectory!}
-      webviewDebuggingEnabled={__DEV__}
+      allowingReadAccessToURL={commonFileUri}
       originWhitelist={['*']}
       bounces={false}
       onMessage={handleMessage}

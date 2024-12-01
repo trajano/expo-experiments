@@ -7,8 +7,10 @@ import {
 import { SplashScreen, Stack, useRouter } from 'expo-router';
 import { FC, useEffect, useState } from 'react';
 
-import { WithMyBackgroundFetch } from '@/hooks/MyBackgroundFetch';
-import { BACKGROUND_FETCH_TASK, BACKGROUND_NOTIFICATION_TASK } from '@/tasks';
+import {
+  BACKGROUND_NOTIFICATION_TASK,
+  CLEAN_CACHE_DIRECTORY_TASK,
+} from '@/tasks';
 import { WithUserPreferences } from '@/hooks/UserPreferences';
 import { useColorScheme } from 'react-native';
 import { WithNotifications } from 'react-native-my-hooks';
@@ -16,6 +18,7 @@ import { WithNotifications } from 'react-native-my-hooks';
 import 'react-native-reanimated';
 import { registerDevMenuItemsAsync } from '@/devmenu';
 import { useShakeDetection, WithShakeDetection } from '@/hooks/ShakeDetection';
+import { WithBackgroundFetchRegistration } from '@/hooks/BackgroundFetchRegistration/BackgroundFetchRegistration';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -59,6 +62,7 @@ export const RootLayout: FC = () => {
         <Stack.Screen name="splash" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="storybook" options={{ headerShown: false }} />
+        <Stack.Screen name="secure" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
@@ -71,12 +75,14 @@ export type MyAppUserPreferences = {
 };
 // with load guard?
 const CompositeApp = WithShakeDetection(
-  WithMyBackgroundFetch(WithUserPreferences(WithNotifications(RootLayout))),
+  WithBackgroundFetchRegistration(
+    WithUserPreferences(WithNotifications(RootLayout)),
+  ),
 );
 const MyApp = () => (
   <CompositeApp
     shakeDetectionDisabled={__DEV__}
-    backgroundFetchTaskName={BACKGROUND_FETCH_TASK}
+    backgroundFetchTaskNames={[CLEAN_CACHE_DIRECTORY_TASK]}
     notificationTaskName={BACKGROUND_NOTIFICATION_TASK}
     stopOnTerminate={false}
     startOnBoot={true}
