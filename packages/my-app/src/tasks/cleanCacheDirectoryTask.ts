@@ -6,6 +6,8 @@ import { backgroundFetchLog } from '@/logging';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import * as FileSystem from 'expo-file-system';
+import { processFilesInBatchesAsync, walkDirectoryAsync } from '@/files';
+import { FileInfo } from 'expo-file-system';
 
 export const CLEAN_CACHE_DIRECTORY_TASK =
   'clean-cache-directory-background-fetch';
@@ -24,72 +26,36 @@ const TRIGGER_CACHE_SIZE_IN_BYTES = 100_000_000;
  */
 const MIN_FILES_TO_KEEP = 100;
 
-const processFilesInBatchesAsync = async <T>(
-  items: string[],
-  processFunction: (item: string) => Promise<T | null>,
-): Promise<T[]> => {
-  const results: T[] = [];
-  for (
-    let i = 0;
-    i < items.length;
-    i += FILESYSTEM_ASYNC_OPERATIONS_BATCH_SIZE
-  ) {
-    const batch = items.slice(i, i + FILESYSTEM_ASYNC_OPERATIONS_BATCH_SIZE);
-    const batchResults = await Promise.all(batch.map(processFunction));
-    results.push(...(batchResults.filter((it) => it !== null) as T[]));
-  }
-  return results;
-};
-
 /**
- * Function that specifies which files to preseve.  Namely Cache.db* and *.ttf
- * @param filename
+ * Function that specifies which files to preserve.  Namely Cache.db* and *.ttf and zero byte files.
  */
-const shouldPreserve = (filename: string) => {
+const shouldPreserve = async (filename: string, fileInfo: FileInfo) => {
   const preserveCacheDb = filename.startsWith('Cache.db');
   const preserveTtf = filename.endsWith('.ttf');
-
-  return preserveCacheDb || preserveTtf;
-};
-/**
- * Traverses the directory and skips some files.
- * @param directory
- */
-const traverseDirectorySkipFontsAsync = async (
-  directory: string,
-): Promise<string[]> => {
-  const files: string[] = [];
-  const items = await FileSystem.readDirectoryAsync(directory);
-
-  for (const item of items) {
-    const fullPath = `${directory}/${item}`;
-    const fileInfo = await FileSystem.getInfoAsync(fullPath);
-
-    if (fileInfo.isDirectory) {
-      const nestedFiles = await traverseDirectorySkipFontsAsync(fullPath);
-      files.push(...nestedFiles);
-    } else if (!shouldPreserve(item)) {
-      files.push(fullPath);
-    }
-  }
-  return files;
+  const preserveZeroSizeFiles =
+    fileInfo.exists && !fileInfo.isDirectory && fileInfo.size === 0;
+  return preserveCacheDb || preserveTtf || preserveZeroSizeFiles;
 };
 
 TaskManager.defineTask(CLEAN_CACHE_DIRECTORY_TASK, async () => {
   try {
-    const files = await traverseDirectorySkipFontsAsync(
-      FileSystem.cacheDirectory!,
-    );
+    const files = await walkDirectoryAsync(FileSystem.cacheDirectory!, {
+      size: true,
+      onFileInfoAsync: shouldPreserve,
+    });
 
     // Process file info in batches
-    const fileInfos = await processFilesInBatchesAsync(files, async (file) => {
-      const info = await FileSystem.getInfoAsync(file, { size: true });
-      if (info.isDirectory || !info.exists || info.modificationTime === 0) {
-        return null;
-      } else {
-        return info;
-      }
-    });
+    const fileInfos = await processFilesInBatchesAsync(
+      files,
+      async (info) => {
+        if (info.isDirectory || !info.exists || info.modificationTime === 0) {
+          return null;
+        } else {
+          return info;
+        }
+      },
+      FILESYSTEM_ASYNC_OPERATIONS_BATCH_SIZE,
+    );
 
     const totalSizeOfCacheDirectoryInBytes = fileInfos.reduce(
       (c, info) => c + info.size,
@@ -105,13 +71,14 @@ TaskManager.defineTask(CLEAN_CACHE_DIRECTORY_TASK, async () => {
       fileInfos.length > MIN_FILES_TO_KEEP
     ) {
       fileInfos.sort((a, b) => a.modificationTime - b.modificationTime);
-      const filesToDelete = fileInfos
-        .slice(0, fileInfos.length - MIN_FILES_TO_KEEP)
-        .map((f) => f.uri);
+      const filesToDelete = fileInfos.slice(
+        0,
+        fileInfos.length - MIN_FILES_TO_KEEP,
+      );
 
       // Delete files in batches
-      await processFilesInBatchesAsync(filesToDelete, async (fileUri) => {
-        await FileSystem.deleteAsync(fileUri, { idempotent: true });
+      await processFilesInBatchesAsync(filesToDelete, async (info) => {
+        await FileSystem.deleteAsync(info.uri, { idempotent: true });
       });
     }
     return BackgroundFetch.BackgroundFetchResult.NoData;
