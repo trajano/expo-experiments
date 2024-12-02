@@ -19,6 +19,7 @@ import 'react-native-reanimated';
 import { registerDevMenuItemsAsync } from '@/devmenu';
 import { useShakeDetection, WithShakeDetection } from '@/hooks/ShakeDetection';
 import { WithBackgroundFetchRegistration } from '@/hooks/BackgroundFetchRegistration/BackgroundFetchRegistration';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -56,16 +57,19 @@ export const RootLayout: FC = () => {
     return null;
   }
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="splash" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="storybook" options={{ headerShown: false }} />
-        <Stack.Screen name="secure" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="splash" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="storybook" options={{ headerShown: false }} />
+          <Stack.Screen name="secure" options={{ headerShown: false }} />
+          <Stack.Screen name="public" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 };
 export type MyAppUserPreferences = {

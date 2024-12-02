@@ -23,10 +23,10 @@ const TabTwoScreen: FC = () => {
         <ThemedText type="title">Preferences</ThemedText>
       </ThemedView>
       <ThemedText>
-        This screen will contain the prefrence settings. So how would that API
+        This screen will contain the preference settings. So how would that API
         look like? Well I don't want it to be simply restricted to what I need
         right now which are Theme (system/dark/light), Locale (en/fr/system) So
-        how woudl I handle this? hmm... For sure there's a context
+        how would I handle this? hmm... For sure there's a context
       </ThemedText>
       <DebouncedTextInput />
       <Collapsible title="File-based routing">
