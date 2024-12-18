@@ -66,6 +66,14 @@ const HomeScreen: FC = () => {
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <Button
+          title="test screen"
+          testID="test screen"
+          onPress={() => {
+            router.push('/public');
+          }}
+        />
+
+        <Button
           title="go load"
           testID="go-load-button"
           onPress={() => {

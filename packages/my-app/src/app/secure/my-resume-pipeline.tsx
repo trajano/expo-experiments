@@ -20,11 +20,14 @@ const ResumeScreen: FC = () => {
   const [pageCount, setPageCount] = useState(1);
   const { dimensions, setHeight, setWidth } = useViewDimensions();
   const flip = useCallback(() => {
-    const randomUri = samples[Crypto.getRandomBytes(1)[0] % samples.length];
+    let randomUri = samples[Crypto.getRandomBytes(1)[0] % samples.length];
+    while (randomUri === uri) {
+      randomUri = samples[Crypto.getRandomBytes(1)[0] % samples.length];
+    }
     setUri(randomUri);
     setPageCount(1);
     setLoading(true);
-  }, []);
+  }, [uri]);
   const { postPdfRequest } = usePdfPipeline();
   const post = useCallback(async () => {
     let randomUri = samples[Crypto.getRandomBytes(1)[0] % samples.length];
@@ -53,7 +56,9 @@ const ResumeScreen: FC = () => {
               }}
             >
               <View style={{ alignSelf: 'center' }}>
-                <MyText>{pageNumber}</MyText>
+                <MyText style={{ fontWeight: 'bold', color: 'white' }}>
+                  {pageNumber} / {pageCount}
+                </MyText>
               </View>
               <PdfPipelineView
                 style={[styles.pdf, dimensions]}

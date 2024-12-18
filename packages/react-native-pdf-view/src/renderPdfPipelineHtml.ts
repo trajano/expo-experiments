@@ -2,6 +2,7 @@ export const renderPdfPipelineHtml = (
   pdfJsCodeUri: string,
   pdfWorkerCodeUri: string,
   locale: string = 'en',
+  concurrency: number = 3,
 ) => `
 <!DOCTYPE html>
 <html lang="${locale}">
@@ -20,6 +21,41 @@ canvas {
 <script type="module">
 const { pdfjsLib } = /** @type {{ pdfjsLib: typeof import('pdfjs-dist') }} */ (globalThis);
 pdfjsLib.GlobalWorkerOptions.workerSrc = ${JSON.stringify(pdfWorkerCodeUri)};
+
+class CanvasResourcePool {
+  constructor() {
+    this.pool = [];
+    this.maxSize = ${concurrency};
+    this.waitQueue = [];
+  }
+  async acquire() {
+    return new Promise((resolve) => {
+      if (this.pool.length > 0) {
+        const canvas = this.pool.pop();
+        resolve(canvas);
+      } else if (this.pool.length + this.waitQueue.length < this.maxSize) {
+        const canvas = document.createElement('canvas');
+        resolve(canvas);
+      } else {
+        this.waitQueue.push(resolve);
+      }
+    });
+  }
+  /** @param {HTMLCanvasElement} canvas */
+  release(canvas) {
+    if (this.waitQueue.length > 0) {
+      const nextRequester = this.waitQueue.shift();
+      const newCanvas = document.createElement('canvas');
+      nextRequester(newCanvas);
+    } else {
+      const newCanvas = document.createElement('canvas');
+      this.pool.push(newCanvas);
+    }
+    canvas.remove();
+  }
+}
+const canvasPool = new CanvasResourcePool();
+
 /**
 *
 * @param {ArrayBuffer} arrayBuffer array buffer of PDF file
@@ -37,11 +73,10 @@ const renderPdfAsync = async (arrayBuffer, pageNumber, scale, correlationId) => 
   const pdfPage = await pdfDocument.getPage(pageNumber);
 
   /** @type {HTMLCanvasElement} */
-  const canvasElement = document.createElement('canvas');
+  const canvasElement = await canvasPool.acquire();
   const viewport = pdfPage.getViewport({ scale });
   canvasElement.height= viewport.height;
   canvasElement.width = viewport.width;
-  document.body.appendChild(canvasElement);
   window.ReactNativeWebView.postMessage(
     JSON.stringify({
         type: 'viewport',
@@ -64,8 +99,7 @@ const renderPdfAsync = async (arrayBuffer, pageNumber, scale, correlationId) => 
       correlationId
 }));
   } finally {
-    document.body.removeChild(canvasElement);
-    canvasElement.remove();
+    canvasPool.release(canvasElement);
   }
 };
 
@@ -80,7 +114,7 @@ window.addEventListener('message', (rawMessage) => {
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
-        renderPdfAsync(xhr.response, message.pageNumber, message.scale, message.correlationId).then();
+        renderPdfAsync(xhr.response, message.pageNumber, message.scale, message.correlationId);
     }
   }
   xhr.open("GET", message.uri);

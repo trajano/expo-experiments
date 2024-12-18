@@ -40,7 +40,15 @@
       "package": "net.trajano.myapp.go"
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": false,
+          "asyncRoutes": {
+            "default": "development"
+          }
+        }
+      ],
       ["expo-asset", {}],
       "expo-background-fetch",
       [
@@ -78,12 +86,6 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {
-        "origin": false,
-        "asyncRoutes": {
-          "default": "development"
-        }
-      },
       "eas": {
         "projectId": "82884520-3f2f-4a6f-a85f-e6257469b267"
       }

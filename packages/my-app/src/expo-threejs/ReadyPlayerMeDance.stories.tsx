@@ -19,6 +19,7 @@ export const ThreeJsReadyPlayerMeSample: Story = {
     modelUri: 'https://threejs.org/examples/models/gltf/readyplayer.me.glb',
     fbxAnimationUri: 'https://threejs.org/examples/models/fbx/mixamo.fbx',
     testID: 'webview',
+    webviewDebuggingEnabled: true,
   },
   parameters: {
     previewViewMode: PreviewViewMode.NO_SCROLL_VIEW,
@@ -30,6 +31,7 @@ export const SelectableSamples: Story = {
   args: {
     avatarId: '673053f10e05f44f8d84fe69',
     animationResource: require('@/assets/animations/Talking-On-Phone.fbx'),
+    webviewDebuggingEnabled: true,
   },
   argTypes: {
     avatarId: {
@@ -43,8 +45,6 @@ export const SelectableSamples: Story = {
         type: 'select',
       },
     },
-    onError: { action: 'error' },
-    onLoad: { action: 'loaded' },
     animationResource: {
       options: [
         require('@/assets/animations/Breakdance-Footwork-1.fbx'),
